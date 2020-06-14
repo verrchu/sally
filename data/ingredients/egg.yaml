@@ -1,8 +1,7 @@
-quantity: 1
-unit: NATURAL
-
-characteristics:
-    CALORIES: 80
-    PROTEINS: 7
-    FATS: 5.3
-    CARBOHYDRATES: 0.4
+NATURAL:
+    quantity: 1
+    characteristics:
+        calories: 80
+        proteins: 7
+        fats: 5.3
+        carbohydrates: 0.4

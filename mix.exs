@@ -19,7 +19,7 @@ defmodule Sally.MixProject do
 
   defp deps do
     [
-      {:yamerl, "~> 0.8"}
+      {:yaml_elixir, "~> 2.4"}
     ]
   end
 end

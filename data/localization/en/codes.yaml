@@ -2,6 +2,13 @@ OMELETTE: "omelette"
 
 BREAKFAST: "breakfast"
 
+GRAM: "g."
+
+CALORIES: "cal."
+PROTEINS: "p."
+FATS: "f."
+CARBOHYDRATES: "c."
+
 EGG: "egg"
 SALMON: "salmon"
 SAULT: "sault"
