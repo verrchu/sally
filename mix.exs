@@ -19,7 +19,9 @@ defmodule Sally.MixProject do
 
   defp deps do
     [
-      {:yaml_elixir, "~> 2.4"}
+      {:yaml_elixir, "~> 2.4"},
+      {:json_xema, "~> 0.4"},
+      {:jason, "~> 1.2"}
     ]
   end
 end

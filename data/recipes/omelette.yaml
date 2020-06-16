@@ -1,17 +1,17 @@
 name: OMELETTE
 type: BREAKFAST
 ingredients:
-  EGG:
+  - name: EGG
     quantity: 2
     unit: NATURAL
     min: 1
     max: 2
-  SALMON:
+  - name: SALMON
     quantity: 50
     unit: GRAM
     min: 50
     max: 100
-  SAULT:
+  - name: SAULT
     quantity: ANY
-  PEPPER:
+  - name: PEPPER
     quantity: ANY

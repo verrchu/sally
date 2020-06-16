@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ingredient definition",
+  "type": "object",
+  "required": [
+    "name",
+    "units"
+  ],
+  "additionalPropertis": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "units": {
+      "type": "array",
+      "item": {
+        "type": "object",
+        "required": [
+          "name",
+          "quantity",
+          "characteristics"
+        ],
+        "additionalPropertis": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["NATURAL", "GRAM"]
+          },
+          "quantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "characteristics": {
+            "type": "object",
+            "required": [
+              "calories",
+              "proteins",
+              "fats",
+              "carbohydrates"
+            ],
+            "additionalPropertis": false,
+            "properties": {
+              "calories": {
+                "type": "number",
+                "minimum": 0
+              },
+              "proteins": {
+                "type": "number",
+                "minimum": 0
+              },
+              "fats": {
+                "type": "number",
+                "minimum": 0
+              },
+              "carbohydrates": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

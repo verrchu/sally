@@ -1,7 +1,9 @@
-NATURAL:
-    quantity: 1
-    characteristics:
-        calories: 80
-        proteins: 7
-        fats: 5.3
-        carbohydrates: 0.4
+name: EGG
+units:
+    - name: NATURAL
+      quantity: 1
+      characteristics:
+          calories: 80
+          proteins: 7
+          fats: 5.3
+          carbohydrates: 0.4

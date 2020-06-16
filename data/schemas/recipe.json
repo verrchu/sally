@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ingredient definition",
+  "type": "object",
+  "required": [
+    "name",
+    "type"
+  ],
+  "additionalPropertis": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["BREAKFAST"]
+    },
+    "ingredients": {
+      "type": "array",
+      "item": {
+        "type": "object",
+        "additionalPropertis": false,
+        "oneOf": [
+          {
+            "required": [
+              "quantity",
+              "unit",
+              "min",
+              "max"
+            ],
+            "properties": {
+              "unit": {
+                "type": "string",
+                "enum": ["NATURAL", "GRAM"]
+              },
+              "quantity": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "min": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "max": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            }
+          },
+          {
+            "required": ["quantity"],
+            "properties": {
+              "quantity": {
+                "type": "string",
+                "enum": ["ANY"]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
