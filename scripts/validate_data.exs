@@ -24,11 +24,29 @@ end
 
 defmodule Validator do
   def validate_ingredients!(ingredients, schema, codes) do
-    # TODO: duplicate ingredients
+    duplicate_ingredients = Util.duplicates(Map.keys(ingredients))
+    unless Enum.empty?(duplicate_ingredients) do
+      raise(
+        """
+        Duplicate ingedient definition
+        Ingredients: #{inspect duplicate_ingredients}
+        """
+      )
+    end
+
     Enum.each(ingredients, fn({name, ingredient}) ->
-      # TODO: duplicate units
+      ingredient_units = Map.get(ingredient, "units", [])
+                         |> Enum.map(fn(unit) -> unit["name"] end)
+      duplicate_units = Util.duplicates(ingredient_units)
+
       unless name == ingredient["name"] do
-        Util.log_and_raise("ingredient definition for #{name} defines #{ingredient["name"]}")
+        raise(
+          """
+          Ingreient definition mismatched name
+          Excpected: #{name}
+          Actual: #{ingredient["name"]}
+          """
+        )
       end
 
       :ok = validate_schema!(ingredient, schema)
@@ -40,7 +58,7 @@ defmodule Validator do
     # TODO: duplicate recipes
     Enum.each(recipes, fn({name, recipe}) ->
       unless name == recipe["name"] do
-        Util.log_and_raise("recipe definition for #{name} defines #{recipe["name"]}")
+        raise("recipe definition for #{name} defines #{recipe["name"]}")
       end
 
       :ok = validate_schema!(recipe, schema)
@@ -50,18 +68,41 @@ defmodule Validator do
   end
 
   def validate_recipe_ingredients!(recipe, ingredients) do
-    duplicate_ingredients = recipe["ingredients"] -- Enum.uniq(recipe["ingredients"])
-    unless Enum.empty?(duplicate_ingredients) do
-      Util.log_and_raise(
-        "recipe #{recipe["name"]} contains duplicate ingredients #{inspect duplicate_ingredients}"
+    duplicate_recipe_ingredients = Util.duplicates(recipe["ingredients"])
+
+    unless Enum.empty?(duplicate_recipe_ingredients) do
+      raise(
+        "recipe #{recipe["name"]} contains duplicate ingredients #{inspect duplicate_recipe_ingredients}"
       )
     end
 
     Enum.each(recipe["ingredients"], fn(recipe_ingredient) ->
       unless Map.has_key?(ingredients, recipe_ingredient["name"]) do
-        Util.log_and_raise(
-          "recipe #{recipe["name"]} contains undefined ingredient #{recipe_ingredient["name"]}"
+        raise(
+          """
+          Undefined ingredient
+          Recipe: #{recipe["name"]}
+          Ingredient: #{recipe_ingredient["name"]}
+          """
         )
+      end
+
+      ingredient = ingredients[recipe_ingredient["name"]]
+      ingredient_units = Map.get(ingredient, "units", [])
+                         |> Enum.map(fn(unit) -> unit["name"] end)
+
+      unless recipe_ingredient["quantity"] == "ANY" do
+        unless recipe_ingredient["unit"] in ingredient_units do
+          raise(
+            """
+            Incompatible ingedient unit
+            Recipe: #{recipe["name"]}
+            Ingredient: #{recipe_ingredient["name"]}
+            Specified Unit: #{recipe_ingredient["unit"]}
+            Defined Units: #{inspect ingredient_units}
+            """
+          )
+        end
       end
     end)
   end
@@ -71,7 +112,7 @@ defmodule Validator do
       codes = Map.get(codes, lang)
 
       unless Map.has_key?(codes, code) do
-        Util.log_and_raise("Code #{code} not defined for lang #{lang}")
+        raise("Code #{code} not defined for lang #{lang}")
       end
     end)
   end
@@ -163,7 +204,9 @@ defmodule Util do
 
   def remove_file_ext(file), do: hd(String.split(file, "."))
 
-  def log_and_raise(err_msg), do: err_msg |> Logger.error |> raise
+  def duplicates(data) when is_list(data) do
+    data -- Enum.uniq(data)
+  end
 end
 
 defmodule Data do

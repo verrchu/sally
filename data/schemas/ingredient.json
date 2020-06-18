@@ -3,8 +3,7 @@
   "title": "Ingredient definition",
   "type": "object",
   "required": [
-    "name",
-    "units"
+    "name"
   ],
   "additionalPropertis": false,
   "properties": {
