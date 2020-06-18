@@ -7,6 +7,8 @@ defmodule Script do
     schemas = Loader.load_schemas!(data_dir)
     codes = Loader.load_codes!(data_dir)
     ingredients = Loader.load_ingredients!(data_dir)
+    recipes = Loader.load_recipes!(data_dir)
+    steps = Loader.load_steps!(data_dir)
 
     :ok = Validator.validate_ingredients!(
       ingredients, schemas[:ingredient], codes
@@ -14,10 +16,9 @@ defmodule Script do
 
     :ok = Validator.validate_known_codes!(codes)
 
-    recipes = Loader.load_recipes!(data_dir)
 
     :ok = Validator.validate_recipes!(
-      recipes, schemas[:recipe], ingredients, codes
+      recipes, schemas[:recipe], ingredients, codes, steps
     )
   end
 end
@@ -54,16 +55,32 @@ defmodule Validator do
     end)
   end
 
-  def validate_recipes!(recipes, schema, ingredients, codes) do
-    # TODO: duplicate recipes
+  def validate_recipes!(recipes, schema, ingredients, codes, steps) do
+    duplicate_recipes = Util.duplicates(Map.keys(recipes))
+    unless Enum.empty?(duplicate_recipes) do
+      raise(
+        """
+        Duplicate recipes:
+        Recipes: #{inspect duplicate_recipes}
+        """
+      )
+    end
+
     Enum.each(recipes, fn({name, recipe}) ->
       unless name == recipe["name"] do
-        raise("recipe definition for #{name} defines #{recipe["name"]}")
+        raise(
+          """
+          Mismathed recipe name
+          Expected: #{name}
+          Actual: #{recipe["name"]}
+          """
+        )
       end
 
       :ok = validate_schema!(recipe, schema)
       :ok = validate_code!(recipe["name"], codes)
       :ok = validate_recipe_ingredients!(recipe, ingredients)
+      :ok = validate_recipe_steps!(recipe, steps)
     end)
   end
 
@@ -72,7 +89,11 @@ defmodule Validator do
 
     unless Enum.empty?(duplicate_recipe_ingredients) do
       raise(
-        "recipe #{recipe["name"]} contains duplicate ingredients #{inspect duplicate_recipe_ingredients}"
+        """
+        Duplicate recipe ingredients
+        Recipe: #{recipe["name"]}
+        Ingredients: #{inspect duplicate_recipe_ingredients}
+        """
       )
     end
 
@@ -107,12 +128,22 @@ defmodule Validator do
     end)
   end
 
+  def validate_recipe_steps!(reciep, steps) do
+    :ok
+  end
+
   def validate_code!(code, codes) do
     Enum.each(Data.langs(), fn(lang) ->
       codes = Map.get(codes, lang)
 
       unless Map.has_key?(codes, code) do
-        raise("Code #{code} not defined for lang #{lang}")
+        raise(
+          """
+          Code not defined
+          Code: #{code}
+          Language: #{lang}
+          """
+        )
       end
     end)
   end
@@ -135,6 +166,7 @@ defmodule Loader do
   @schemas_path "schemas"
 
   @codes_file "codes.yaml"
+  @steps_file "steps.yaml"
 
   @schemas [
     recipe: "recipe.json",
@@ -160,6 +192,17 @@ defmodule Loader do
       codes = Util.parse_yaml!(codes_path)
 
       Map.put(acc, lang, codes)
+    end)
+  end
+
+  def load_steps!(data_dir) do
+    localization_path = Path.join(data_dir, @localization_path)
+
+    Enum.reduce(Data.langs(), %{}, fn(lang, acc) ->
+      steps_path = Path.join([localization_path, lang, @steps_file])
+      steps = Util.parse_yaml!(steps_path)
+
+      Map.put(acc, lang, steps)
     end)
   end
 
@@ -223,6 +266,7 @@ defmodule Data do
   def langs(), do: ["ru", "en"]
 end
 
+{:ok, _apps} = Application.ensure_all_started(:jason)
 {:ok, _apps} = Application.ensure_all_started(:json_xema)
 {:ok, _apps} = Application.ensure_all_started(:yaml_elixir)
 
