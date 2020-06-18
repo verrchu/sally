@@ -39,6 +39,15 @@ defmodule Validator do
       ingredient_units = Map.get(ingredient, "units", [])
                          |> Enum.map(fn(unit) -> unit["name"] end)
       duplicate_units = Util.duplicates(ingredient_units)
+      unless Enum.empty?(duplicate_units) do
+        raise(
+          """
+          Duplicate ingredient units
+          Ingredient: #{ingredient["name"]}
+          Units: #{inspect duplicate_units}
+          """
+        )
+      end
 
       unless name == ingredient["name"] do
         raise(
@@ -128,8 +137,30 @@ defmodule Validator do
     end)
   end
 
-  def validate_recipe_steps!(reciep, steps) do
-    :ok
+  def validate_recipe_steps!(recipe, steps) do
+    Enum.each(steps, fn({lang, steps}) ->
+      unless Map.has_key?(steps, recipe["name"]) do
+        raise(
+          """
+          Recipe steps not defined
+          Recipe: #{recipe["name"]}
+          Lang: #{lang}
+          """
+        )
+      end
+
+      recipe_steps = steps[recipe["name"]]
+
+      unless is_list(recipe_steps) && Enum.all?(recipe_steps, &is_binary/1) do
+        raise(
+          """
+          Recipe steps malformed
+          Recipe: #{recipe["name"]}
+          Lang: #{lang}
+          """
+        )
+      end
+    end)
   end
 
   def validate_code!(code, codes) do
