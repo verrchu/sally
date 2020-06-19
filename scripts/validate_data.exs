@@ -23,7 +23,11 @@ defmodule Script do
 end
 
 defmodule Validator do
+  require Logger
+
   def validate_ingredients!(ingredients, schema, codes, langs) do
+    Logger.info("Validating ingredients")
+
     duplicate_ingredients = Util.duplicates(Map.keys(ingredients))
     unless Enum.empty?(duplicate_ingredients) do
       raise(
@@ -35,6 +39,8 @@ defmodule Validator do
     end
 
     Enum.each(ingredients, fn({name, ingredient}) ->
+      Logger.debug("Validating ingedient #{name}")
+
       ingredient_units = Map.get(ingredient, "units", [])
                          |> Enum.map(fn(unit) -> unit["name"] end)
       duplicate_units = Util.duplicates(ingredient_units)
@@ -64,6 +70,8 @@ defmodule Validator do
   end
 
   def validate_recipes!(recipes, schema, ingredients, codes, steps, langs) do
+    Logger.info("Validating recipes")
+
     duplicate_recipes = Util.duplicates(Map.keys(recipes))
     unless Enum.empty?(duplicate_recipes) do
       raise(
@@ -75,6 +83,8 @@ defmodule Validator do
     end
 
     Enum.each(recipes, fn({name, recipe}) ->
+      Logger.debug("Validating recipe #{name}")
+
       unless name == recipe["name"] do
         raise(
           """
@@ -164,6 +174,8 @@ defmodule Validator do
 
   def validate_code!(code, codes, langs) do
     Enum.each(langs, fn(lang) ->
+      Logger.debug("Validating code #{code}. Lang: #{lang}")
+
       codes = Map.get(codes, lang)
 
       unless Map.has_key?(codes, code) do
@@ -179,6 +191,8 @@ defmodule Validator do
   end
 
   def validate_known_codes!(codes, langs) do
+    Logger.info("Validating known codes")
+
     recipe_types = ["BREAKFAST"]
     ingredient_units = ["GRAM"]
     ingresient_characteristics = [
