@@ -1,3 +1,5 @@
+.PHONY: deps
+
 PWD = $(shell pwd)
 DATA_DIR = data 
 

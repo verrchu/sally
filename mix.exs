@@ -22,7 +22,8 @@ defmodule Sally.MixProject do
       {:redix, "~> 0.11"},
       {:yaml_elixir, "~> 2.4"},
       {:json_xema, "~> 0.4"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.2"},
+      {:confex, "~> 3.4"}
     ]
   end
 end

@@ -8,7 +8,7 @@ defmodule Script do
     codes = DataLoader.load_codes!(data_dir, langs)
     ingredients = DataLoader.load_ingredients!(data_dir)
     recipes = DataLoader.load_recipes!(data_dir)
-    steps = DataLoader.load_steps!(data_dir, langs)
+    steps = DataLoader.load_recipe_steps!(data_dir, langs)
 
     :ok = Validator.validate_ingredients!(
       ingredients, schemas[:ingredient], codes, langs
