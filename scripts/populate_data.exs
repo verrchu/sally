@@ -8,6 +8,8 @@ defmodule Script do
   end
 end
 
+{:ok, _apps} = Application.ensure_all_started(:redix)
+
 [data_dir, langs] = System.argv()
 langs = String.split(langs, ",")
 
