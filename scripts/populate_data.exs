@@ -18,7 +18,7 @@ defmodule Script do
 
     :ok = DataBase.persist_recipes!(conn, recipes)
 
-    ingredients = DataLoader.load_ingredients!(data_dir) |> IO.inspect
+    ingredients = DataLoader.load_ingredients!(data_dir)
 
     :ok = DataBase.persist_ingredients!(conn, ingredients)
   end
