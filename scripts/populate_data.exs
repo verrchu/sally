@@ -17,8 +17,11 @@ defmodule Script do
     recipes = DataLoader.load_recipes!(data_dir)
 
     :ok = DataBase.persist_recipes!(conn, recipes)
-  end
 
+    ingredients = DataLoader.load_ingredients!(data_dir) |> IO.inspect
+
+    :ok = DataBase.persist_ingredients!(conn, ingredients)
+  end
 end
 
 defmodule DataBase do
@@ -51,9 +54,9 @@ defmodule DataBase do
 
         Logger.debug("Persisting recipe steps. Key: #{key}. Recipe: #{recipe}. Lang: #{lang}")
 
-        Enum.each(steps, fn(step) ->
-          {:ok, _index} = Redix.command(conn, ["RPUSH", key, step])
-        end)
+        {:ok, _index} = Redix.command(
+          conn, List.flatten(["SADD", key, steps])
+        )
       end)
     end)
   end
@@ -67,7 +70,7 @@ defmodule DataBase do
 
       Logger.debug(
         """
-        Persisting recipe ingrdients.
+        Persisting recipe ingredients.
         Recipe: #{recipe["name"]}.
         Key: #{ingredients_key}
         """
@@ -75,13 +78,15 @@ defmodule DataBase do
 
       Enum.each(recipe["ingredients"], fn(ingredient) ->
         ingredient_name = Map.fetch!(ingredient, "name")
-        {:ok, _index} = Redix.command(conn, ["RPUSH", ingredients_key, ingredient_name])
+        {:ok, _index} = Redix.command(
+          conn, ["SADD", ingredients_key, ingredient_name]
+        )
 
         ingredient_key = "recipe:#{recipe_name}:ingredient:#{ingredient_name}"
 
         Logger.debug(
           """
-          Persisting recipe ingrdient.
+          Persisting recipe ingredient.
           Recipe: #{recipe["name"]}.
           Ingredient: #{ingredient["name"]}.
           Key: #{ingredient_key}
@@ -102,6 +107,46 @@ defmodule DataBase do
               "max", Map.fetch!(ingredient, "max")
             ])
         end
+      end)
+    end)
+  end
+
+  def persist_ingredients!(conn, ingredients) do
+    Enum.each(ingredients, fn({ingredient_name, ingredient}) ->
+      units_key = "ingredient:#{ingredient_name}:units"
+      Logger.debug(
+        """
+        Persisting ingredient.
+        Ingredient: #{ingredient["name"]}.
+        Key: #{units_key}
+        """
+      )
+
+      Enum.each(Map.fetch!(ingredient, "units"), fn(unit) ->
+        unit_name = Map.fetch!(unit, "name")
+        {:ok, _index} = Redix.command(conn, ["SADD", units_key, unit_name])
+
+        unit_characteristics = Map.fetch!(unit, "characteristics")
+
+        unit_key = "ingredient:#{ingredient_name}:unit:#{unit_name}"
+
+        Logger.debug(
+          """
+          Persisting ingredient characteristics.
+          Ingredient: #{ingredient["name"]}.
+          Unit: #{unit_name}
+          Key: #{unit_key}
+          """
+        )
+
+        {:ok, "OK"} = Redix.command(conn, [
+          "HMSET", unit_key,
+          "quantity", Map.fetch!(unit, "quantity"),
+          "calories", Map.fetch!(unit_characteristics, "calories"),
+          "carbohydrates", Map.fetch!(unit_characteristics, "carbohydrates"),
+          "fats", Map.fetch!(unit_characteristics, "fats"),
+          "proteins", Map.fetch!(unit_characteristics, "proteins")
+        ])
       end)
     end)
   end
