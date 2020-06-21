@@ -1,0 +1,8 @@
+units:
+    MILLILITER:
+      quantity: 100
+      characteristics:
+          calories: 59
+          carbohydrates: 4.7
+          fats: 3.2
+          proteins: 2.9
