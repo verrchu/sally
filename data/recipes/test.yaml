@@ -1,0 +1,8 @@
+name: TEST
+type: BREAKFAST
+ingredients:
+    - name: TEST
+      unit: GRAM
+      quantity: 100
+      min: 50
+      max: 150

@@ -41,6 +41,11 @@ defmodule Validator do
     Enum.each(ingredients, fn({name, ingredient}) ->
       Logger.debug("Validating ingedient #{name}")
 
+      IO.inspect(ingredient)
+
+      :ok = validate_schema!(ingredient, schema)
+      :ok = validate_code!(ingredient["name"], codes, langs)
+
       ingredient_units = Map.get(ingredient, "units", [])
                          |> Enum.map(fn(unit) -> unit["name"] end)
       duplicate_units = Util.duplicates(ingredient_units)
@@ -64,8 +69,6 @@ defmodule Validator do
         )
       end
 
-      :ok = validate_schema!(ingredient, schema)
-      :ok = validate_code!(ingredient["name"], codes, langs)
     end)
   end
 

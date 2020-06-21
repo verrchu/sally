@@ -4,7 +4,8 @@
   "type": "object",
   "required": [
     "name",
-    "type"
+    "type",
+    "ingredients"
   ],
   "additionalPropertis": false,
   "properties": {
@@ -17,46 +18,34 @@
     },
     "ingredients": {
       "type": "array",
-      "item": {
+      "minItems": 1,
+      "items": {
         "type": "object",
         "additionalPropertis": false,
-        "oneOf": [
-          {
-            "required": [
-              "quantity",
-              "unit",
-              "min",
-              "max"
-            ],
-            "properties": {
-              "unit": {
-                "type": "string",
-                "enum": ["NATURAL", "GRAM"]
-              },
-              "quantity": {
-                "type": "number",
-                "exclusiveMinimum": 0
-              },
-              "min": {
-                "type": "number",
-                "exclusiveMinimum": 0
-              },
-              "max": {
-                "type": "number",
-                "exclusiveMinimum": 0
-              }
-            }
+        "required": [
+          "quantity",
+          "unit",
+          "min",
+          "max"
+        ],
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": ["NATURAL", "GRAM"]
           },
-          {
-            "required": ["quantity"],
-            "properties": {
-              "quantity": {
-                "type": "string",
-                "enum": ["ANY"]
-              }
-            }
+          "quantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "min": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "max": {
+            "type": "number",
+            "exclusiveMinimum": 0
           }
-        ]
+        }
       }
     }
   }

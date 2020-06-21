@@ -1,0 +1,9 @@
+name: TEST
+units:
+    - name: GRAM
+      quantity: 100
+      characteristics:
+          calories: 100
+          carbohydrates: 100
+          fats: 100
+          proteins: 100

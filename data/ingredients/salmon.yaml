@@ -1,9 +1,0 @@
-name: SALMON
-units:
-    - name: GRAM
-      quantity: 100
-      characteristics:
-          calories: 139
-          proteins: 20
-          fats: 6.5
-          carbohydrates: 0
