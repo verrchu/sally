@@ -9,6 +9,9 @@ defmodule Script do
     ingredients = DataLoader.load_ingredients!(data_dir)
     recipes = DataLoader.load_recipes!(data_dir)
     steps = DataLoader.load_recipe_steps!(data_dir, langs)
+    measures = DataLoader.load_measures!(data_dir, langs)
+
+    :ok = Validator.validate_measures!(measures, schemas[:measure])
 
     :ok = Validator.validate_ingredients!(
       ingredients, schemas[:ingredient], codes, langs
@@ -25,6 +28,29 @@ end
 defmodule Validator do
   require Logger
 
+  @measures ["GRAM"]
+
+  def validate_measures!(measures, schema) do
+    Enum.each(measures, fn({lang, measures}) ->
+      diff = @measures -- Map.keys(measures)
+
+      unless Enum.empty?(diff) do
+        raise(
+          """
+          Measures not defined
+          Measures: #{inspect diff}
+          """
+        )
+      end
+
+      Enum.each(measures, fn({name, measure}) ->
+        Logger.debug("Validating measure #{name}. Lang: #{lang}")
+
+        :ok = validate_schema!(measure, schema)
+      end)
+    end)
+  end
+
   def validate_ingredients!(ingredients, schema, codes, langs) do
     Logger.info("Validating ingredients")
 
@@ -40,8 +66,6 @@ defmodule Validator do
 
     Enum.each(ingredients, fn({name, ingredient}) ->
       Logger.debug("Validating ingedient #{name}")
-
-      IO.inspect(ingredient)
 
       :ok = validate_schema!(ingredient, schema)
       :ok = validate_code!(ingredient["name"], codes, langs)
@@ -197,13 +221,12 @@ defmodule Validator do
     Logger.info("Validating known codes")
 
     recipe_types = ["BREAKFAST"]
-    ingredient_units = ["GRAM"]
     ingresient_characteristics = [
       "CALORIES", "PROTEINS", "FATS", "CARBOHYDRATES"
     ]
 
     known_codes = (
-      recipe_types ++ ingredient_units ++ ingresient_characteristics
+      recipe_types ++ ingresient_characteristics
     )
 
     Enum.each(known_codes, fn(code) ->

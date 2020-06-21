@@ -18,6 +18,9 @@ defmodule Script do
 
     steps = DataLoader.load_recipe_steps!(data_dir, langs)
     :ok = DataBase.persist_recipe_steps!(conn, steps)
+
+    # measures = DataLoader.load_measures!(data_dir, langs)
+    # :ok = DataBase.persist_measures!(conn, measures)
   end
 end
 

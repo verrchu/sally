@@ -1,5 +1,5 @@
 GRAM:
-    int:
+    integer:
         "0": "grams"
         "1": "gram"
         "2": "grams"

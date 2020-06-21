@@ -8,10 +8,12 @@ defmodule DataLoader do
 
   @codes_file "codes.yaml"
   @steps_file "steps.yaml"
+  @measures_file "measures.yaml"
 
   @schemas [
     recipe: "recipe.json",
-    ingredient: "ingredient.json"
+    ingredient: "ingredient.json",
+    measure: "measure.json"
   ]
 
   def load_schemas!(data_dir) do
@@ -54,6 +56,20 @@ defmodule DataLoader do
       steps = parse_yaml!(steps_path)
 
       Map.put(acc, lang, steps)
+    end)
+  end
+
+  def load_measures!(data_dir, langs) do
+    localization_path = Path.join(data_dir, @localization_path)
+
+    Enum.reduce(langs, %{}, fn(lang, acc) ->
+      measures_path = Path.join([localization_path, lang, @measures_file])
+
+      Logger.info("Loading measures. Lang: #{lang}. Path: #{measures_path}")
+
+      measures = parse_yaml!(measures_path)
+
+      Map.put(acc, lang, measures)
     end)
   end
 
