@@ -29,7 +29,7 @@
                     "properties": {
                         "unit": {
                           "type": "string",
-                          "enum": ["NATURAL", "GRAM", "TABLESPOON"]
+                          "enum": ["NATURAL", "GRAM", "TABLESPOON", "MILLILITER"]
                         },
                         "quantity": {
                           "type": "number",

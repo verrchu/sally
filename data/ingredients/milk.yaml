@@ -1,5 +1,5 @@
 units:
-    GRAM:
+    MILLILITER:
       quantity: 100
       characteristics:
           calories: 59
