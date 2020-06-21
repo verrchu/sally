@@ -1,0 +1,13 @@
+GRAM:
+    int:
+        "0": "grams"
+        "1": "gram"
+        "2": "grams"
+        "3": "grams"
+        "4": "grams"
+        "5": "grams"
+        "6": "grams"
+        "7": "grams"
+        "8": "grams"
+        "9": "grams"
+    float: "grams"

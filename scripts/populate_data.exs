@@ -5,22 +5,19 @@ defmodule Script do
     Logger.info("Populating data from #{data_dir}")
 
     {:ok, conn} = DataBase.connect()
+    :ok = DataBase.flush(conn)
 
     codes = DataLoader.load_codes!(data_dir, langs)
-
     :ok = DataBase.persist_codes!(conn, codes)
 
-    steps = DataLoader.load_recipe_steps!(data_dir, langs)
-
-    :ok = DataBase.persist_recipe_steps!(conn, steps)
+    ingredients = DataLoader.load_ingredients!(data_dir)
+    :ok = DataBase.persist_ingredients!(conn, ingredients)
 
     recipes = DataLoader.load_recipes!(data_dir)
-
     :ok = DataBase.persist_recipes!(conn, recipes)
 
-    ingredients = DataLoader.load_ingredients!(data_dir)
-
-    :ok = DataBase.persist_ingredients!(conn, ingredients)
+    steps = DataLoader.load_recipe_steps!(data_dir, langs)
+    :ok = DataBase.persist_recipe_steps!(conn, steps)
   end
 end
 
@@ -33,6 +30,12 @@ defmodule DataBase do
     Logger.info("Connecting to DB. Host: #{host}. Port: #{port}")
 
     {:ok, _conn} = Redix.start_link(host: host, port: port)
+  end
+
+  def flush(conn) do
+    {:ok, "OK"} = Redix.command(conn, ["FLUSHALL"])
+
+    :ok
   end
 
   def persist_codes!(conn, codes) do
