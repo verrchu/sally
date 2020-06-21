@@ -1,2 +1,10 @@
 TEST:
     - "test"
+OAT_PANCAKE:
+  - "mix all the ingredients"
+  - "pour the mix into a well-heated pan"
+  - "fry under the lid on both sides until cooked"
+OMELET:
+  - "mix all the ingredients"
+  - "pour the mix into a well-heated pan"
+  - "fry under the lid until cooked"

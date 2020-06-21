@@ -1,0 +1,8 @@
+units:
+    TABLESPOON:
+      quantity: 1
+      characteristics:
+          calories: 72
+          carbohydrates: 16.0
+          fats: 0.1
+          proteins: 1.5

@@ -12,7 +12,7 @@
       "minProperties": 1,
       "additionalProperties": false,
       "patternProperties": {
-          "^(GRAM|NATURAL)$": {
+          "^(GRAM|NATURAL|TABLESPOON)$": {
               "type": "object",
               "type": "object",
               "required": [

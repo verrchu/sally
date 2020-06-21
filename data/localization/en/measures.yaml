@@ -11,3 +11,16 @@ GRAM:
         "8": "grams"
         "9": "grams"
     float: "grams"
+TABLESPOON:
+    integer:
+        "0": "tablesppons"
+        "1": "tablesppon"
+        "2": "tablesppons"
+        "3": "tablesppons"
+        "4": "tablesppons"
+        "5": "tablesppons"
+        "6": "tablesppons"
+        "7": "tablesppons"
+        "8": "tablesppons"
+        "9": "tablesppons"
+    float: "tablespoons"
