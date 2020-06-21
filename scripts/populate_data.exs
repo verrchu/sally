@@ -77,13 +77,14 @@ defmodule DataBase do
       Logger.debug(
         """
         Persisting recipe ingredients.
-        Recipe: #{recipe["name"]}.
+        Recipe: #{recipe_name}.
         Key: #{ingredients_key}
         """
       )
 
-      Enum.each(recipe["ingredients"], fn(ingredient) ->
-        ingredient_name = Map.fetch!(ingredient, "name")
+      recipe_ingredients = Map.fetch!(recipe, "ingredients")
+
+      Enum.each(recipe_ingredients, fn({ingredient_name, ingredient}) ->
         {:ok, _index} = Redix.command(
           conn, ["SADD", ingredients_key, ingredient_name]
         )
@@ -93,8 +94,8 @@ defmodule DataBase do
         Logger.debug(
           """
           Persisting recipe ingredient.
-          Recipe: #{recipe["name"]}.
-          Ingredient: #{ingredient["name"]}.
+          Recipe: #{recipe_name}.
+          Ingredient: #{ingredient_name}.
           Key: #{ingredient_key}
           """
         )
@@ -123,13 +124,12 @@ defmodule DataBase do
       Logger.debug(
         """
         Persisting ingredient.
-        Ingredient: #{ingredient["name"]}.
+        Ingredient: #{ingredient_name}.
         Key: #{units_key}
         """
       )
 
-      Enum.each(Map.fetch!(ingredient, "units"), fn(unit) ->
-        unit_name = Map.fetch!(unit, "name")
+      Enum.each(Map.fetch!(ingredient, "units"), fn({unit_name, unit}) ->
         {:ok, _index} = Redix.command(conn, ["SADD", units_key, unit_name])
 
         unit_characteristics = Map.fetch!(unit, "characteristics")
@@ -139,7 +139,7 @@ defmodule DataBase do
         Logger.debug(
           """
           Persisting ingredient characteristics.
-          Ingredient: #{ingredient["name"]}.
+          Ingredient: #{ingredient_name}.
           Unit: #{unit_name}
           Key: #{unit_key}
           """

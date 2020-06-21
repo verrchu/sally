@@ -1,6 +1,5 @@
-name: TEST
 units:
-    - name: GRAM
+    GRAM:
       quantity: 100
       characteristics:
           calories: 100

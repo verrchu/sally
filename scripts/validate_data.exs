@@ -11,16 +11,18 @@ defmodule Script do
     steps = DataLoader.load_recipe_steps!(data_dir, langs)
     measures = DataLoader.load_measures!(data_dir, langs)
 
-    :ok = Validator.validate_measures!(measures, schemas[:measure])
+    :ok = Validator.validate_measures!(
+      measures, Map.fetch!(schemas, :measure)
+    )
 
     :ok = Validator.validate_ingredients!(
-      ingredients, schemas[:ingredient], codes, langs
+      ingredients, Map.fetch!(schemas, :ingredient), codes, langs
     )
 
     :ok = Validator.validate_known_codes!(codes, langs)
 
     :ok = Validator.validate_recipes!(
-      recipes, schemas[:recipe], ingredients, codes, steps, langs
+      recipes, Map.fetch!(schemas, :recipe), ingredients, codes, steps, langs
     )
   end
 end
@@ -54,144 +56,64 @@ defmodule Validator do
   def validate_ingredients!(ingredients, schema, codes, langs) do
     Logger.info("Validating ingredients")
 
-    duplicate_ingredients = Util.duplicates(Map.keys(ingredients))
-    unless Enum.empty?(duplicate_ingredients) do
-      raise(
-        """
-        Duplicate ingedient definition
-        Ingredients: #{inspect duplicate_ingredients}
-        """
-      )
-    end
-
     Enum.each(ingredients, fn({name, ingredient}) ->
       Logger.debug("Validating ingedient #{name}")
 
       :ok = validate_schema!(ingredient, schema)
-      :ok = validate_code!(ingredient["name"], codes, langs)
-
-      ingredient_units = Map.get(ingredient, "units", [])
-                         |> Enum.map(fn(unit) -> unit["name"] end)
-      duplicate_units = Util.duplicates(ingredient_units)
-      unless Enum.empty?(duplicate_units) do
-        raise(
-          """
-          Duplicate ingredient units
-          Ingredient: #{ingredient["name"]}
-          Units: #{inspect duplicate_units}
-          """
-        )
-      end
-
-      unless name == ingredient["name"] do
-        raise(
-          """
-          Ingreient definition mismatched name
-          Excpected: #{name}
-          Actual: #{ingredient["name"]}
-          """
-        )
-      end
-
+      :ok = validate_code!(name, codes, langs)
     end)
   end
 
   def validate_recipes!(recipes, schema, ingredients, codes, steps, langs) do
     Logger.info("Validating recipes")
 
-    duplicate_recipes = Util.duplicates(Map.keys(recipes))
-    unless Enum.empty?(duplicate_recipes) do
-      raise(
-        """
-        Duplicate recipes:
-        Recipes: #{inspect duplicate_recipes}
-        """
-      )
-    end
+    Enum.each(recipes, fn({recipe_name, recipe}) ->
+      Logger.debug("Validating recipe #{recipe_name}")
 
-    Enum.each(recipes, fn({name, recipe}) ->
-      Logger.debug("Validating recipe #{name}")
-
-      unless name == recipe["name"] do
-        raise(
-          """
-          Mismathed recipe name
-          Expected: #{name}
-          Actual: #{recipe["name"]}
-          """
-        )
-      end
+      recipe_ingredients = Map.fetch!(recipe, "ingredients")
 
       :ok = validate_schema!(recipe, schema)
-      :ok = validate_code!(recipe["name"], codes, langs)
-      :ok = validate_recipe_ingredients!(recipe, ingredients)
-      :ok = validate_recipe_steps!(recipe, steps)
+      :ok = validate_code!(recipe_name, codes, langs)
+      :ok = validate_recipe_ingredients!(
+        recipe_name, recipe_ingredients, ingredients
+      )
+      :ok = validate_recipe_steps!(recipe_name, steps)
     end)
   end
 
-  def validate_recipe_ingredients!(recipe, ingredients) do
-    duplicate_recipe_ingredients = Util.duplicates(recipe["ingredients"])
-
-    unless Enum.empty?(duplicate_recipe_ingredients) do
-      raise(
-        """
-        Duplicate recipe ingredients
-        Recipe: #{recipe["name"]}
-        Ingredients: #{inspect duplicate_recipe_ingredients}
-        """
-      )
-    end
-
-    Enum.each(recipe["ingredients"], fn(recipe_ingredient) ->
-      unless Map.has_key?(ingredients, recipe_ingredient["name"]) do
+  def validate_recipe_ingredients!(recipe_name, recipe_ingredients, ingredients) do
+    Enum.each(Map.keys(recipe_ingredients), fn(ingredient_name) ->
+      unless Map.has_key?(ingredients, ingredient_name) do
         raise(
           """
           Undefined ingredient
-          Recipe: #{recipe["name"]}
-          Ingredient: #{recipe_ingredient["name"]}
+          Recipe: #{recipe_name}
+          Ingredient: #{ingredient_name}
           """
         )
-      end
-
-      ingredient = ingredients[recipe_ingredient["name"]]
-      ingredient_units = Map.get(ingredient, "units", [])
-                         |> Enum.map(fn(unit) -> unit["name"] end)
-
-      unless recipe_ingredient["quantity"] == "ANY" do
-        unless recipe_ingredient["unit"] in ingredient_units do
-          raise(
-            """
-            Incompatible ingedient unit
-            Recipe: #{recipe["name"]}
-            Ingredient: #{recipe_ingredient["name"]}
-            Specified Unit: #{recipe_ingredient["unit"]}
-            Defined Units: #{inspect ingredient_units}
-            """
-          )
-        end
       end
     end)
   end
 
-  def validate_recipe_steps!(recipe, steps) do
+  def validate_recipe_steps!(recipe_name, steps) do
     Enum.each(steps, fn({lang, steps}) ->
-      unless Map.has_key?(steps, recipe["name"]) do
+      unless Map.has_key?(steps, recipe_name) do
         raise(
           """
           Recipe steps not defined
-          Recipe: #{recipe["name"]}
+          Recipe: #{recipe_name}
           Lang: #{lang}
           """
         )
       end
 
-      recipe_steps = steps[recipe["name"]]
+      recipe_steps = Map.fetch!(steps, recipe_name)
 
       unless is_list(recipe_steps) && Enum.all?(recipe_steps, &is_binary/1) do
         raise(
           """
           Recipe steps malformed
-          Recipe: #{recipe["name"]}
+          Recipe: #{recipe_name}
           Lang: #{lang}
           """
         )
@@ -236,12 +158,6 @@ defmodule Validator do
 
   def validate_schema!(entity, schema) do
     JsonXema.validate!(schema, entity)
-  end
-end
-
-defmodule Util do
-  def duplicates(data) when is_list(data) do
-    data -- Enum.uniq(data)
   end
 end
 

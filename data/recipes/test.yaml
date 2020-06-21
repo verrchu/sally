@@ -1,7 +1,6 @@
-name: TEST
 type: BREAKFAST
 ingredients:
-    - name: TEST
+    TEST:
       unit: GRAM
       quantity: 100
       min: 50
