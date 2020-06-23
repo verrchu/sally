@@ -12,7 +12,7 @@
       "minProperties": 1,
       "additionalProperties": false,
       "patternProperties": {
-          "^(GRAM|NATURAL|TABLESPOON|MILLILITER)$": {
+          "^(GRAM|NATURAL|TABLESPOON|TEASPOON|MILLILITER)$": {
               "type": "object",
               "type": "object",
               "required": [
