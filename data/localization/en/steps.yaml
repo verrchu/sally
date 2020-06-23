@@ -8,3 +8,8 @@ OMELET:
   - "mix all the ingredients"
   - "pour the mix into a well-heated pan"
   - "fry under the lid until cooked"
+CHEESE_PANCAKE:
+  - "mix all the ingredients"
+  - "form cheese pancakes"
+  - "put the pancakes into a well-heatedb pan"
+  - "fry under the lid until cooked"

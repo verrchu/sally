@@ -37,3 +37,16 @@ MILLILITER:
         "8": "milliliters"
         "9": "milliliters"
     float: "milliliters"
+TEASPOON:
+    integer:
+        "0": "teaspoons"
+        "1": "teaspoon"
+        "2": "teaspoons"
+        "3": "teaspoons"
+        "4": "teaspoons"
+        "5": "teaspoons"
+        "6": "teaspoons"
+        "7": "teaspoons"
+        "8": "teaspoons"
+        "9": "teaspoons"
+    float: "teaspoons"

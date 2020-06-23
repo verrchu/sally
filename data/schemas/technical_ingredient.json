@@ -12,7 +12,13 @@
       "minItems": 1,
       "items": {
           "type": "string",
-          "enum": ["GRAM", "TABLESPOON", "NATURAL"]
+          "enum": [
+            "GRAM",
+            "TABLESPOON",
+            "TEASPOON",
+            "MILLILITER",
+            "NATURAL"
+          ]
       }
     }
   }
