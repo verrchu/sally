@@ -5,7 +5,7 @@
   "required": [
     "units"
   ],
-  "additionalPropertis": false,
+  "additionalProperties": false,
   "properties": {
     "units": {
       "type": "object",
@@ -19,7 +19,7 @@
                 "quantity",
                 "characteristics"
               ],
-              "additionalPropertis": false,
+              "additionalProperties": false,
               "properties": {
                 "quantity": {
                   "type": "number",
@@ -33,7 +33,7 @@
                     "fats",
                     "carbohydrates"
                   ],
-                  "additionalPropertis": false,
+                  "additionalProperties": false,
                   "properties": {
                     "calories": {
                       "type": "number",

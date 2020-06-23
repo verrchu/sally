@@ -5,7 +5,7 @@
   "required": [
     "units"
   ],
-  "additionalPropertis": false,
+  "additionalProperties": false,
   "properties": {
     "units": {
       "type": "array",

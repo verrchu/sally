@@ -10,6 +10,9 @@ DB_SOURCE_PORT = 6379
 
 LANGS = ru,en
 
+make global_replace:
+	@ find $(TARGET) -type f -name "*.$(FILETYPE)" -exec sed -i '' -e 's/$(FROM)/$(TO)/g' {} +
+
 validate_data: deps
 	@ mix run --no-compile --no-start scripts/validate_data.exs $(PWD)/$(DATA_DIR) $(LANGS)
 

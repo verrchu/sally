@@ -6,7 +6,7 @@
       "type",
       "ingredients"
     ],
-    "additionalPropertis": false,
+    "additionalProperties": false,
     "properties": {
         "type": {
           "type": "string",
@@ -24,7 +24,7 @@
                     "patternProperties": {
                         "^[A-Z_]+$": {
                             "type": "object",
-                            "additionalPropertis": false,
+                            "additionalProperties": false,
                             "oneOf": [
                                 {
                                     "required": [
@@ -70,7 +70,7 @@
                     "patternProperties": {
                         "^[A-Z_]+$": {
                             "type": "object",
-                            "additionalPropertis": false,
+                            "additionalProperties": false,
                             "required": [
                               "quantity",
                               "unit",

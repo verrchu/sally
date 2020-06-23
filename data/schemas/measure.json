@@ -6,7 +6,7 @@
       "integer",
       "float"
   ],
-  "additionalPropertis": false,
+  "additionalProperties": false,
   "properties": {
       "float": {
           "type": "string"
