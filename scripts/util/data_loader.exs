@@ -1,30 +1,33 @@
 defmodule DataLoader do
   require Logger
 
-  @localization_path "localization"
-  @ingredients_path "ingredients"
-  @recipes_path "recipes"
-  @schemas_path "schemas"
+  @localization_path ["localization"]
+  @ingredients_path ["ingredients"]
+  @recipes_path ["recipes"]
+  @schemas_path ["schemas"]
+
+  @ingredient_types ["regular", "technical"]
 
   @codes_file "codes.yaml"
   @steps_file "steps.yaml"
   @measures_file "measures.yaml"
 
   @schemas [
+    measure: "measure.json",
     recipe: "recipe.json",
-    ingredient: "ingredient.json",
-    measure: "measure.json"
+    regular_ingredient: "regular_ingredient.json",
+    technical_ingredient: "technical_ingredient.json"
   ]
 
   def load_schemas!(data_dir) do
-    schemas_path = Path.join(data_dir, @schemas_path)
+    schemas_path = path!([data_dir, @schemas_path])
 
     Logger.info("Loading schemas. Path: #{schemas_path}")
 
     Enum.reduce(@schemas, %{}, fn({name, path}, acc) ->
       Logger.debug("Loading schema #{inspect name}")
 
-      schema_path = Path.join(schemas_path, path)
+      schema_path = path!([schemas_path, path])
       schema = schema_path |> parse_json! |> JsonXema.new
 
       Map.put(acc, name, schema)
@@ -32,10 +35,10 @@ defmodule DataLoader do
   end
 
   def load_codes!(data_dir, langs) do
-    localization_path = Path.join(data_dir, @localization_path)
+    localization_path = path!([data_dir, @localization_path])
 
     Enum.reduce(langs, %{}, fn(lang, acc) ->
-      codes_path = Path.join([localization_path, lang, @codes_file])
+      codes_path = path!([localization_path, lang, @codes_file])
 
       Logger.info("Loading codes. Lang: #{lang}. Path: #{codes_path}")
 
@@ -46,10 +49,10 @@ defmodule DataLoader do
   end
 
   def load_recipe_steps!(data_dir, langs) do
-    localization_path = Path.join(data_dir, @localization_path)
+    localization_path = path!([data_dir, @localization_path])
 
     Enum.reduce(langs, %{}, fn(lang, acc) ->
-      steps_path = Path.join([localization_path, lang, @steps_file])
+      steps_path = path!([localization_path, lang, @steps_file])
 
       Logger.info("Loading recipe steps. Lang: #{lang}. Path: #{steps_path}")
 
@@ -60,10 +63,10 @@ defmodule DataLoader do
   end
 
   def load_measures!(data_dir, langs) do
-    localization_path = Path.join(data_dir, @localization_path)
+    localization_path = path!([data_dir, @localization_path])
 
     Enum.reduce(langs, %{}, fn(lang, acc) ->
-      measures_path = Path.join([localization_path, lang, @measures_file])
+      measures_path = path!([localization_path, lang, @measures_file])
 
       Logger.info("Loading measures. Lang: #{lang}. Path: #{measures_path}")
 
@@ -74,15 +77,44 @@ defmodule DataLoader do
   end
 
   def load_ingredients!(data_dir) do
-    ingredients_path = Path.join(data_dir, @ingredients_path)
 
-    Logger.info("Loading ingredients. Path: #{ingredients_path}")
+    Enum.reduce(@ingredient_types, %{}, fn(ingredients_type, acc) ->
+      ingredients_path = path!([data_dir, @ingredients_path, ingredients_type])
+
+      Logger.info(
+        """
+        Loading ingredients
+        Type: #{ingredients_type}
+        Path: #{ingredients_path}
+        """
+      )
+
+      ingredients =
+        Enum.reduce(File.ls!(ingredients_path), %{}, fn(file, acc) ->
+          ingredient_file = path!([ingredients_path, file])
+          ingredient_name = remove_file_ext(file) |> String.upcase
+
+          Logger.debug("Loading ingredient #{ingredient_name}")
+
+          ingredient = parse_yaml!(ingredient_file)
+
+          Map.put(acc, ingredient_name, ingredient)
+        end)
+
+      Map.put(acc, ingredients_type, ingredients)
+    end)
+  end
+
+  def load_technical_ingredients!(data_dir) do
+    ingredients_path = path!([data_dir, @tachnical_ingredients_path])
+
+    Logger.info("Loading technical ingredients. Path: #{ingredients_path}")
 
     Enum.reduce(File.ls!(ingredients_path), %{}, fn(file, acc) ->
-      ingredient_file = Path.join(ingredients_path, file)
+      ingredient_file = path!([ingredients_path, file])
       ingredient_name = remove_file_ext(file) |> String.upcase
 
-      Logger.debug("Loading ingredient #{ingredient_name}")
+      Logger.debug("Loading technical ingredient #{ingredient_name}")
 
       ingredient = parse_yaml!(ingredient_file)
 
@@ -91,12 +123,12 @@ defmodule DataLoader do
   end
 
   def load_recipes!(data_dir) do
-    recipes_path = Path.join(data_dir, @recipes_path)
+    recipes_path = path!([data_dir, @recipes_path])
 
     Logger.info("Loading recipes. Path: #{recipes_path}")
 
     Enum.reduce(File.ls!(recipes_path), %{}, fn(file, acc) ->
-      recipe_file = Path.join(recipes_path, file)
+      recipe_file = path!([recipes_path, file])
       recipe_name = remove_file_ext(file) |> String.upcase
 
       Logger.debug("Loading recipe #{recipe_name}")
@@ -119,4 +151,8 @@ defmodule DataLoader do
   end
 
   def remove_file_ext(file), do: hd(String.split(file, "."))
+
+  defp path!(path_fragments) do
+    path_fragments |> List.flatten |> Path.join
+  end
 end
