@@ -24,9 +24,9 @@
                     "patternProperties": {
                         "^[A-Z_]+$": {
                             "type": "object",
-                            "additionalProperties": false,
                             "oneOf": [
                                 {
+                                    "additionalProperties": false,
                                     "required": [
                                       "quantity",
                                       "unit"
@@ -49,6 +49,7 @@
                                     }
                                 },
                                 {
+                                    "additionalProperties": false,
                                     "required": [
                                       "quantity"
                                     ],
