@@ -22,10 +22,6 @@ ingredient_characteristic('OAT',calories,'GRAM',100,342).
 ingredient_characteristic('OAT',carbohydrates,'GRAM',100,59.5).
 ingredient_characteristic('OAT',fats,'GRAM',100,6.1).
 ingredient_characteristic('OAT',proteins,'GRAM',100,12.3).
-ingredient_characteristic('TEST',calories,'GRAM',100,100).
-ingredient_characteristic('TEST',carbohydrates,'GRAM',100,100).
-ingredient_characteristic('TEST',fats,'GRAM',100,100).
-ingredient_characteristic('TEST',proteins,'GRAM',100,100).
 
 ingredient_characteristic_query(Ingredient, Characteristic, Unit, Quantity, Value) :-
    ingredient_characteristic(Ingredient, Characteristic, Unit, BaseQuantity, BaseValue),

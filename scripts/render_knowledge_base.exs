@@ -2,11 +2,15 @@ defmodule Script do
   def main([data_dir, knowledge_base_dir]) do
     ingredients = DataLoader.load_ingredients!(data_dir)
     :ok = KnowledgeBase.render_ingredients(knowledge_base_dir, ingredients)
+
+    recipes = DataLoader.load_recipes!(data_dir)
+    :ok = KnowledgeBase.render_recipes(knowledge_base_dir, recipes)
   end
 end
 
 defmodule KnowledgeBase do
   @ingredients_file "ingredients.pl"
+  @recipes_file "recipes.pl"
 
   @ingredient_characteristic_query """
   ingredient_characteristic_query(Ingredient, Characteristic, Unit, Quantity, Value) :-
@@ -18,7 +22,7 @@ defmodule KnowledgeBase do
     path = Path.join([knowledge_base_dir, @ingredients_file])
     regular_ingredients = Map.fetch!(ingredients, "regular")
 
-    File.rm!(path)
+    File.rm_rf!(path)
     File.touch!(path)
 
     Enum.each(regular_ingredients, fn({ingredient_name, ingredient}) ->
@@ -40,12 +44,43 @@ defmodule KnowledgeBase do
         pred = "ingredient_characteristic"
         name = "'#{ingredient_name}'"
         unit = "'#{unit}'"
-        predicate_clause = """
-        #{pred}(#{name},#{characteristic},#{unit},#{quantity},#{value}).
-        """
+        predicate_clause = "#{pred}(#{name},#{characteristic},#{unit},#{quantity},#{value}).\n"
         File.write!(path, predicate_clause, [:append])
       end)
     end)
+  end
+
+  def render_recipes(knowledge_base_dir, recipes) do
+    path = Path.join([knowledge_base_dir, @recipes_file])
+    
+    File.rm_rf!(path)
+    File.touch!(path)
+
+    Enum.each(recipes, fn({recipe_name, recipe}) ->
+      recipe_ingredients =
+        recipe |> Map.fetch!("ingredients") |> Map.fetch!("regular")
+      ingredients = render_recipe_ingredients(recipe_ingredients)
+      recipe_name = "'#{recipe_name}'"
+      predicate = "recipe_ingredients"
+      predicate_clause = "#{predicate}(#{recipe_name},#{ingredients}).\n"
+
+      File.write!(path, predicate_clause, [:append])
+    end)
+
+    File.write!(path, "\n", [:append])
+  end
+
+  defp render_recipe_ingredients(ingredients) do
+    raw = Enum.map(ingredients, fn({ingredient_name, ingredient}) ->
+      name = "'#{ingredient_name}'"
+      unit = "'#{Map.fetch!(ingredient, "unit")}'"
+      quantity = Map.fetch!(ingredient, "quantity")
+      min = Map.fetch!(ingredient, "min")
+      max = Map.fetch!(ingredient, "max")
+      "[#{name},#{unit},#{quantity},#{min},#{max}]"
+    end) |> Enum.join(",\n    ")
+
+    "[\n    #{raw}\n]"
   end
 end
 
