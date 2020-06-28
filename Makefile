@@ -2,6 +2,7 @@
 
 PWD = $(shell pwd)
 DATA_DIR = data 
+KNOWLEDGE_BASE_DIR = knowledge_base 
 
 DB = redis:6.0
 DB_NAME = redis
@@ -18,6 +19,10 @@ validate_data: deps
 
 populate_data: deps validate_data
 	@ mix run --no-compile --no-start scripts/populate_data.exs $(PWD)/$(DATA_DIR) $(LANGS)
+
+render_knowledge_base: deps validate_data
+	@ mix run --no-compile --no-start scripts/render_knowledge_base.exs \
+		$(PWD)/$(DATA_DIR) $(PWD)/$(KNOWLEDGE_BASE_DIR)
 
 db:
 	@ docker run -d --name $(DB_NAME) -p $(DB_LOCAL_PORT):$(DB_SOURCE_PORT) $(DB)
