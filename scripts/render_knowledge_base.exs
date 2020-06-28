@@ -57,6 +57,18 @@ defmodule KnowledgeBase do
     File.touch!(path)
 
     Enum.each(recipes, fn({recipe_name, recipe}) ->
+      recipe_type = Map.fetch!(recipe, "type")
+      recipe_name = "'#{recipe_name}'"
+      recipe_type = "'#{recipe_type}'"
+      predicate = "recipe_type"
+      predicate_clause = "#{predicate}(#{recipe_name},#{recipe_type}).\n"
+
+      File.write!(path, predicate_clause, [:append])
+    end)
+
+    File.write!(path, "\n", [:append])
+
+    Enum.each(recipes, fn({recipe_name, recipe}) ->
       recipe_ingredients =
         recipe |> Map.fetch!("ingredients") |> Map.fetch!("regular")
       ingredients = render_recipe_ingredients(recipe_ingredients)

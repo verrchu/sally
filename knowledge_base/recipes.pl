@@ -1,3 +1,7 @@
+recipe_type('CHEESE_PANCAKE','BREAKFAST').
+recipe_type('OAT_PANCAKE','BREAKFAST').
+recipe_type('OMELET','BREAKFAST').
+
 recipe_ingredients('CHEESE_PANCAKE',[
     ['COTTAGE_CHEESE','GRAM',220,220,440],
     ['EGG','NATURAL',1,1,1],
