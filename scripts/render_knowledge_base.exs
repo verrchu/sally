@@ -87,9 +87,7 @@ defmodule KnowledgeBase do
       name = "'#{ingredient_name}'"
       unit = "'#{Map.fetch!(ingredient, "unit")}'"
       quantity = Map.fetch!(ingredient, "quantity")
-      min = Map.fetch!(ingredient, "min")
-      max = Map.fetch!(ingredient, "max")
-      "[#{name},#{unit},#{quantity},#{min},#{max}]"
+      "[#{name},#{unit},#{quantity}]"
     end) |> Enum.join(",\n    ")
 
     "[\n    #{raw}\n]"

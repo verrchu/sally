@@ -109,9 +109,7 @@ defmodule DataBase do
             {:ok, "OK"} = Redix.command(conn, [
               "HMSET", ingredient_key,
               "quantity", Map.fetch!(ingredient, "quantity"),
-              "unit", Map.fetch!(ingredient, "unit"),
-              "min", Map.fetch!(ingredient, "min"),
-              "max", Map.fetch!(ingredient, "max")
+              "unit", Map.fetch!(ingredient, "unit")
             ])
         end
       end)
