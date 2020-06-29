@@ -250,23 +250,6 @@ defmodule Validator do
   end
 end
 
-defmodule SchemaLoader do
-  @behaviour Xema.Loader
-
-  def init() do
-    :ok = Application.put_env(:xema, :loader, __MODULE__)
-  end
-
-  @spec fetch(URI.t()) :: {:ok, any} | {:error, any}
-  def fetch(uri) do
-    Application.fetch_env!(:sally, :data_dir)
-    |> Path.join("schemas")
-    |> Path.join(uri.path)
-    |> File.read!()
-    |> Jason.decode()
-  end
-end
-
 {:ok, _apps} = Application.ensure_all_started(:jason)
 {:ok, _apps} = Application.ensure_all_started(:json_xema)
 {:ok, _apps} = Application.ensure_all_started(:yaml_elixir)
@@ -276,6 +259,10 @@ langs = String.split(langs, ",")
 
 [{DataLoader, _}] = Code.require_file(
   Path.join([File.cwd!(), "scripts", "util", "data_loader.exs"])
+)
+
+[{SchemaLoader, _}] = Code.require_file(
+  Path.join([File.cwd!(), "scripts", "util", "schema_loader.exs"])
 )
 
 Script.main([data_dir, langs])
