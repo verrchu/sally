@@ -1,6 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "unit": {
+  "ingredient_unit": {
     "type": "string",
     "enum": [
       "NATURAL",
@@ -9,5 +8,83 @@
       "TEASPOON",
       "MILLILITER"
     ]
+  },
+  "ingredient_characteristics": {
+      "type": "object",
+      "required": [
+        "calories",
+        "proteins",
+        "fats",
+        "carbohydrates"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "calories": {
+          "type": "number",
+          "minimum": 0
+        },
+        "proteins": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fats": {
+          "type": "number",
+          "minimum": 0
+        },
+        "carbohydrates": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+  },
+  "ingredient_quantity": {
+      "type": "number",
+      "exclusiveMinimum": 0
+  },
+  "regular_recipe_ingredient": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "quantity",
+      "unit"
+    ],
+    "properties": {
+        "unit": {"$ref": "#/ingredient_unit"},
+        "quantity": {"$ref": "#/ingredient_quantity"}
+    }
+  },
+  "any_quantity_recipe_ingredient": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "quantity"
+    ],
+    "properties": {
+        "quantity": {
+          "type": "string",
+          "enum": ["ANY"]
+        }
+    }
+  },
+  "recipe_technical_ingredients": {
+    "type": "object",
+    "additionalProperties": false,
+    "minProperties": 1,
+    "patternProperties": {
+        "^[A-Z_]+$": {
+            "oneOf": [
+                {"$ref": "#/regular_recipe_ingredient"},
+                {"$ref": "#/any_quantity_recipe_ingredient"}
+            ]
+        }
+    }
+  },
+  "recipe_main_ingredients": {
+    "type": "object",
+    "additionalProperties": false,
+    "minProperties": 1,
+    "patternProperties": {
+        "^[A-Z_]+$": {"$ref": "#/regular_recipe_ingredient"}
+    }
   }
 }

@@ -14,45 +14,14 @@
       "patternProperties": {
           "^(GRAM|NATURAL|TABLESPOON|TEASPOON|MILLILITER)$": {
               "type": "object",
-              "type": "object",
               "required": [
                 "quantity",
                 "characteristics"
               ],
               "additionalProperties": false,
               "properties": {
-                "quantity": {
-                  "type": "number",
-                  "exclusiveMinimum": 0
-                },
-                "characteristics": {
-                  "type": "object",
-                  "required": [
-                    "calories",
-                    "proteins",
-                    "fats",
-                    "carbohydrates"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "calories": {
-                      "type": "number",
-                      "minimum": 0
-                    },
-                    "proteins": {
-                      "type": "number",
-                      "minimum": 0
-                    },
-                    "fats": {
-                      "type": "number",
-                      "minimum": 0
-                    },
-                    "carbohydrates": {
-                      "type": "number",
-                      "minimum": 0
-                    }
-                  }
-                }
+                "quantity": {"$ref": "def.json#/ingredient_quantity"},
+                "characteristics": {"$ref": "def.json#/ingredient_characteristics"}
               }
           }
       }
