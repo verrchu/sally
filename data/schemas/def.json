@@ -66,6 +66,25 @@
         }
     }
   },
+  "recipe_main_ingredients": {
+    "type": "object",
+    "additionalProperties": false,
+    "minProperties": 1,
+    "patternProperties": {
+        "^[A-Z_]+$": {"$ref": "#/regular_recipe_ingredient"}
+    }
+  },
+  "recipe_additional_ingredients": {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "patternProperties": {
+            "^[A-Z_]+$": {"$ref": "#/regular_recipe_ingredient"}
+        }
+    }
+  },
   "recipe_technical_ingredients": {
     "type": "object",
     "additionalProperties": false,
@@ -77,14 +96,6 @@
                 {"$ref": "#/any_quantity_recipe_ingredient"}
             ]
         }
-    }
-  },
-  "recipe_main_ingredients": {
-    "type": "object",
-    "additionalProperties": false,
-    "minProperties": 1,
-    "patternProperties": {
-        "^[A-Z_]+$": {"$ref": "#/regular_recipe_ingredient"}
     }
   }
 }

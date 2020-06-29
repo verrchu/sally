@@ -33,6 +33,7 @@ defmodule Validator do
 
   @recipe_ingredient_type_main "main"
   @recipe_ingredient_type_technical "technical"
+  @recipe_ingredient_type_additional "additional"
 
   @ingredient_type_regular "regular"
   @ingredient_type_technical "technical"
@@ -93,6 +94,17 @@ defmodule Validator do
 
   def validate_recipe_ingredients!(recipe_name, recipe_ingredients, ingredients) do
     Enum.each(recipe_ingredients, fn({ingredient_type, recipe_ingredients}) ->
+      recipe_ingredients = case ingredient_type do
+        @recipe_ingredient_type_additional ->
+          recipe_ingredients
+          |> Enum.map(&Map.to_list/1)
+          |> Enum.reduce([], &Enum.concat/2)
+        @recipe_ingredient_type_main ->
+          Map.to_list(recipe_ingredients)
+        @recipe_ingredient_type_technical ->
+          Map.to_list(recipe_ingredients)
+      end
+
       Enum.each(recipe_ingredients, fn({ingredient_name, recipe_ingredient}) ->
         Logger.debug(
           """
@@ -105,6 +117,7 @@ defmodule Validator do
 
         ingredient_type = case ingredient_type do
           @recipe_ingredient_type_main -> @ingredient_type_regular
+          @recipe_ingredient_type_additional -> @ingredient_type_regular
           @recipe_ingredient_type_technical -> @ingredient_type_technical
         end
 

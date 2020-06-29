@@ -10,6 +10,16 @@ ingredients:
     COTTAGE_CHEESE:
       unit: GRAM
       quantity: 220
+  additional:
+      - EGG:
+          unit: NATURAL
+          quantity: 1
+        FLOUR:
+          unit: TABLESPOON
+          quantity: 1
+      - COTTAGE_CHEESE:
+          unit: GRAM
+          quantity: 220
   technical:
     BAKING_POWDER:
       unit: TEASPOON
