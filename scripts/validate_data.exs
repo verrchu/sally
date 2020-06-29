@@ -18,7 +18,7 @@ defmodule Script do
     measures = DataLoader.load_measures!(data_dir, langs)
     :ok = Validator.validate_measures!(measures, schemas)
 
-    ingredients = DataLoader.load_ingredients!(data_dir)
+    ingredients = DataLoader.load_ingredients!(data_dir) |> IO.inspect
     :ok = Validator.validate_ingredients!(ingredients, schemas, codes, langs)
 
     recipes = DataLoader.load_recipes!(data_dir)
@@ -31,23 +31,16 @@ end
 defmodule Validator do
   require Logger
 
-  @measures ["GRAM"]
+  @recipe_ingredient_type_main "main"
+  @recipe_ingredient_type_technical "technical"
+
+  @ingredient_type_regular "regular"
+  @ingredient_type_technical "technical"
 
   def validate_measures!(measures, schemas) do
     schema = Map.fetch!(schemas, :measure)
 
     Enum.each(measures, fn({lang, measures}) ->
-      diff = @measures -- Map.keys(measures)
-
-      unless Enum.empty?(diff) do
-        raise(
-          """
-          Measures not defined
-          Measures: #{inspect diff}
-          """
-        )
-      end
-
       Enum.each(measures, fn({name, measure}) ->
         Logger.debug("Validating measure #{name}. Lang: #{lang}")
 
@@ -109,6 +102,11 @@ defmodule Validator do
           Ingredient type: #{ingredient_type}
           """
         )
+
+        ingredient_type = case ingredient_type do
+          @recipe_ingredient_type_main -> @ingredient_type_regular
+          @recipe_ingredient_type_technical -> @ingredient_type_technical
+        end
 
         ingredients = Map.fetch!(ingredients, ingredient_type)
 

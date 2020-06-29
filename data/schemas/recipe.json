@@ -3,80 +3,22 @@
     "title": "Ingredient definition",
     "type": "object",
     "required": [
-      "type",
+      "meal",
       "ingredients"
     ],
     "additionalProperties": false,
     "properties": {
-        "type": {
+        "meal": {
           "type": "string",
           "enum": ["BREAKFAST"]
         },
         "ingredients": {
             "type": "object",
-            "required": ["regular"],
+            "required": ["main"],
             "additionalProperties": false,
             "properties": {
-                "technical": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "minProperties": 1,
-                    "patternProperties": {
-                        "^[A-Z_]+$": {
-                            "type": "object",
-                            "oneOf": [
-                                {
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "quantity",
-                                      "unit"
-                                    ],
-                                    "properties": {
-                                        "unit": {"$ref": "def.json#/unit"},
-                                        "quantity": {
-                                          "type": "number",
-                                          "exclusiveMinimum": 0
-                                        }
-                                    }
-                                },
-                                {
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "quantity"
-                                    ],
-                                    "properties": {
-                                        "quantity": {
-                                          "type": "string",
-                                          "enum": ["ANY"]
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "regular": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "minProperties": 1,
-                    "patternProperties": {
-                        "^[A-Z_]+$": {
-                            "type": "object",
-                            "additionalProperties": false,
-                            "required": [
-                              "quantity",
-                              "unit"
-                            ],
-                            "properties": {
-                                "unit": {"$ref": "def.json#/unit"},
-                                "quantity": {
-                                  "type": "number",
-                                  "exclusiveMinimum": 0
-                                }
-                            }
-                        }
-                    }
-                }
+                "main": {"$ref": "def.json#/recipe_main_ingredients"},
+                "technical": {"$ref": "def.json#/recipe_technical_ingredients"}
             }
         }
     }

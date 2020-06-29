@@ -10,7 +10,7 @@
     "units": {
       "type": "array",
       "minItems": 1,
-      "items": {"$ref": "def.json#/unit"}
+      "items": {"$ref": "def.json#/ingredient_unit"}
     }
   }
 }
