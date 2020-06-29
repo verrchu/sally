@@ -32,16 +32,7 @@
                                       "unit"
                                     ],
                                     "properties": {
-                                        "unit": {
-                                          "type": "string",
-                                          "enum": [
-                                            "NATURAL",
-                                            "GRAM",
-                                            "TABLESPOON",
-                                            "TEASPOON",
-                                            "MILLILITER"
-                                          ]
-                                        },
+                                        "unit": {"$ref": "def.json#/unit"},
                                         "quantity": {
                                           "type": "number",
                                           "exclusiveMinimum": 0
@@ -77,10 +68,7 @@
                               "unit"
                             ],
                             "properties": {
-                                "unit": {
-                                  "type": "string",
-                                  "enum": ["NATURAL", "GRAM", "TABLESPOON", "MILLILITER"]
-                                },
+                                "unit": {"$ref": "def.json#/unit"},
                                 "quantity": {
                                   "type": "number",
                                   "exclusiveMinimum": 0
