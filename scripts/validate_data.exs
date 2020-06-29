@@ -57,7 +57,7 @@ defmodule Validator do
       Enum.each(ingredients, fn({ingredient_name, ingredient}) ->
         Logger.debug(
           """
-          Validating ingedient
+          Validating ingredient
           Ingredient: #{ingredient_name}
           Ingredient type: #{ingredient_type}
 
@@ -93,17 +93,10 @@ defmodule Validator do
   end
 
   def validate_recipe_ingredients!(recipe_name, recipe_ingredients, ingredients) do
-    Enum.each(recipe_ingredients, fn({ingredient_type, recipe_ingredients}) ->
-      recipe_ingredients = case ingredient_type do
-        @recipe_ingredient_type_additional ->
-          recipe_ingredients
-          |> Enum.map(&Map.to_list/1)
-          |> Enum.reduce([], &Enum.concat/2)
-        @recipe_ingredient_type_main ->
-          Map.to_list(recipe_ingredients)
-        @recipe_ingredient_type_technical ->
-          Map.to_list(recipe_ingredients)
-      end
+    Enum.each(Map.keys(recipe_ingredients), fn(ingredient_type) ->
+      recipe_ingredients = get_recipe_ingredients(
+        ingredient_type, recipe_ingredients
+      )
 
       Enum.each(recipe_ingredients, fn({ingredient_name, recipe_ingredient}) ->
         Logger.debug(
@@ -145,6 +138,31 @@ defmodule Validator do
         )
       end)
     end)
+
+    if Map.has_key?(recipe_ingredients, @recipe_ingredient_type_additional) do
+      main_recipe_ingredients = get_recipe_ingredients(
+        @recipe_ingredient_type_main, recipe_ingredients
+      ) |> Enum.map(fn({k, _v}) -> k end) |> MapSet.new
+      additional_recipe_ingredients = get_recipe_ingredients(
+        @recipe_ingredient_type_additional, recipe_ingredients
+      ) |> Enum.map(fn({k, _v}) -> k end) |> MapSet.new
+
+      intersection = MapSet.intersection(
+        main_recipe_ingredients, additional_recipe_ingredients
+      ) |> MapSet.to_list
+
+      unless Enum.empty?(intersection) do
+        raise(
+          """
+          Main and additional ingredients intersect
+          Recipe: #{recipe_name}
+          Ingredients: #{inspect intersection}
+          """
+        )
+      end
+    end
+
+    :ok
   end
 
   def validate_recipe_ingredient!("technical" = ingredient_type,
@@ -258,6 +276,29 @@ defmodule Validator do
 
   def validate_schema!(entity, schema) do
     JsonXema.validate!(schema, entity)
+  end
+
+  defp get_recipe_ingredients(
+    @recipe_ingredient_type_main = ingredient_type, ingredients
+  ) do
+    ingredients
+    |> Map.fetch!(ingredient_type)
+    |> Map.to_list
+  end
+  defp get_recipe_ingredients(
+    @recipe_ingredient_type_additional = ingredient_type, ingredients
+  ) do
+    ingredients
+    |> Map.fetch!(ingredient_type)
+    |> Enum.map(&Map.to_list/1)
+    |> Enum.reduce([], &Enum.concat/2)
+  end
+  defp get_recipe_ingredients(
+    @recipe_ingredient_type_technical = ingredient_type, ingredients
+  ) do
+    ingredients
+    |> Map.fetch!(ingredient_type)
+    |> Map.to_list
   end
 end
 
