@@ -74,9 +74,7 @@
                             "additionalProperties": false,
                             "required": [
                               "quantity",
-                              "unit",
-                              "min",
-                              "max"
+                              "unit"
                             ],
                             "properties": {
                                 "unit": {
@@ -84,14 +82,6 @@
                                   "enum": ["NATURAL", "GRAM", "TABLESPOON", "MILLILITER"]
                                 },
                                 "quantity": {
-                                  "type": "number",
-                                  "exclusiveMinimum": 0
-                                },
-                                "min": {
-                                  "type": "number",
-                                  "exclusiveMinimum": 0
-                                },
-                                "max": {
                                   "type": "number",
                                   "exclusiveMinimum": 0
                                 }

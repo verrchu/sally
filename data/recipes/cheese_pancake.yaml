@@ -4,18 +4,12 @@ ingredients:
     EGG:
       unit: NATURAL
       quantity: 1
-      min: 1
-      max: 1
     FLOUR:
       unit: TABLESPOON
       quantity: 1
-      min: 1
-      max: 1
     COTTAGE_CHEESE:
       unit: GRAM
       quantity: 220
-      min: 220
-      max: 440
   technical:
     BAKING_POWDER:
       unit: TEASPOON
