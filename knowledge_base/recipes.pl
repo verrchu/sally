@@ -1,3 +1,8 @@
+:- module(recipes, [
+    recipe_type/2,
+    recipe_ingredients/2
+]).
+
 recipe_type('CHEESE_PANCAKE','BREAKFAST').
 recipe_type('OAT_PANCAKE','BREAKFAST').
 recipe_type('OMELET','BREAKFAST').

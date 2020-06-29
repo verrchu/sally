@@ -1,3 +1,8 @@
+:- module(ingredients, [
+    ingredient_characteristic/5,
+    ingredient_characteristic_query/5
+]).
+
 ingredient_characteristic('COTTAGE_CHEESE',calories,'GRAM',100,121).
 ingredient_characteristic('COTTAGE_CHEESE',carbohydrates,'GRAM',100,1.8).
 ingredient_characteristic('COTTAGE_CHEESE',fats,'GRAM',100,5.0).

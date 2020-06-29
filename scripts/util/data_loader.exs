@@ -77,7 +77,6 @@ defmodule DataLoader do
   end
 
   def load_ingredients!(data_dir) do
-
     Enum.reduce(@ingredient_types, %{}, fn(ingredients_type, acc) ->
       ingredients_path = path!([data_dir, @ingredients_path, ingredients_type])
 
@@ -102,23 +101,6 @@ defmodule DataLoader do
         end)
 
       Map.put(acc, ingredients_type, ingredients)
-    end)
-  end
-
-  def load_technical_ingredients!(data_dir) do
-    ingredients_path = path!([data_dir, @tachnical_ingredients_path])
-
-    Logger.info("Loading technical ingredients. Path: #{ingredients_path}")
-
-    Enum.reduce(File.ls!(ingredients_path), %{}, fn(file, acc) ->
-      ingredient_file = path!([ingredients_path, file])
-      ingredient_name = remove_file_ext(file) |> String.upcase
-
-      Logger.debug("Loading technical ingredient #{ingredient_name}")
-
-      ingredient = parse_yaml!(ingredient_file)
-
-      Map.put(acc, ingredient_name, ingredient)
     end)
   end
 
