@@ -2,9 +2,13 @@ defmodule Script do
   require Logger
 
   def main([data_dir, langs]) do
+    :ok = Application.put_env(:sally, :data_dir, data_dir)
+
+    :ok = SchemaLoader.init()
+
     Logger.info("Validating data in #{data_dir}")
 
-    schemas = DataLoader.load_schemas!(data_dir)
+    schemas = DataLoader.load_schemas!(data_dir) |> IO.inspect
 
     codes = DataLoader.load_codes!(data_dir, langs)
     steps = DataLoader.load_recipe_steps!(data_dir, langs)
@@ -243,6 +247,23 @@ defmodule Validator do
 
   def validate_schema!(entity, schema) do
     JsonXema.validate!(schema, entity)
+  end
+end
+
+defmodule SchemaLoader do
+  @behaviour Xema.Loader
+
+  def init() do
+    :ok = Application.put_env(:xema, :loader, __MODULE__)
+  end
+
+  @spec fetch(URI.t()) :: {:ok, any} | {:error, any}
+  def fetch(uri) do
+    Application.fetch_env!(:sally, :data_dir)
+    |> Path.join("schemas")
+    |> Path.join(uri.path)
+    |> File.read!()
+    |> Jason.decode()
   end
 end
 
