@@ -1,0 +1,26 @@
+meal: BREAKFAST
+ingredients:
+    main:
+      EGG:
+        unit: NATURAL
+        quantity: 1
+      BANANA:
+        unit: NATURAL
+        quantity: 1
+      OAT:
+        unit: GRAM
+        quantity: 15
+    technical:
+       BAKING_POWDER:
+         unit: TEASPOON
+         quantity: 0.5
+    additional:
+      - DARK_CHOCOLATE:
+          unit: GRAM
+          quantity: 10
+        PEACH:
+          unit: NATURAL
+          quantity: 0.5
+      - DARK_CHOCOLATE:
+          unit: GRAM
+          quantity: 15

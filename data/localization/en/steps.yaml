@@ -24,3 +24,10 @@ CHEESE_PANCAKE:
 FRIED_EGGS:
     - type: REGULAR
       text: "break the eggs into a well-heated pan"
+BANANA_PANCAKE:
+    - type: REGULAR
+      text: "mix all the ingredients ans leave it for 10-15 minutes"
+    - type: REGULAR
+      text: "pour the mix into a well-heated pan"
+    - type: REGULAR
+      text: "fry under the lid until cooked"
