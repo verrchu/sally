@@ -1,0 +1,6 @@
+meal: BREAKFAST
+ingredients:
+    main:
+      EGG:
+        unit: NATURAL
+        quantity: 2
