@@ -21,3 +21,6 @@ CHEESE_PANCAKE:
       text: "put the pancakes into a well-heatedb pan"
     - type: REGULAR
       text: "fry under the lid until cooked"
+FRIED_EGGS:
+    - type: REGULAR
+      text: "break the eggs into a well-heated pan"
