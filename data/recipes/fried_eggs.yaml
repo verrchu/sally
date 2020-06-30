@@ -1,8 +1,6 @@
-type: BREAKFAST
+meal: BREAKFAST
 ingredients:
-    regular:
+    main:
       EGG:
         unit: NATURAL
         quantity: 2
-        min: 2
-        max: 2
