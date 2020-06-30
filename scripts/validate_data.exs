@@ -85,7 +85,9 @@ defmodule Validator do
 
       :ok = validate_schema!(recipe, schema)
       :ok = validate_code!(recipe_name, codes, langs)
-      :ok = validate_recipe_steps!(recipe_name, steps, schemas)
+      :ok = validate_recipe_steps!(
+        recipe_name, recipe_ingredients, steps, schemas
+      )
       :ok = validate_recipe_ingredients!(
         recipe_name, recipe_ingredients, ingredients
       )
@@ -213,8 +215,12 @@ defmodule Validator do
     :ok
   end
 
-  def validate_recipe_steps!(recipe_name, steps, schemas) do
+  def validate_recipe_steps!(recipe_name, recipe_ingredients, steps, schemas) do
     schema = Map.fetch!(schemas, :recipe_steps)
+
+    additional_recipe_ingredients = get_recipe_ingredients(
+      @recipe_ingredient_type_additional, recipe_ingredients
+    ) |> Enum.map(fn({k, _v}) -> k end) |> Enum.uniq
 
     Enum.each(steps, fn({lang, steps}) ->
       unless Map.has_key?(steps, recipe_name) do
@@ -230,6 +236,42 @@ defmodule Validator do
       recipe_steps = Map.fetch!(steps, recipe_name)
 
       :ok = validate_schema!(recipe_steps, schema)
+
+      additional_ingredient_steps = Enum.filter(recipe_steps, fn(step) ->
+        Map.fetch!(step, "type") == "ADDITIONAL_INGREDIENT"
+      end)
+
+      additional_ingredient_step_keys = Enum.map(additional_ingredient_steps, fn(step) ->
+        Map.fetch!(step, "key")
+      end)
+
+      diff = (
+        additional_ingredient_step_keys -- Enum.uniq(
+          additional_ingredient_step_keys
+        )
+      )
+
+      unless Enum.empty?(diff) do
+        raise(
+          """
+          Duplicate recipe steps for additional ingredient defined
+          Recipe: #{recipe_name}
+          Duplicate ingredients: #{inspect diff}
+          """
+        )
+      end
+
+      Enum.each(additional_ingredient_step_keys, fn(key) ->
+        unless key in additional_recipe_ingredients do
+          raise(
+            """
+            Recipe step defined for unexpected additional ingredient
+            Recipe: #{recipe_name}
+            Ingredient: #{key}
+            """
+          )
+        end
+      end)
     end)
   end
 
@@ -276,14 +318,14 @@ defmodule Validator do
     @recipe_ingredient_type_main = ingredient_type, ingredients
   ) do
     ingredients
-    |> Map.fetch!(ingredient_type)
+    |> Map.get(ingredient_type, %{})
     |> Map.to_list
   end
   defp get_recipe_ingredients(
     @recipe_ingredient_type_additional = ingredient_type, ingredients
   ) do
     ingredients
-    |> Map.fetch!(ingredient_type)
+    |> Map.get(ingredient_type, %{})
     |> Enum.map(&Map.to_list/1)
     |> Enum.reduce([], &Enum.concat/2)
   end
@@ -291,7 +333,7 @@ defmodule Validator do
     @recipe_ingredient_type_technical = ingredient_type, ingredients
   ) do
     ingredients
-    |> Map.fetch!(ingredient_type)
+    |> Map.get(ingredient_type, %{})
     |> Map.to_list
   end
 end

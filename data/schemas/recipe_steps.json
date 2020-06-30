@@ -23,7 +23,7 @@
               "properties": {
                   "type": {
                       "type": "string",
-                      "enum": ["ADDITTIONAL_INGREDIENT"]
+                      "enum": ["ADDITIONAL_INGREDIENT"]
                   },
                   "key": {
                       "type": "string",
