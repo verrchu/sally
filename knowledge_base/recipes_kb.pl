@@ -1,16 +1,20 @@
 :- module(recipes_kb, [
-    type/2,
+    meal/2,
     ingredients/2
 ]).
 
-type('CHEESE_PANCAKE','BREAKFAST').
-type('OAT_PANCAKE','BREAKFAST').
-type('OMELET','BREAKFAST').
+meal('CHEESE_PANCAKE','BREAKFAST').
+meal('FRIED_EGGS','BREAKFAST').
+meal('OAT_PANCAKE','BREAKFAST').
+meal('OMELET','BREAKFAST').
 
 ingredients('CHEESE_PANCAKE',[
     ['COTTAGE_CHEESE','GRAM',220],
     ['EGG','NATURAL',1],
     ['FLOUR','TABLESPOON',1]
+]).
+ingredients('FRIED_EGGS',[
+    ['EGG','NATURAL',2]
 ]).
 ingredients('OAT_PANCAKE',[
     ['EGG','NATURAL',1],

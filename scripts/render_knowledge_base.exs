@@ -14,19 +14,14 @@ end
 
 defmodule KnowledgeBase do
   defmodule Ingredients do
-    @kb_file "ingredients.pl"
+    @kb_file "ingredients_kb.pl"
+
+    @predicate_characteristic "characteristic"
 
     @module_definition """
-    :- module(ingredients, [
-        ingredient_characteristic/5,
-        ingredient_characteristic_query/5
+    :- module(ingredients_kb, [
+        #{@predicate_characteristic}/5
     ]).
-    """
-
-    @ingredient_characteristic_query """
-    ingredient_characteristic_query(Ingredient, Characteristic, Unit, Quantity, Value) :-
-       ingredient_characteristic(Ingredient, Characteristic, Unit, BaseQuantity, BaseValue),
-       Value is Quantity / BaseQuantity * BaseValue.
     """
 
     def render(ingredients, [dir: dir]) do
@@ -44,10 +39,6 @@ defmodule KnowledgeBase do
           ingredient_name, ingredient, [file: file]
         )
       end)
-
-      File.write!(file, "\n", [:append])
-
-      File.write!(file, @ingredient_characteristic_query, [:append])
     end
 
     defp render_ingredient_characteristic(ingredient_name, ingredient, [file: file]) do
@@ -57,7 +48,7 @@ defmodule KnowledgeBase do
         characteristics = Map.fetch!(data, "characteristics")
 
         Enum.each(characteristics, fn({characteristic, value}) ->
-          pred = "ingredient_characteristic"
+          pred = @predicate_characteristic
           name = "'#{ingredient_name}'"
           unit = "'#{unit}'"
           predicate_clause = "#{pred}(#{name},#{characteristic},#{unit},#{quantity},#{value}).\n"
@@ -69,12 +60,15 @@ defmodule KnowledgeBase do
   end
 
   defmodule Recipes do
-    @kb_file "recipes.pl"
+    @kb_file "recipes_kb.pl"
+
+    @predicate_meal "meal"
+    @predicate_ingredients "ingredients"
 
     @module_definition """
-    :- module(recipes, [
-        recipe_type/2,
-        recipe_ingredients/2
+    :- module(recipes_kb, [
+        #{@predicate_meal}/2,
+        #{@predicate_ingredients}/2
     ]).
     """
 
@@ -88,11 +82,11 @@ defmodule KnowledgeBase do
       File.write!(file, "\n", [:append])
 
       Enum.each(recipes, fn({recipe_name, recipe}) ->
-        recipe_type = Map.fetch!(recipe, "type")
+        recipe_meal = Map.fetch!(recipe, "meal")
         recipe_name = "'#{recipe_name}'"
-        recipe_type = "'#{recipe_type}'"
-        predicate = "recipe_type"
-        predicate_clause = "#{predicate}(#{recipe_name},#{recipe_type}).\n"
+        recipe_meal = "'#{recipe_meal}'"
+        predicate = @predicate_meal
+        predicate_clause = "#{predicate}(#{recipe_name},#{recipe_meal}).\n"
 
         File.write!(file, predicate_clause, [:append])
       end)
@@ -101,10 +95,10 @@ defmodule KnowledgeBase do
 
       Enum.each(recipes, fn({recipe_name, recipe}) ->
         recipe_ingredients =
-          recipe |> Map.fetch!("ingredients") |> Map.fetch!("regular")
+          recipe |> Map.fetch!("ingredients") |> Map.fetch!("main")
         ingredients = render_recipe_ingredients(recipe_ingredients)
         recipe_name = "'#{recipe_name}'"
-        predicate = "recipe_ingredients"
+        predicate = @predicate_ingredients
         predicate_clause = "#{predicate}(#{recipe_name},#{ingredients}).\n"
 
         File.write!(file, predicate_clause, [:append])

@@ -4,7 +4,7 @@
 ]).
 
 :- use_module(recipes_kb, [
-    type/2,
+    meal/2,
     ingredients/2
 ]).
 
@@ -13,7 +13,7 @@
 ]).
 
 breakfast(Breakfast) :-
-    recipes_kb:type(Breakfast, 'BREAKFAST').
+    recipes_kb:meal(Breakfast, 'BREAKFAST').
 
 characteristics_query(Recipe, Cals, Prots, Fats, Carbs) :-
     recipes_kb:ingredients(Recipe, Ingredients),
