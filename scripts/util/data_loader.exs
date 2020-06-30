@@ -15,6 +15,7 @@ defmodule DataLoader do
   @schemas [
     measure: "measure.json",
     recipe: "recipe.json",
+    recipe_steps: "recipe_steps.json",
     regular_ingredient: "regular_ingredient.json",
     technical_ingredient: "technical_ingredient.json"
   ]

@@ -1,15 +1,23 @@
-TEST:
-    - "test"
 OAT_PANCAKE:
-  - "mix all the ingredients"
-  - "pour the mix into a well-heated pan"
-  - "fry under the lid on both sides until cooked"
+    - type: REGULAR
+      text: "mix all the ingredients"
+    - type: REGULAR
+      text: "pour the mix into a well-heated pan"
+    - type: REGULAR
+      text: "fry under the lid on both sides until cooked"
 OMELET:
-  - "mix all the ingredients"
-  - "pour the mix into a well-heated pan"
-  - "fry under the lid until cooked"
+    - type: REGULAR
+      text: "mix all the ingredients"
+    - type: REGULAR
+      text: "pour the mix into a well-heated pan"
+    - type: REGULAR
+      text: "fry under the lid until cooked"
 CHEESE_PANCAKE:
-  - "mix all the ingredients"
-  - "form cheese pancakes"
-  - "put the pancakes into a well-heatedb pan"
-  - "fry under the lid until cooked"
+    - type: REGULAR
+      text: "mix all the ingredients"
+    - type: REGULAR
+      text: "form cheese pancakes"
+    - type: REGULAR
+      text: "put the pancakes into a well-heatedb pan"
+    - type: REGULAR
+      text: "fry under the lid until cooked"

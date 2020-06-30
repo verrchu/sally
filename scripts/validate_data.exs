@@ -85,7 +85,7 @@ defmodule Validator do
 
       :ok = validate_schema!(recipe, schema)
       :ok = validate_code!(recipe_name, codes, langs)
-      :ok = validate_recipe_steps!(recipe_name, steps)
+      :ok = validate_recipe_steps!(recipe_name, steps, schemas)
       :ok = validate_recipe_ingredients!(
         recipe_name, recipe_ingredients, ingredients
       )
@@ -213,7 +213,9 @@ defmodule Validator do
     :ok
   end
 
-  def validate_recipe_steps!(recipe_name, steps) do
+  def validate_recipe_steps!(recipe_name, steps, schemas) do
+    schema = Map.fetch!(schemas, :recipe_steps)
+
     Enum.each(steps, fn({lang, steps}) ->
       unless Map.has_key?(steps, recipe_name) do
         raise(
@@ -227,15 +229,7 @@ defmodule Validator do
 
       recipe_steps = Map.fetch!(steps, recipe_name)
 
-      unless is_list(recipe_steps) && Enum.all?(recipe_steps, &is_binary/1) do
-        raise(
-          """
-          Recipe steps malformed
-          Recipe: #{recipe_name}
-          Lang: #{lang}
-          """
-        )
-      end
+      :ok = validate_schema!(recipe_steps, schema)
     end)
   end
 

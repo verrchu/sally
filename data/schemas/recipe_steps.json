@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recipe steps definition",
+  "type": "array",
+  "items": {
+      "oneOf": [
+          {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                  "type": {
+                      "type": "string",
+                      "enum": ["REGULAR"]
+                  },
+                  "text": {
+                      "type": "string"
+                  }
+              }
+          },
+          {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                  "type": {
+                      "type": "string",
+                      "enum": ["ADDITTIONAL_INGREDIENT"]
+                  },
+                  "key": {
+                      "type": "string",
+                      "pattern": "^[A-Z_]+$"
+                  },
+                  "text": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      }
+                  }
+              }
+          }
+      ]
+  }
+}
