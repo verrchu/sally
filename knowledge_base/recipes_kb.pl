@@ -1,23 +1,23 @@
-:- module(recipes, [
-    recipe_type/2,
-    recipe_ingredients/2
+:- module(recipes_kb, [
+    type/2,
+    ingredients/2
 ]).
 
-recipe_type('CHEESE_PANCAKE','BREAKFAST').
-recipe_type('OAT_PANCAKE','BREAKFAST').
-recipe_type('OMELET','BREAKFAST').
+type('CHEESE_PANCAKE','BREAKFAST').
+type('OAT_PANCAKE','BREAKFAST').
+type('OMELET','BREAKFAST').
 
-recipe_ingredients('CHEESE_PANCAKE',[
+ingredients('CHEESE_PANCAKE',[
     ['COTTAGE_CHEESE','GRAM',220],
     ['EGG','NATURAL',1],
     ['FLOUR','TABLESPOON',1]
 ]).
-recipe_ingredients('OAT_PANCAKE',[
+ingredients('OAT_PANCAKE',[
     ['EGG','NATURAL',1],
     ['GLAIR','NATURAL',2],
     ['OAT','GRAM',40]
 ]).
-recipe_ingredients('OMELET',[
+ingredients('OMELET',[
     ['EGG','NATURAL',2],
     ['FLOUR','TABLESPOON',1],
     ['GLAIR','NATURAL',1],
