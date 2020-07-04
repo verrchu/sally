@@ -1,7 +1,10 @@
 import argparse
 
 from lib.loaders import data_loader, schema_loader
-from lib.validators import measures_validator
+from lib.validators import (
+    measures_validator,
+    ingredients_validator
+)
 
 
 def main():
@@ -16,6 +19,7 @@ def main():
     schemas = schema_loader.load_schemas(data_dir)
 
     measures_validator.validate(measures, schemas)
+    ingredients_validator.validate(ingredients, schemas)
 
 
 def args():
