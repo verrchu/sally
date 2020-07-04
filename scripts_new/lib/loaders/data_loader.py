@@ -26,7 +26,7 @@ def load_codes(data_dir, langs):
     return data
 
 
-def load_steps(data_dir, langs):
+def load_recipes_steps(data_dir, langs):
     localization_path = os.path.join(data_dir, LOCALIZATION_DIR)
 
     data = {}
