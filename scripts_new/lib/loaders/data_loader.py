@@ -1,6 +1,7 @@
 import os
-import yaml
 from pathlib import Path
+
+from lib.loaders.util import load_yaml
 
 
 LOCALIZATION_DIR = 'localization'
@@ -80,9 +81,6 @@ def load_recipes(data_dir):
 
     return data
 
-
-def load_yaml(path):
-    return yaml.load(open(path, 'r'), Loader=yaml.Loader)
 
 def get_ingredient_name(file):
     return Path(file).stem.upper()

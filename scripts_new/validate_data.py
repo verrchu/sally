@@ -1,6 +1,7 @@
 import argparse
 
-from loaders import data_loader
+from lib.loaders import data_loader, schema_loader
+from lib.validators import measures_validator
 
 
 def main():
@@ -12,7 +13,9 @@ def main():
     ingredients = data_loader.load_ingredients(data_dir)
     recipes = data_loader.load_recipes(data_dir)
 
-    print(recipes)
+    schemas = schema_loader.load_schemas(data_dir)
+
+    measures_validator.validate(measures, schemas)
 
 
 def args():
