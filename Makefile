@@ -1,6 +1,7 @@
 .PHONY: deps
 
 PWD = $(shell pwd)
+SCRIPTS_DIR = scripts_new
 DATA_DIR = data
 KNOWLEDGE_BASE_DIR = knowledge_base
 
@@ -11,11 +12,12 @@ DB_SOURCE_PORT = 6379
 
 LANGS = ru,en
 
+make validate_data:
+	@ python $(SCRIPTS_DIR)/validate_data.py \
+		--data-dir $(PWD)/$(DATA_DIR) --langs $(LANGS)
+
 make global_replace:
 	@ find $(TARGET) -type f -name "*.$(FILETYPE)" -exec sed -i '' -e 's/$(FROM)/$(TO)/g' {} +
-
-validate_data: deps
-	@ mix run --no-compile --no-start scripts/validate_data.exs $(PWD)/$(DATA_DIR) $(LANGS)
 
 populate_data: deps validate_data
 	@ mix run --no-compile --no-start scripts/populate_data.exs $(PWD)/$(DATA_DIR) $(LANGS)
