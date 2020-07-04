@@ -1,5 +1,6 @@
 from lib.validators.util import validate_schema
 
+
 def validate(measures, schemas):
     measure_schema = schemas['measure']
 

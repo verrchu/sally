@@ -19,7 +19,7 @@ def main():
     schemas = schema_loader.load_schemas(data_dir)
 
     measures_validator.validate(measures, schemas)
-    ingredients_validator.validate(ingredients, schemas)
+    ingredients_validator.validate(ingredients, codes, schemas)
 
 
 def args():
