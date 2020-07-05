@@ -4,48 +4,10 @@ from pathlib import Path
 from lib.loaders.util import load_yaml
 
 
-LOCALIZATION_DIR = 'localization'
 INGREDIENTS_DIR = 'ingredients'
 RECIPES_DIR = 'recipes'
 
-CODES_FILE = 'codes.yaml'
-STEPS_FILE = 'steps.yaml'
-MEASURES_FILE = 'measures.yaml'
-
 INGREDIENT_TYPES = ['regular', 'technical']
-
-
-def load_codes(data_dir, langs):
-    localization_path = os.path.join(data_dir, LOCALIZATION_DIR)
-
-    data = {}
-    for lang in langs:
-        codes_path = os.path.join(localization_path, lang, CODES_FILE)
-        data[lang] = load_yaml(codes_path)
-
-    return data
-
-
-def load_recipes_steps(data_dir, langs):
-    localization_path = os.path.join(data_dir, LOCALIZATION_DIR)
-
-    data = {}
-    for lang in langs:
-        steps_path = os.path.join(localization_path, lang, STEPS_FILE)
-        data[lang] = load_yaml(steps_path)
-
-    return data
-
-
-def load_measures(data_dir, langs):
-    localization_path = os.path.join(data_dir, LOCALIZATION_DIR)
-
-    data = {}
-    for lang in langs:
-        measures_path = os.path.join(localization_path, lang, MEASURES_FILE)
-        data[lang] = load_yaml(measures_path)
-
-    return data
 
 
 def load_ingredients(data_dir):

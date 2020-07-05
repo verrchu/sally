@@ -1,8 +1,7 @@
-from lib.validators.util import validate_schema, validate_code
+from lib.validators.util import validate_schema
 
-def validate(recipes, ingredients, steps, codes, schemas):
+def validate(recipes, ingredients, schemas):
     schema = schemas['recipe']
 
     for recipe_name, recipe in recipes.items():
-        validate_code(recipe_name, codes)
         validate_schema(recipe, schema)

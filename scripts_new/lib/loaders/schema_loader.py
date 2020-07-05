@@ -6,8 +6,6 @@ SCHEMAS_DIR = 'schemas'
 SCHEMAS = [
     'recipe',
     'regular_ingredient',
-    'measure',
-    'recipe_steps',
     'technical_ingredient'
 ]
 
