@@ -1,15 +1,20 @@
 {
-  "ingredient_unit": {
-    "type": "string",
-    "enum": [
-      "NATURAL",
-      "GRAM",
-      "TABLESPOON",
-      "TEASPOON",
-      "MILLILITER"
-    ]
-  },
-  "ingredient_characteristics": {
+  "ingredient": {
+    "unit": {
+      "type": "string",
+      "enum": [
+        "NATURAL",
+        "GRAM",
+        "TABLESPOON",
+        "TEASPOON",
+        "MILLILITER"
+      ]
+    },
+    "quantity": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "nutritions": {
       "type": "object",
       "required": [
         "calories",
@@ -36,66 +41,69 @@
           "minimum": 0
         }
       }
-  },
-  "ingredient_quantity": {
-      "type": "number",
-      "exclusiveMinimum": 0
-  },
-  "regular_recipe_ingredient": {
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "quantity",
-      "unit"
-    ],
-    "properties": {
-        "unit": {"$ref": "#/ingredient_unit"},
-        "quantity": {"$ref": "#/ingredient_quantity"}
     }
   },
-  "any_quantity_recipe_ingredient": {
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "quantity"
-    ],
-    "properties": {
-        "quantity": {
-          "type": "string",
-          "enum": ["ANY"]
+  "recipe": {
+    "ingredient": {
+      "regular": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "quantity",
+          "unit"
+        ],
+        "properties": {
+          "unit": {"$ref": "#/ingredient/unit"},
+          "quantity": {"$ref": "#/ingredient/quantity"}
         }
-    }
-  },
-  "recipe_main_ingredients": {
-    "type": "object",
-    "additionalProperties": false,
-    "minProperties": 1,
-    "patternProperties": {
-        "^[A-Z_]+$": {"$ref": "#/regular_recipe_ingredient"}
-    }
-  },
-  "recipe_additional_ingredients": {
-    "type": "array",
-    "items": {
+      },
+      "any_quantity": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "quantity"
+        ],
+        "properties": {
+          "quantity": {
+            "type": "string",
+            "enum": ["ANY"]
+          }
+        }
+      }
+    },
+    "ingredients": {
+      "main": {
         "type": "object",
         "additionalProperties": false,
         "minProperties": 1,
         "patternProperties": {
-            "^[A-Z_]+$": {"$ref": "#/regular_recipe_ingredient"}
+            "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
         }
-    }
-  },
-  "recipe_technical_ingredients": {
-    "type": "object",
-    "additionalProperties": false,
-    "minProperties": 1,
-    "patternProperties": {
-        "^[A-Z_]+$": {
+      },
+      "additional": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "patternProperties": {
+              "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
+          }
+        }
+      },
+      "technical": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "patternProperties": {
+          "^[A-Z_]+$": {
             "oneOf": [
-                {"$ref": "#/regular_recipe_ingredient"},
-                {"$ref": "#/any_quantity_recipe_ingredient"}
+              {"$ref": "#/recipe/ingredient/regular"},
+              {"$ref": "#/recipe/ingredient/any_quantity"}
             ]
+          }
         }
+      }
     }
   }
 }

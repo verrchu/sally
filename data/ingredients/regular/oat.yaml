@@ -1,7 +1,7 @@
 units:
     GRAM:
       quantity: 100
-      characteristics:
+      nutritions:
           calories: 342
           carbohydrates: 59.5
           fats: 6.1

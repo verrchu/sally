@@ -16,12 +16,12 @@
               "type": "object",
               "required": [
                 "quantity",
-                "characteristics"
+                "nutritions"
               ],
               "additionalProperties": false,
               "properties": {
-                "quantity": {"$ref": "def.json#/ingredient_quantity"},
-                "characteristics": {"$ref": "def.json#/ingredient_characteristics"}
+                "quantity": {"$ref": "def.json#/ingredient/quantity"},
+                "nutritions": {"$ref": "def.json#/ingredient/nutritions"}
               }
           }
       }
