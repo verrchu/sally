@@ -18,6 +18,19 @@ def validate_recipe_ingredients(recipe_name, recipe_ingredients, ingredients):
         validate_additional_recipe_ingredients(
             recipe_name, recipe_ingredients['additional'], ingredients['regular']
         )
+        main_ingredients_keys = set(recipe_ingredients['main'].keys())
+        additional_ingredients_keys = set()
+        for ingredients_group in recipe_ingredients['additional']:
+            for ingredient_key in ingredients_group.keys():
+                additional_ingredients_keys.add(ingredient_key)
+
+        intersection = list(main_ingredients_keys.intersection(additional_ingredients_keys))
+        if len(intersection):
+            raise Exception(f"""
+            SAME INGREDIENTS USED AS BOTH MAIN AND ADDITIONAL
+            RECIPE: {recipe_name}
+            INGREDIENTS: {intersection}
+            """)
     if 'technical' in recipe_ingredients:
         validate_technical_recipe_ingredients(
             recipe_name, recipe_ingredients['technical'], ingredients['technical']
@@ -32,7 +45,15 @@ def validate_main_recipe_ingredients(recipe_name, recipe_ingredients, ingredient
 
 
 def validate_additional_recipe_ingredients(recipe_name, recipe_ingredients, ingredients):
-    pass
+    flattened_ingredients = []
+    for ingredients_group in recipe_ingredients:
+        for ingredient_name, ingredient in ingredients_group.items():
+            flattened_ingredients.append((ingredient_name, ingredient))
+
+    for ingredient_name, ingredient in flattened_ingredients:
+        validate_regular_recipe_ingredient(
+            recipe_name, ingredient_name, ingredient, ingredients
+        )
 
 
 def validate_technical_recipe_ingredients(recipe_name, recipe_ingredients, ingredients):
