@@ -1,6 +1,6 @@
 import os
 
-PREDICATE_NUTRITION = 'nutriton'
+PREDICATE_NUTRITION = 'nutrition'
 
 MODULE_HEADER = f"""
 :- module(ingredients_kb, [

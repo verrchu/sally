@@ -4,14 +4,14 @@
 
 :- use_module(recipe, [
     breakfast/1,
-    characteristics_query/5
+    nutritions/5
 ]).
 
 
 main :-
     args(Cals, Prots, Fats, Carbs),
     recipe:breakfast(Breakfast),
-    recipe:characteristics_query(
+    recipe:nutritions(
         Breakfast,
         BreakfastCals,
         BreakfastProts,

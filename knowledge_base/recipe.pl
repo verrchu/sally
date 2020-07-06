@@ -1,36 +1,36 @@
 :- module(recipe, [
     breakfast/1,
-    characteristics_query/5
+    nutritions/5
 ]).
 
 :- use_module(recipes_kb, [
     meal/2,
-    ingredients/2
+    main_ingredients/2
 ]).
 
 :- use_module(ingredient, [
-    characteristic_query/5
+    nutrition_query/5
 ]).
 
 breakfast(Breakfast) :-
     recipes_kb:meal(Breakfast, 'BREAKFAST').
 
-characteristics_query(Recipe, Cals, Prots, Fats, Carbs) :-
-    recipes_kb:ingredients(Recipe, Ingredients),
-    ingredients_characteristics(Ingredients, Cals, Prots, Fats, Carbs).
+nutritions(Recipe, Cals, Prots, Fats, Carbs) :-
+    recipes_kb:main_ingredients(Recipe, Ingredients),
+    ingredients_nutritions(Ingredients, Cals, Prots, Fats, Carbs).
 
-ingredients_characteristics([], 0, 0, 0, 0).
-ingredients_characteristics(
+ingredients_nutritions([], 0, 0, 0, 0).
+ingredients_nutritions(
     [Ingredient|Ingredients], Cals, Prots, Fats, Carbs
 ) :-
     [Name, Unit, Quantity] = Ingredient,
 
-    ingredient:characteristic_query(Name, calories, Unit, Quantity, CurCals),
-    ingredient:characteristic_query(Name, proteins, Unit, Quantity, CurProts),
-    ingredient:characteristic_query(Name, fats, Unit, Quantity, CurFats),
-    ingredient:characteristic_query(Name, carbohydrates, Unit, Quantity, CurCarbs),
+    ingredient:nutrition_query(Name, Unit, Quantity, calories, CurCals),
+    ingredient:nutrition_query(Name, Unit, Quantity, proteins, CurProts),
+    ingredient:nutrition_query(Name, Unit, Quantity, fats, CurFats),
+    ingredient:nutrition_query(Name, Unit, Quantity, carbohydrates, CurCarbs),
 
-    ingredients_characteristics(Ingredients, AccCals, AccProts, AccFats, AccCarbs),
+    ingredients_nutritions(Ingredients, AccCals, AccProts, AccFats, AccCarbs),
 
     Cals is ceil(CurCals + AccCals),
     Prots is ceil(CurProts + AccProts),

@@ -1,15 +1,15 @@
 :- module(ingredient, [
-    characteristic_query/5
+    nutrition_query/5
 ]).
 
 :- use_module(ingredients_kb, [
-    characteristic/5
+    nutrition/5
 ]).
 
-characteristic_query(
-    Ingredient, Characteristic, Unit, Quantity, Value
+nutrition_query(
+    Ingredient, Unit, Quantity, Nutrition, Value
 ) :-
-    ingredients_kb:characteristic(
-        Ingredient, Characteristic, Unit, BaseQuantity, BaseValue
+    ingredients_kb:nutrition(
+        Ingredient, Unit, BaseQuantity, Nutrition, BaseValue
     ),
     Value is Quantity / BaseQuantity * BaseValue.
