@@ -1,6 +1,6 @@
 :- module(recipe, [
     breakfast/1,
-    nutritions/5
+    nutritions/3
 ]).
 
 :- use_module(recipes_kb, [
@@ -16,25 +16,28 @@
 breakfast(Breakfast) :-
     recipes_kb:meal(Breakfast, 'BREAKFAST').
 
-nutritions(Recipe, Cals, Prots, Fats, Carbs) :-
+nutritions(Recipe, [], Nutritions) :-
     recipes_kb:additional_ingredients(Recipe, []),
     recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, Cals, Prots, Fats, Carbs).
-nutritions(Recipe, Cals, Prots, Fats, Carbs) :-
+    ingredients_nutritions(MainIngredients, Nutritions).
+nutritions(Recipe, AdditionalIngredientsGroup, Nutritions) :-
     recipes_kb:additional_ingredients(Recipe, AdditionalIngredients),
     member(AdditionalIngredientsGroup, AdditionalIngredients),
-    ingredients_nutritions(AdditionalIngredientsGroup, ACals, AProts, AFats, ACarbs),
+    ingredients_nutritions(AdditionalIngredientsGroup, [ACals, AProts, AFats, ACarbs]),
     recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, MCals, MProts, MFats, MCarbs),
+    ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
+
     Cals is ACals + MCals,
     Prots is AProts + MProts,
     Fats is AFats + MFats,
-    Carbs is ACarbs + MCarbs.
+    Carbs is ACarbs + MCarbs,
+
+    Nutritions = [Cals, Prots, Fats, Carbs].
 
 
-ingredients_nutritions([], 0, 0, 0, 0).
+ingredients_nutritions([], [0, 0, 0, 0]).
 ingredients_nutritions(
-    [Ingredient|Ingredients], Cals, Prots, Fats, Carbs
+    [Ingredient|Ingredients], [Cals, Prots, Fats, Carbs]
 ) :-
     [Name, Unit, Quantity] = Ingredient,
 
@@ -43,9 +46,11 @@ ingredients_nutritions(
     ingredient:nutrition_query(Name, Unit, Quantity, fats, CurFats),
     ingredient:nutrition_query(Name, Unit, Quantity, carbohydrates, CurCarbs),
 
-    ingredients_nutritions(Ingredients, AccCals, AccProts, AccFats, AccCarbs),
+    ingredients_nutritions(Ingredients, [AccCals, AccProts, AccFats, AccCarbs]),
 
     Cals is ceil(CurCals + AccCals),
     Prots is ceil(CurProts + AccProts),
     Fats is ceil(CurFats + AccFats),
-    Carbs is ceil(CurCarbs + AccCarbs).
+    Carbs is ceil(CurCarbs + AccCarbs),
+
+    Nutritions = [Cals, Prots, Fats, Carbs].
