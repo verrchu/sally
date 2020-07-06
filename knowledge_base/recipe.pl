@@ -5,7 +5,8 @@
 
 :- use_module(recipes_kb, [
     meal/2,
-    main_ingredients/2
+    main_ingredients/2,
+    additional_ingredients/2
 ]).
 
 :- use_module(ingredient, [
@@ -16,8 +17,20 @@ breakfast(Breakfast) :-
     recipes_kb:meal(Breakfast, 'BREAKFAST').
 
 nutritions(Recipe, Cals, Prots, Fats, Carbs) :-
-    recipes_kb:main_ingredients(Recipe, Ingredients),
-    ingredients_nutritions(Ingredients, Cals, Prots, Fats, Carbs).
+    recipes_kb:additional_ingredients(Recipe, []),
+    recipes_kb:main_ingredients(Recipe, MainIngredients),
+    ingredients_nutritions(MainIngredients, Cals, Prots, Fats, Carbs).
+nutritions(Recipe, Cals, Prots, Fats, Carbs) :-
+    recipes_kb:additional_ingredients(Recipe, AdditionalIngredients),
+    member(AdditionalIngredientsGroup, AdditionalIngredients),
+    ingredients_nutritions(AdditionalIngredientsGroup, ACals, AProts, AFats, ACarbs),
+    recipes_kb:main_ingredients(Recipe, MainIngredients),
+    ingredients_nutritions(MainIngredients, MCals, MProts, MFats, MCarbs),
+    Cals is ACals + MCals,
+    Prots is AProts + MProts,
+    Fats is AFats + MFats,
+    Carbs is ACarbs + MCarbs.
+
 
 ingredients_nutritions([], 0, 0, 0, 0).
 ingredients_nutritions(
