@@ -17,9 +17,9 @@
             "required": ["main"],
             "additionalProperties": false,
             "properties": {
-                "main": {"$ref": "def.json#/recipe_main_ingredients"},
-                "additional": {"$ref": "def.json#/recipe_additional_ingredients"},
-                "technical": {"$ref": "def.json#/recipe_technical_ingredients"}
+                "main": {"$ref": "def.json#/recipe/ingredients/main"},
+                "additional": {"$ref": "def.json#/recipe/ingredients/additional"},
+                "technical": {"$ref": "def.json#/recipe/ingredients/technical"}
             }
         }
     }

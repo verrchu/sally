@@ -1,11 +1,2 @@
-/_build
-/cover
-/deps
-/doc
 /env
-/.fetch
-erl_crash.dump
-*.ez
-*.beam
-/config/*.secret.exs
-.elixir_ls/
+/**/__pycache__
