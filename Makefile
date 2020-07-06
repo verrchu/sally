@@ -1,7 +1,7 @@
 .PHONY: deps
 
 PWD = $(shell pwd)
-SCRIPTS_DIR = scripts_new
+SCRIPTS_DIR = scripts
 DATA_DIR = data
 KNOWLEDGE_BASE_DIR = knowledge_base
 
@@ -12,10 +12,6 @@ DB_SOURCE_PORT = 6379
 
 validate_data:
 	@ python $(SCRIPTS_DIR)/validate_data.py \
-		--data-dir $(PWD)/$(DATA_DIR)
-
-populate_data: validate_data
-	@ python $(SCRIPTS_DIR)/populate_data.py \
 		--data-dir $(PWD)/$(DATA_DIR)
 
 render_knowledge_base: validate_data
