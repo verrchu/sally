@@ -1,6 +1,6 @@
 :- module(recipe, [
     breakfast/1,
-    nutritions/3
+    variants/3
 ]).
 
 :- use_module(recipes_kb, [
@@ -16,11 +16,11 @@
 breakfast(Breakfast) :-
     recipes_kb:meal(Breakfast, 'BREAKFAST').
 
-nutritions(Recipe, [], Nutritions) :-
+variants(Recipe, [], Nutritions) :-
     recipes_kb:additional_ingredients(Recipe, []),
     recipes_kb:main_ingredients(Recipe, MainIngredients),
     ingredients_nutritions(MainIngredients, Nutritions).
-nutritions(Recipe, AdditionalIngredientsGroup, Nutritions) :-
+variants(Recipe, AdditionalIngredientsGroup, Nutritions) :-
     recipes_kb:additional_ingredients(Recipe, AdditionalIngredients),
     member(AdditionalIngredientsGroup, AdditionalIngredients),
     ingredients_nutritions(AdditionalIngredientsGroup, [ACals, AProts, AFats, ACarbs]),

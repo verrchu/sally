@@ -4,24 +4,25 @@
 
 :- use_module(recipe, [
     breakfast/1,
-    nutritions/3
+    variants/3
 ]).
 
 
 main :-
-    % args(Cals, Prots, Fats, Carbs),
-    findall([Breakfast], menu(Breakfast), Menu),
+    args(Nutritions, ExcludedRecipes),
+    findall([Breakfast], menu(Breakfast, ExcludedRecipes), Menu),
     print_menu(Menu),
     halt.
 
 
-menu(Breakfast) :-
-    meal(breakfast, Breakfast).
+menu(Breakfast, ExcludedRecipes) :-
+    meal(breakfast, Breakfast, ExcludedRecipes).
 
 
-meal(breakfast, [Recipe, AdditionalIngredients, Nutritions]) :-
+meal(breakfast, [Recipe, AdditionalIngredients, Nutritions], ExcludedRecipes) :-
     recipe:breakfast(Recipe),
-    recipe:nutritions(Recipe, AdditionalIngredients, Nutritions).
+    atom_string(Recipe, RecipeStr), \+ member(RecipeStr, ExcludedRecipes),
+    recipe:variants(Recipe, AdditionalIngredients, Nutritions).
 
 
 print_menu([]) :- true.
@@ -57,11 +58,17 @@ format_ingredient([Name, Unit, Quantity], Txt) :-
     ).
 
 
-args(CalsNum, ProtsNum, FatsNum, CarbsNum) :-
-    current_prolog_flag(argv, [_, Cals, Prots, Fats, Carbs]),
-    atom_number(Cals, CalsNum), positive(CalsNum),
-    atom_number(Prots, ProtsNum), positive(ProtsNum),
-    atom_number(Fats, FatsNum), positive(FatsNum),
-    atom_number(Carbs, CarbsNum), positive(CarbsNum).
+args(Nutritions, ExcludedRecipes) :-
+    current_prolog_flag(argv, [
+        _, CalsRaw, ProtsRaw, FatsRaw, CarbsRaw, ExcludedRecipesRaw
+    ]),
+
+    atom_number(CalsRaw, Cals), positive(Cals),
+    atom_number(ProtsRaw, Prots), positive(Prots),
+    atom_number(FatsRaw, Fats), positive(Fats),
+    atom_number(CarbsRaw, Carbs), positive(Carbs),
+
+    Nutritions = [Cals, Prots, Fats, Carbs],
+    split_string(ExcludedRecipesRaw, ',', '', ExcludedRecipes).
 
 positive(X) :- X > 0.

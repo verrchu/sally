@@ -20,7 +20,9 @@ render_knowledge_base: validate_data
 		--knowledge-base-dir $(PWD)/$(KNOWLEDGE_BASE_DIR)
 
 generate_menu:
-	@ swipl -s $(KNOWLEDGE_BASE_DIR)/menu.pl | jq --slurp . > $(OUT)
+	@ swipl -s $(KNOWLEDGE_BASE_DIR)/menu.pl -- \
+		$(CALORIES) $(PROTEINS) $(FATS) $(CARBOHYDRATES) \
+		$(EXCLUDED_RECIPES) | jq --slurp .
 
 db:
 	@ docker run -d --name $(DB_NAME) -p $(DB_LOCAL_PORT):$(DB_SOURCE_PORT) $(DB)
