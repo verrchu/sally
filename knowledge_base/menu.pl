@@ -4,25 +4,40 @@
 
 :- use_module(recipe, [
     breakfast/1,
-    variants/3
+    variant/3
 ]).
 
 
 main :-
     args(Nutritions, ExcludedRecipes),
-    findall([Breakfast], menu(Breakfast, ExcludedRecipes), Menu),
+    findall([Breakfast], menu(
+        Breakfast, Nutritions, ExcludedRecipes
+    ), Menu),
     print_menu(Menu),
     halt.
 
 
-menu(Breakfast, ExcludedRecipes) :-
-    meal(breakfast, Breakfast, ExcludedRecipes).
+menu(Breakfast, Nutritions, ExcludedRecipes) :-
+    meal(breakfast, Breakfast, ExcludedRecipes),
+    [_, _, BreakfastNutritions] = Breakfast,
+    check_nutritions(BreakfastNutritions, Nutritions).
+
+
+check_nutritions(BreakfastNutritions, TargetNutritions) :-
+    [BFCals, BFProts, BFFats, BFCarbs] = BreakfastNutritions,
+
+    [TCals, TProts, TFats, TCarbs] = TargetNutritions,
+
+    Cals is BFCals, Cals < TCals,
+    Prots is BFProts, Prots < TProts,
+    Fats is BFFats, Fats < TFats,
+    Carbs is BFCarbs, Carbs < TCarbs.
 
 
 meal(breakfast, [Recipe, AdditionalIngredients, Nutritions], ExcludedRecipes) :-
     recipe:breakfast(Recipe),
     atom_string(Recipe, RecipeStr), \+ member(RecipeStr, ExcludedRecipes),
-    recipe:variants(Recipe, AdditionalIngredients, Nutritions).
+    recipe:variant(Recipe, AdditionalIngredients, Nutritions).
 
 
 print_menu([]) :- true.
