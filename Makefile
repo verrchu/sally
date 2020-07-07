@@ -21,3 +21,6 @@ generate_menu:
 
 server:
 	@ python server.py --port $(PORT)
+
+build:
+	docker build --no-cache -t ulidity/sally:latest --build-arg SSH_KEY="$(SSH_KEY)" .
