@@ -1,4 +1,5 @@
 attrs==19.3.0
+bottle==0.12.18
 jsonref==0.2
 jsonschema==3.2.0
 pyrsistent==0.16.0
