@@ -9,8 +9,10 @@ from bottle import get, request, response, run
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--port', type=int, required=True)
+parser.add_argument('--program', required=True)
 args = parser.parse_args()
 
+prog = args.program
 
 @get('/menu/generate')
 def generate_menu():
@@ -22,22 +24,22 @@ def generate_menu():
     fats = float(request.query.nf)
     carbs = float(request.query.nb)
 
-    menu = exec((cals, prots, fats, carbs), excluded_recipes)
+    (exit_code, output) = exec((cals, prots, fats, carbs), excluded_recipes)
 
-    response.content_type = 'application/json'
-    response.status = 200
-    return menu
+    if exit_code == 0:
+        response.content_type = 'application/json'
+        response.status = 200
+    else:
+        response.status = 500
+
+    return output
 
 
 def exec(nutritions, excluded_recipes):
     (cals, prots, fats, carbs) = nutritions
-    resp = subprocess.run(['make', 'generate_menu'], env = {
-        'CALORIES': str(cals),
-        'PROTEINS': str(prots),
-        'FATS': str(fats),
-        'CARBOHYDRATES': str(carbs),
-        'EXCLUDED_RECIPES': excluded_recipes
-    }, stdout=subprocess.PIPE)
-    return resp.stdout
+    cmd = f'swipl {prog} -- {cals} {prots} {fats} {carbs} {excluded_recipes}'
+    resp = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
+
+    return (resp.returncode, resp.stdout)
 
 run(host='0.0.0.0', port=args.port, debug=True)

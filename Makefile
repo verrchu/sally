@@ -17,10 +17,12 @@ render_knowledge_base: validate_data
 generate_menu:
 	@ swipl -s $(KNOWLEDGE_BASE_DIR)/menu.pl -- \
 		$(CALORIES) $(PROTEINS) $(FATS) $(CARBOHYDRATES) \
-		$(EXCLUDED_RECIPES) | jq --slurp .
+		$(EXCLUDED_RECIPES)
 
 server:
-	@ python server.py --port $(PORT)
+	@ python server.py \
+		--port $(PORT) --program $(PWD)/$(KNOWLEDGE_BASE_DIR)/menu.pl
+		
 
 build:
 	docker build --no-cache -t ulidity/sally:latest --build-arg SSH_KEY="$(SSH_KEY)" .

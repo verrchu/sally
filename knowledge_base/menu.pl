@@ -14,7 +14,9 @@ main :-
         Breakfast, Nutritions, ExcludedRecipes
     ), Menu),
     print_menu(Menu),
-    halt.
+    halt(0).
+main :-
+    halt(1).
 
 
 menu(Breakfast, Nutritions, ExcludedRecipes) :-
@@ -75,7 +77,7 @@ format_ingredient([Name, Unit, Quantity], Txt) :-
 
 args(Nutritions, ExcludedRecipes) :-
     current_prolog_flag(argv, [
-        _, CalsRaw, ProtsRaw, FatsRaw, CarbsRaw, ExcludedRecipesRaw
+        CalsRaw, ProtsRaw, FatsRaw, CarbsRaw, ExcludedRecipesRaw
     ]),
 
     atom_number(CalsRaw, Cals), positive(Cals),
