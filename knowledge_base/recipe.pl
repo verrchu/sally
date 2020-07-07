@@ -37,7 +37,7 @@ variant(Recipe, AdditionalIngredientsGroup, Nutritions) :-
 
 ingredients_nutritions([], [0, 0, 0, 0]).
 ingredients_nutritions(
-    [Ingredient|Ingredients], [Cals, Prots, Fats, Carbs]
+    [Ingredient|Ingredients], Nutritions
 ) :-
     [Name, Unit, Quantity] = Ingredient,
 

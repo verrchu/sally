@@ -48,7 +48,7 @@ print_menu([Menu|Menus]) :-
     print_menu(Menus).
 
 
-format_breakfast([Recipe, AdditionalIngredients, Nutritions], Txt) :-
+format_breakfast([Recipe, AdditionalIngredients, _Nutritions], Txt) :-
     format_ingredients(AdditionalIngredients, AdditionalIngredientsTxt),
     swritef(
         Txt,
