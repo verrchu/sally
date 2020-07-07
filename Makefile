@@ -18,3 +18,6 @@ generate_menu:
 	@ swipl -s $(KNOWLEDGE_BASE_DIR)/menu.pl -- \
 		$(CALORIES) $(PROTEINS) $(FATS) $(CARBOHYDRATES) \
 		$(EXCLUDED_RECIPES) | jq --slurp .
+
+server:
+	@ python server.py --port $(PORT)

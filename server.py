@@ -9,7 +9,6 @@ from bottle import get, request, response, run
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--port', type=int, required=True)
-parser.add_argument('--path', required=True)
 args = parser.parse_args()
 
 
