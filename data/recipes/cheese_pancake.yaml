@@ -16,3 +16,22 @@ ingredients:
       quantity: 0.5
     SUGAR_SUBSTITUTE:
       quantity: ANY
+  additional:
+    - SOUR_CREAM:
+        unit: GRAM
+        quantity: 15
+    - DARK_CHOCOLATE:
+        unit: GRAM
+        quantity: 30
+    - COCONUT_FLAKES:
+        unit: GRAM
+        quantity: 30
+    - JAM:
+        unit: GRAM
+        quantity: 50
+    - DARK_CHOCOLATE:
+        unit: GRAM
+        quantity: 30
+      BANANA:
+        unit: NATURAL
+        quantity: 1

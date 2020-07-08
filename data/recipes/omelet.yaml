@@ -1,15 +1,34 @@
 meal: BREAKFAST
 ingredients:
-    main:
-      EGG:
-        unit: NATURAL
-        quantity: 2
-      GLAIR:
+  main:
+    EGG:
+      unit: NATURAL
+      quantity: 2
+    GLAIR:
+      unit: NATURAL
+      quantity: 1
+    MILK:
+      unit: MILLILITER
+      quantity: 100
+    FLOUR:
+      unit: TABLESPOON
+      quantity: 1
+  additional:
+    - CHEESE:
+        unit: GRAM
+        quantity: 20
+    - CHEESE:
+        unit: GRAM
+        quantity: 20
+      TOMATO:
         unit: NATURAL
         quantity: 1
-      MILK:
-        unit: MILLILITER
-        quantity: 100
-      FLOUR:
-        unit: TABLESPOON
-        quantity: 1
+    - BASTURMA:
+        unit: GRAM
+        quantity: 70
+      ARUGULA:
+        unit: GRAM
+        quantity: 15
+    - CHAMPIGNON:
+        unit: NATURAL
+        quantity: 5

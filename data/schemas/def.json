@@ -87,7 +87,7 @@
           "additionalProperties": false,
           "minProperties": 1,
           "patternProperties": {
-              "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
+            "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
           }
         }
       },

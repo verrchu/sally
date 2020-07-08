@@ -1,6 +1,16 @@
 meal: BREAKFAST
 ingredients:
-    main:
-      EGG:
+  main:
+    EGG:
+      unit: NATURAL
+      quantity: 2
+  additional:
+    - BACON:
+        unit: GRAM
+        quantity: 50
+    - BEANS:
+        unit: GRAM
+        quantity: 80
+    - TOMATO:
         unit: NATURAL
-        quantity: 2
+        quantity: 1
