@@ -9,6 +9,7 @@
 
 
 main :-
+    % current_prolog_flag(argv, Args), print(Args),
     args(Nutritions, ExcludedRecipes),
     findall([Breakfast], menu(
         Breakfast, Nutritions, ExcludedRecipes
