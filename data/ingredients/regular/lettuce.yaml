@@ -1,0 +1,8 @@
+units:
+    GRAM:
+      quantity: 100
+      nutritions:
+          calories: 12
+          carbohydrates: 1.3
+          fats: 0.3
+          proteins: 1.2

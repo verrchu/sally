@@ -1,12 +1,37 @@
 meal: BREAKFAST
 ingredients:
-    main:
-      EGG:
+  main:
+    EGG:
+      unit: NATURAL
+      quantity: 1
+    GLAIR:
+      unit: NATURAL
+      quantity: 2
+    OAT:
+      unit: GRAM
+      quantity: 40
+  additional:
+    - HONEY:
+        unit: TEASPOON
+        quantity: 1
+    - SALMON:
+        unit: GRAM
+        quantity: 50
+      CREAM_CHEESE:
+        unit: GRAM
+        quantity: 30
+    - CREAM_CHEESE:
+        unit: GRAM
+        quantity: 30
+      CHICKEN_FILLET:
+        unit: GRAM
+        quantity: 100
+      LETTUCE:
+        unit: GRAM
+        quantity: 20
+    - DARK_CHOCOLATE:
+        unit: GRAM
+        quantity: 30
+      BANANA:
         unit: NATURAL
         quantity: 1
-      GLAIR:
-        unit: NATURAL
-        quantity: 2
-      OAT:
-        unit: GRAM
-        quantity: 40
