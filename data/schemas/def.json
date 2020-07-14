@@ -81,13 +81,17 @@
         }
       },
       "additional": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "additionalProperties": false,
-          "minProperties": 1,
-          "patternProperties": {
-            "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "patternProperties": {
+          "^[A-HJKMNP-TV-Z0-9]{26}$": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "patternProperties": {
+              "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
+            }
           }
         }
       },
