@@ -21,9 +21,9 @@ def render(kb_dir, ingredients):
 
         nutritions = []
         for ingredient_name, ingredient in ingredients.items():
-            name = f'\'{ingredient_name}\''
+            name = f'"{ingredient_name}"'
             for unit, unit_data in ingredient['units'].items():
-                unit = f'\'{unit}\''
+                unit = f'"{unit}"'
                 quantity = unit_data['quantity']
                 for key, value in unit_data['nutritions'].items():
                     nutritions.append((name, unit, quantity, key, value))

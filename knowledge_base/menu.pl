@@ -16,18 +16,16 @@ main :-
     ), Menu),
     print_menu(Menu),
     halt(0).
-main :-
-    halt(1).
 
 
-menu(Breakfast, Nutritions, ExcludedRecipes) :-
+menu(Breakfast, TargetNutritions, ExcludedRecipes) :-
     meal(breakfast, Breakfast, ExcludedRecipes),
-    [_, _, BreakfastNutritions] = Breakfast,
-    check_nutritions(BreakfastNutritions, Nutritions).
+    [_, BreakfastNutritions, _] = Breakfast,
+    check_nutritions(BreakfastNutritions, TargetNutritions).
 
 
-check_nutritions(BreakfastNutritions, TargetNutritions) :-
-    [BFCals, BFProts, BFFats, BFCarbs] = BreakfastNutritions,
+check_nutritions(MenuNutritions, TargetNutritions) :-
+    [BFCals, BFProts, BFFats, BFCarbs] = MenuNutritions,
 
     [TCals, TProts, TFats, TCarbs] = TargetNutritions,
 
@@ -37,10 +35,12 @@ check_nutritions(BreakfastNutritions, TargetNutritions) :-
     Carbs is BFCarbs, Carbs < TCarbs.
 
 
-meal(breakfast, [Recipe, AdditionalIngredients, Nutritions], ExcludedRecipes) :-
+meal(breakfast, Meal, ExcludedRecipes) :-
     recipe:breakfast(Recipe),
     atom_string(Recipe, RecipeStr), \+ member(RecipeStr, ExcludedRecipes),
-    recipe:variant(Recipe, AdditionalIngredients, Nutritions).
+    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId),
+
+    Meal = [Recipe, Nutritions, AdditionalIngredientsId].
 
 
 print_menu([]) :- true.
@@ -51,13 +51,12 @@ print_menu([Menu|Menus]) :-
     print_menu(Menus).
 
 
-format_breakfast([Recipe, AdditionalIngredients, _Nutritions], Txt) :-
-    format_ingredients(AdditionalIngredients, AdditionalIngredientsTxt),
-    swritef(
-        Txt,
-        '{"recipe": "%w", "additional_ingredients": [%w]}',
-        [Recipe, AdditionalIngredientsTxt]
-    ).
+format_breakfast([Recipe, _Nutritions, none], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "additional_ingredients": null}', [Recipe]).
+format_breakfast([Recipe, _Nutritions, AdditionalIngredientsId], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "additional_ingredients": "%w"}', [
+        Recipe, AdditionalIngredientsId
+    ]).
 
 
 format_ingredients([], '').

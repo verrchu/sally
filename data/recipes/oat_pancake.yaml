@@ -11,16 +11,19 @@ ingredients:
       unit: GRAM
       quantity: 40
   additional:
-    - HONEY:
+    '01ECVN5K5SE900A9PH88Z9QY9A':
+      HONEY:
         unit: TEASPOON
         quantity: 1
-    - SALMON:
+    '01ECVN65T2N4JTVYKV89PF42PX':
+      SALMON:
         unit: GRAM
         quantity: 50
       CREAM_CHEESE:
         unit: GRAM
         quantity: 30
-    - CREAM_CHEESE:
+    '01ECVN6Q3STBJ4K9SD6Z85Z7RQ':
+      CREAM_CHEESE:
         unit: GRAM
         quantity: 30
       CHICKEN_FILLET:
@@ -29,7 +32,8 @@ ingredients:
       LETTUCE:
         unit: GRAM
         quantity: 20
-    - DARK_CHOCOLATE:
+    '01ECVN7B12E2C6N0PD17HEZDV9':
+      DARK_CHOCOLATE:
         unit: GRAM
         quantity: 30
       BANANA:

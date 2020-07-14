@@ -17,19 +17,24 @@ ingredients:
     SUGAR_SUBSTITUTE:
       quantity: ANY
   additional:
-    - SOUR_CREAM:
+    '01ECVMYMMCFC8ETMQDPZ4SQT5J':
+      SOUR_CREAM:
         unit: GRAM
         quantity: 15
-    - DARK_CHOCOLATE:
+    '01ECVMZB5NF7K3XSWWT94QNTAP':
+      DARK_CHOCOLATE:
         unit: GRAM
         quantity: 30
-    - COCONUT_FLAKES:
+    '01ECVN08FK873T2WXB3WCP84XF':
+      COCONUT_FLAKES:
         unit: GRAM
         quantity: 30
-    - JAM:
+    '01ECVN0TCB20H8NAYMWF49AGPY':
+      JAM:
         unit: GRAM
         quantity: 50
-    - DARK_CHOCOLATE:
+    '01ECVN1AHBW207267JHKW549Z0':
+      DARK_CHOCOLATE:
         unit: GRAM
         quantity: 30
       BANANA:

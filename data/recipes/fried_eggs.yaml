@@ -5,12 +5,15 @@ ingredients:
       unit: NATURAL
       quantity: 2
   additional:
-    - BACON:
+    '01ECVN36S5PSB47NGVEDRFF84Q':
+      BACON:
         unit: GRAM
         quantity: 50
-    - BEANS:
+    '01ECVN441YGDTQNG86NAK3MMQH':
+      BEANS:
         unit: GRAM
         quantity: 80
-    - TOMATO:
+    '01ECVN4YG8J83QBAN6PX2FQYC0':
+      TOMATO:
         unit: NATURAL
         quantity: 1

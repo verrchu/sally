@@ -15,12 +15,14 @@ ingredients:
        unit: TEASPOON
        quantity: 0.5
   additional:
-    - DARK_CHOCOLATE:
+    '01ECVMVC9X90NKRJY4CMJR6X0M':
+      DARK_CHOCOLATE:
         unit: GRAM
         quantity: 10
       PEACH:
         unit: NATURAL
         quantity: 0.5
-    - DARK_CHOCOLATE:
+    '01ECVMWV5ZRY01YBPSN84TNW3W':
+      DARK_CHOCOLATE:
         unit: GRAM
         quantity: 15

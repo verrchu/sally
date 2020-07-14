@@ -20,7 +20,7 @@ def validate_recipe_ingredients(recipe_name, recipe_ingredients, ingredients):
         )
         main_ingredients_keys = set(recipe_ingredients['main'].keys())
         additional_ingredients_keys = set()
-        for ingredients_group in recipe_ingredients['additional']:
+        for ingredients_group in recipe_ingredients['additional'].values():
             for ingredient_key in ingredients_group.keys():
                 additional_ingredients_keys.add(ingredient_key)
 
@@ -46,7 +46,7 @@ def validate_main_recipe_ingredients(recipe_name, recipe_ingredients, ingredient
 
 def validate_additional_recipe_ingredients(recipe_name, recipe_ingredients, ingredients):
     flattened_ingredients = []
-    for ingredients_group in recipe_ingredients:
+    for ingredients_group in recipe_ingredients.values():
         for ingredient_name, ingredient in ingredients_group.items():
             flattened_ingredients.append((ingredient_name, ingredient))
 
