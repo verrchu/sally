@@ -6,7 +6,7 @@
 :- use_module(recipes_kb, [
     meal/2,
     main_ingredients/2,
-    additional_ingredients/2
+    additional_ingredients/3
 ]).
 
 :- use_module(ingredient, [
@@ -14,16 +14,14 @@
 ]).
 
 breakfast(Breakfast) :-
-    recipes_kb:meal(Breakfast, 'BREAKFAST').
+    recipes_kb:meal(Breakfast, "BREAKFAST").
 
-variant(Recipe, [], Nutritions) :-
-    recipes_kb:additional_ingredients(Recipe, []),
-    recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, Nutritions).
-variant(Recipe, AdditionalIngredientsGroup, Nutritions) :-
-    recipes_kb:additional_ingredients(Recipe, AdditionalIngredients),
-    member(AdditionalIngredientsGroup, AdditionalIngredients),
-    ingredients_nutritions(AdditionalIngredientsGroup, [ACals, AProts, AFats, ACarbs]),
+
+variant(Recipe, Nutritions, AdditionalIngredientsId) :-
+    recipes_kb:additional_ingredients(
+        Recipe, AdditionalIngredientsId, AdditionalIngredients
+    ),
+    ingredients_nutritions(AdditionalIngredients, [ACals, AProts, AFats, ACarbs]),
     recipes_kb:main_ingredients(Recipe, MainIngredients),
     ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
 
@@ -33,6 +31,9 @@ variant(Recipe, AdditionalIngredientsGroup, Nutritions) :-
     Carbs is ACarbs + MCarbs,
 
     Nutritions = [Cals, Prots, Fats, Carbs].
+variant(Recipe, Nutritions, none) :-
+    recipes_kb:main_ingredients(Recipe, MainIngredients),
+    ingredients_nutritions(MainIngredients, Nutritions).
 
 
 ingredients_nutritions([], [0, 0, 0, 0]).

@@ -8,7 +8,7 @@ MODULE_HEADER = f"""
 :- module(recipes_kb, [
     {PREDICATE_MEAL}/2,
     {PREDICATE_MAIN_INGREDIENTS}/2,
-    {PREDICATE_ADDITIONAL_INGREDIENTS}/2
+    {PREDICATE_ADDITIONAL_INGREDIENTS}/3
 ]).
 """
 
@@ -81,7 +81,7 @@ def render_additional_ingredients(kb, recipes):
 
                 ingredients_group_id = f'"{ingredients_group_id}"'
 
-                kb.write(f'{pred}({recipe_name},{ingredients_group_id},{ingredients}]).\n')
+                kb.write(f'{pred}({recipe_name},{ingredients_group_id},{ingredients}).\n')
 
 
 def space(n):
