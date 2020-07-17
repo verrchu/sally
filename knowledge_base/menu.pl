@@ -20,11 +20,27 @@ main :-
 
 menu(Breakfast, Snack, TargetNutritions, ExcludedRecipes) :-
     meal(breakfast, Breakfast, ExcludedRecipes),
-    [BRecipe, BNutritions, _] = Breakfast,
+    [BR, BN, _] = Breakfast,
     meal(snack, Snack, ExcludedRecipes),
-    % TODO: compine recipes' nutritions for comparison
-    [SRecipe, _, _] = Snack, SRecipe \= BRecipe,
-    check_nutritions(BNutritions, TargetNutritions).
+    [SR, SN, _] = Snack, SR \= BR,
+    menu_nutritions(BN, SN, MN),
+    check_nutritions(MN, TargetNutritions).
+
+
+combine_nutritions(NCur, NAcc, NRes) :-
+    [CCals, CProts, CFats, CCarbs] = NCur,
+    [ACals, AProts, AFats, ACarbs] = NAcc,
+
+    RCals is CCals + ACals,
+    RProts is CProts + AProts,
+    RFats is CFats + AFats,
+    RCarbs is CCarbs + ACarbs,
+
+    NRes = [RCals, RProts, RFats, RCarbs].
+
+
+menu_nutritions(BN, SN, MN) :-
+    apply:foldl(menu:combine_nutritions, [BN, SN], [0,0,0,0], MN).
 
 
 check_nutritions(MenuNutritions, TargetNutritions) :-
