@@ -4,6 +4,7 @@
     "type": "object",
     "required": [
       "meal",
+      "standalone",
       "ingredients"
     ],
     "additionalProperties": false,
@@ -11,6 +12,9 @@
         "meal": {
           "type": "string",
           "enum": ["BREAKFAST"]
+        },
+        "standalone": {
+          "type": "boolean"
         },
         "ingredients": {
             "type": "object",

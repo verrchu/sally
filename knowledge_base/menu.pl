@@ -36,8 +36,7 @@ check_nutritions(MenuNutritions, TargetNutritions) :-
 
 
 meal(breakfast, Meal, ExcludedRecipes) :-
-    recipe:breakfast(Recipe),
-    atom_string(Recipe, RecipeStr), \+ member(RecipeStr, ExcludedRecipes),
+    recipe:breakfast(Recipe), \+ member(Recipe, ExcludedRecipes),
     recipe:variant(Recipe, Nutritions, AdditionalIngredientsId),
 
     Meal = [Recipe, Nutritions, AdditionalIngredientsId].

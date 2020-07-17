@@ -34,54 +34,57 @@ def render_meals(kb, recipes):
     pred = PREDICATE_MEAL
 
     for recipe_name, recipe in recipes.items():
-        name = f'"{recipe_name}"'
-        meal = f'"{recipe["meal"]}"'
-        kb.write(f'{pred}({name},{meal}).\n')
+        if recipe['standalone']:
+            name = f'"{recipe_name}"'
+            meal = f'"{recipe["meal"]}"'
+            kb.write(f'{pred}({name},{meal}).\n')
 
 
 def render_main_ingredients(kb, recipes):
     pred = PREDICATE_MAIN_INGREDIENTS
 
     for recipe_name, recipe in recipes.items():
-        recipe_name = f'"{recipe_name}"'
+        if recipe['standalone']:
+            recipe_name = f'"{recipe_name}"'
 
-        ingredients = []
-        for ingredient_name, ingredient in recipe['ingredients']['main'].items():
-            name = f'"{ingredient_name}"'
-            unit = f'"{ingredient["unit"]}"'
-            quantity = ingredient['quantity']
-            ingredients.append(f'[{name},{unit},{quantity}]')
+            ingredients = []
+            for ingredient_name, ingredient in recipe['ingredients']['main'].items():
+                name = f'"{ingredient_name}"'
+                unit = f'"{ingredient["unit"]}"'
+                quantity = ingredient['quantity']
+                ingredients.append(f'[{name},{unit},{quantity}]')
 
-        ingredients = f',\n{space(4)}'.join(ingredients)
-        ingredients = f'{space(4)}{ingredients}'
+            ingredients = f',\n{space(4)}'.join(ingredients)
+            ingredients = f'{space(4)}{ingredients}'
 
 
-        kb.write(f'{pred}({recipe_name},[\n{ingredients}\n]).\n')
+            kb.write(f'{pred}({recipe_name},[\n{ingredients}\n]).\n')
 
 
 def render_additional_ingredients(kb, recipes):
     pred = PREDICATE_ADDITIONAL_INGREDIENTS
 
     for recipe_name, recipe in recipes.items():
-        recipe_name = f'"{recipe_name}"'
+        if recipe['standalone']:
+            recipe_name = f'"{recipe_name}"'
 
-        if 'additional' in recipe['ingredients']:
-            outer_ingredients = []
-            additional_ingredients = recipe['ingredients']['additional']
-            for ingredients_group_id, ingredients_group in additional_ingredients.items():
-                ingredients = []
-                for ingredient_name, ingredient in ingredients_group.items():
-                    name = f'"{ingredient_name}"'
-                    unit = f'"{ingredient["unit"]}"'
-                    quantity = ingredient['quantity']
-                    ingredients.append(f'[{name},{unit},{quantity}]')
+            if 'additional' in recipe['ingredients']:
+                outer_ingredients = []
+                additional_ingredients = recipe['ingredients']['additional']
+                for ingredients_group_id, ingredients_group in additional_ingredients.items():
+                    ingredients = []
+                    for ingredient_name, ingredient in ingredients_group.items():
+                        name = f'"{ingredient_name}"'
+                        unit = f'"{ingredient["unit"]}"'
+                        quantity = ingredient['quantity']
+                        ingredients.append(f'[{name},{unit},{quantity}]')
 
-                ingredients = f',\n{space(4)}'.join(ingredients)
-                ingredients = f'[\n{space(4)}{ingredients}\n]'
+                    ingredients = f',\n{space(4)}'.join(ingredients)
+                    ingredients = f'[\n{space(4)}{ingredients}\n]'
 
-                ingredients_group_id = f'"{ingredients_group_id}"'
+                    ingredients_group_id = f'"{ingredients_group_id}"'
 
-                kb.write(f'{pred}({recipe_name},{ingredients_group_id},{ingredients}).\n')
+                    kb.write(f'{pred}({recipe_name},{ingredients_group_id},{ingredients}).\n')
 
 
 def space(n):
