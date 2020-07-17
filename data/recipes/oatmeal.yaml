@@ -1,22 +1,27 @@
-eal: BREAKFAST
+meal: BREAKFAST
 ingredients:
   main:
     OAT:
       unit: GRAM
       quantity: 45
   additional:
-      - HONEY:
+    "01EDDVX2WYRVNA67ZQJRAV3MBF":
+      HONEY:
         unit: TEASPOON
         quantity: 1
-      - PEACH:
+    "01EDDVXYVY15VHGVHG04W45CA4":
+      PEACH:
         unit: NATURAL
         quantity: 1
-      - JAM:
+    "01EDDVYZWYVXDEAE65NMG78Q0X":
+      JAM:
         unit: GRAM
         quantity: 50
-     - BANANA:
+    "01EDDVZH7GNMH064ASQCT3MMKG":
+      BANANA:
         unit: NATURAL
         quantity: 1
-     - PEANUT_BUTTER:
+    "01EDDW004H870EKWY1D37MJDAD":
+      PEANUT_BUTTER:
         unit: GRAM
         quantity: 15

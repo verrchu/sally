@@ -6,3 +6,10 @@ units:
           carbohydrates: 16.0
           fats: 0.1
           proteins: 1.5
+    GRAM:
+      quantity: 100
+      nutritions:
+          calories: 371
+          carbohydrates: 82
+          fats: 0.6
+          proteins: 7.4

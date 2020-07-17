@@ -1,6 +1,6 @@
 units:
-    GRAM:
-      quantity: NATURAL
+    NATURAL:
+      quantity: 1
       nutritions:
           calories: 15
           carbohydrates: 2.8

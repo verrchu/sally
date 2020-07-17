@@ -1,13 +1,15 @@
-meal: BRUNCH
+meal: SNACK
 ingredients:
   main:
     GREEK_YOGURT:
       unit: GRAM
       quantity: 250
   additional:
-    - RASPBERRY:
+    "01EDDW11900W69QZMMPPKE3QZ1":
+      RASPBERRY:
         unit: GRAM
         quantity: 100
-    - BANANA:
+    "01EDDW1JS0MMFVX9P5BDZM9095":
+      BANANA:
        unit: NATURAL
        quantity: 1

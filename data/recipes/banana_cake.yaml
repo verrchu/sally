@@ -1,4 +1,4 @@
-meal: BRUNCH
+meal: SNACK
 ingredients:
   main:
     EGG:
@@ -11,16 +11,16 @@ ingredients:
       unit: GRAM
       quantity: 15
     COCOA:
-        unit: GRAM
-        quantity: 15
+      unit: GRAM
+      quantity: 15
     DARK_CHOCOLATE:
-        unit: GRAM
-        quantity: 10
+      unit: GRAM
+      quantity: 10
   technical:
-     BAKING_POWDER:
-       unit: TEASPOON
-       quantity: 0.5
+    BAKING_POWDER:
+      unit: TEASPOON
+      quantity: 0.5
     SUGAR_SUBSTITUTE:
-      unit: NATURAL
+      quantity: ANY
     VANILLA:
-      unit: NATURAL   
+      quantity: ANY

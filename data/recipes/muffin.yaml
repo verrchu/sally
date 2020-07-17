@@ -16,11 +16,11 @@ ingredients:
     RAISIN:
       unit: GRAM
       quantity: 15      
-    technical:
-       BAKING_POWDER:
-         unit: TEASPOON
-         quantity: 0.5
-      SUGAR_SUBSTITUTE:
-        unit: NATURAL
-      VANILLA:
-        unit: NATURAL
+  technical:
+    BAKING_POWDER:
+      unit: TEASPOON
+      quantity: 0.5
+    SUGAR_SUBSTITUTE:
+      quantity: ANY
+    VANILLA:
+      quantity: ANY

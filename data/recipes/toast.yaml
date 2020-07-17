@@ -1,11 +1,12 @@
-meal: BRUNCH
+meal: SNACK
 ingredients:
   main:
     CRISP:
       unit: NATURAL
       quantity: 2
   additional:
-    - CREAM_CHEESE:
+    "01EDDW2RM80Y1EWFYVRKDBDYNR":
+      CREAM_CHEESE:
         unit: GRAM
         quantity: 30
       SALMON:
