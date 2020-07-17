@@ -1,5 +1,6 @@
 :- module(recipe, [
     breakfast/1,
+    snack/1,
     variant/3
 ]).
 
@@ -13,8 +14,12 @@
     nutrition_query/5
 ]).
 
+
 breakfast(Breakfast) :-
     recipes_kb:meal(Breakfast, "BREAKFAST").
+
+snack(Snack) :-
+    recipes_kb:meal(Snack, "SNACK").
 
 
 variant(Recipe, Nutritions, AdditionalIngredientsId) :-

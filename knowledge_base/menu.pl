@@ -11,17 +11,20 @@
 main :-
     % current_prolog_flag(argv, Args), print(Args),
     args(Nutritions, ExcludedRecipes),
-    findall([Breakfast], menu(
-        Breakfast, Nutritions, ExcludedRecipes
+    findall([Breakfast, Snack], menu(
+        Breakfast, Snack, Nutritions, ExcludedRecipes
     ), Menu),
     print_menu(Menu),
     halt(0).
 
 
-menu(Breakfast, TargetNutritions, ExcludedRecipes) :-
+menu(Breakfast, Snack, TargetNutritions, ExcludedRecipes) :-
     meal(breakfast, Breakfast, ExcludedRecipes),
-    [_, BreakfastNutritions, _] = Breakfast,
-    check_nutritions(BreakfastNutritions, TargetNutritions).
+    [BRecipe, BNutritions, _] = Breakfast,
+    meal(snack, Snack, ExcludedRecipes),
+    % TODO: compine recipes' nutritions for comparison
+    [SRecipe, _, _] = Snack, SRecipe \= BRecipe,
+    check_nutritions(BNutritions, TargetNutritions).
 
 
 check_nutritions(MenuNutritions, TargetNutritions) :-
@@ -40,19 +43,25 @@ meal(breakfast, Meal, ExcludedRecipes) :-
     recipe:variant(Recipe, Nutritions, AdditionalIngredientsId),
 
     Meal = [Recipe, Nutritions, AdditionalIngredientsId].
+meal(snack, Meal, ExcludedRecipes) :-
+    recipe:snack(Recipe), \+ member(Recipe, ExcludedRecipes),
+    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId),
+
+    Meal = [Recipe, Nutritions, AdditionalIngredientsId].
 
 
 print_menu([]) :- true.
 print_menu([Menu|Menus]) :-
-    [Breakfast] = Menu,
-    format_breakfast(Breakfast, BreakfastTxt),
-    format('{"breakfast": ~s}', [BreakfastTxt]),
+    [Breakfast, Snack] = Menu,
+    format_recipe(Breakfast, BreakfastTxt),
+    format_recipe(Snack, SnackTxt),
+    format('{"breakfast": ~s, "snack": ~s}', [BreakfastTxt, SnackTxt]),
     print_menu(Menus).
 
 
-format_breakfast([Recipe, _Nutritions, none], Txt) :-
+format_recipe([Recipe, _Nutritions, none], Txt) :-
     swritef(Txt, '{"recipe": "%w", "additional_ingredients": null}', [Recipe]).
-format_breakfast([Recipe, _Nutritions, AdditionalIngredientsId], Txt) :-
+format_recipe([Recipe, _Nutritions, AdditionalIngredientsId], Txt) :-
     swritef(Txt, '{"recipe": "%w", "additional_ingredients": "%w"}', [
         Recipe, AdditionalIngredientsId
     ]).
