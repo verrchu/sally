@@ -3,15 +3,20 @@
     "title": "Ingredient definition",
     "type": "object",
     "required": [
-      "meal",
+      "meals",
       "standalone",
       "ingredients"
     ],
     "additionalProperties": false,
     "properties": {
-        "meal": {
-          "type": "string",
-          "enum": ["BREAKFAST", "SNACK"]
+        "meals": {
+          "type": "array",
+          "additionalItems": false,
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["BREAKFAST", "SNACK"]
+          }
         },
         "standalone": {
           "type": "boolean"

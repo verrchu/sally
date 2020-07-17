@@ -35,9 +35,10 @@ def render_meals(kb, recipes):
 
     for recipe_name, recipe in recipes.items():
         if recipe['standalone']:
-            name = f'"{recipe_name}"'
-            meal = f'"{recipe["meal"]}"'
-            kb.write(f'{pred}({name},{meal}).\n')
+            for meal in recipe['meals']:
+                name = f'"{recipe_name}"'
+                meal = f'"{meal}"'
+                kb.write(f'{pred}({name},{meal}).\n')
 
 
 def render_main_ingredients(kb, recipes):

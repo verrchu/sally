@@ -1,4 +1,5 @@
-meal: BREAKFAST
+meals:
+  - BREAKFAST
 standalone: true
 ingredients:
   main:
