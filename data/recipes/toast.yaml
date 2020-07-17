@@ -1,6 +1,5 @@
 meals:
   - SNACK
-standalone: true
 sufficient: false
 ingredients:
   main:

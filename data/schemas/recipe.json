@@ -3,8 +3,6 @@
     "title": "Ingredient definition",
     "type": "object",
     "required": [
-      "meals",
-      "standalone",
       "sufficient",
       "ingredients"
     ],
@@ -18,9 +16,6 @@
             "type": "string",
             "enum": ["BREAKFAST", "SNACK"]
           }
-        },
-        "standalone": {
-          "type": "boolean"
         },
         "sufficient": {
           "type": "boolean"

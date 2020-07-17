@@ -1,6 +1,5 @@
 meals:
   - BREAKFAST
-standalone: true
 sufficient: true
 ingredients:
   main:

@@ -1,10 +1,12 @@
 :- module(recipe, [
     breakfast/1,
-    snack/1, variant/3
+    snack/1,
+    variant/3
 ]).
 
 :- use_module(recipes_kb, [
     meal/2,
+    sufficient/1,
     main_ingredients/2,
     additional_ingredients/3
 ]).
@@ -15,11 +17,9 @@
 
 
 breakfast(Recipe) :-
-    recipes_kb:standalone(Recipe),
     recipes_kb:meal(Recipe, "BREAKFAST").
 
 snack(Recipe) :-
-    recipes_kb:standalone(Recipe),
     recipes_kb:meal(Recipe, "SNACK").
 
 
