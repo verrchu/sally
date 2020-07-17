@@ -1,7 +1,6 @@
 :- module(recipe, [
     breakfast/1,
-    snack/1,
-    variant/3
+    snack/1, variant/3
 ]).
 
 :- use_module(recipes_kb, [
