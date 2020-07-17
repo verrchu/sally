@@ -1,0 +1,18 @@
+meal: SNACK
+standalone: true
+ingredients:
+  main:
+    CRISP:
+      unit: NATURAL
+      quantity: 2
+  additional:
+    "01EDDW2RM80Y1EWFYVRKDBDYNR":
+      CREAM_CHEESE:
+        unit: GRAM
+        quantity: 30
+      SALMON:
+        unit: GRAM
+        quantity: 50
+      CUCUMBER:
+          unit: NATURAL
+          quantity: 1 

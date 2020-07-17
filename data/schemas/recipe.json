@@ -11,7 +11,7 @@
     "properties": {
         "meal": {
           "type": "string",
-          "enum": ["BREAKFAST"]
+          "enum": ["BREAKFAST", "SNACK"]
         },
         "standalone": {
           "type": "boolean"
