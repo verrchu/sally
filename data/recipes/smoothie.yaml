@@ -1,6 +1,7 @@
 meals:
   - SNACK
 standalone: true
+sufficient: false
 ingredients:
   main:
     GREEK_YOGURT:

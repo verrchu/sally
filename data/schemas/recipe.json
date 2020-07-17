@@ -5,6 +5,7 @@
     "required": [
       "meals",
       "standalone",
+      "sufficient",
       "ingredients"
     ],
     "additionalProperties": false,
@@ -19,6 +20,9 @@
           }
         },
         "standalone": {
+          "type": "boolean"
+        },
+        "sufficient": {
           "type": "boolean"
         },
         "ingredients": {

@@ -1,6 +1,7 @@
 meals:
   - SNACK
 standalone: true
+sufficient: true
 ingredients:
   main:
     EGG:

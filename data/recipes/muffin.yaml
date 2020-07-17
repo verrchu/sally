@@ -1,6 +1,7 @@
 meals:
   - BREAKFAST
 standalone: true
+sufficient: true
 ingredients:
   main:
     COTTAGE_CHEESE:
