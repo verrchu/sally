@@ -1,4 +1,5 @@
 meal: BREAKFAST
+standalone: true
 ingredients:
   main:
     OAT:

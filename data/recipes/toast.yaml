@@ -1,4 +1,5 @@
 meal: SNACK
+standalone: true
 ingredients:
   main:
     CRISP:
