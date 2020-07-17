@@ -14,11 +14,13 @@
 ]).
 
 
-breakfast(Breakfast) :-
-    recipes_kb:meal(Breakfast, "BREAKFAST").
+breakfast(Recipe) :-
+    recipes_kb:standalone(Recipe),
+    recipes_kb:meal(Recipe, "BREAKFAST").
 
-snack(Snack) :-
-    recipes_kb:meal(Snack, "SNACK").
+snack(Recipe) :-
+    recipes_kb:standalone(Recipe),
+    recipes_kb:meal(Recipe, "SNACK").
 
 
 variant(Recipe, Nutritions, AdditionalIngredientsId) :-
@@ -36,6 +38,7 @@ variant(Recipe, Nutritions, AdditionalIngredientsId) :-
 
     Nutritions = [Cals, Prots, Fats, Carbs].
 variant(Recipe, Nutritions, none) :-
+    recipes_kb:sufficient(Recipe),
     recipes_kb:main_ingredients(Recipe, MainIngredients),
     ingredients_nutritions(MainIngredients, Nutritions).
 
