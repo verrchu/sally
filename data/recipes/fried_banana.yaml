@@ -1,0 +1,12 @@
+meal: BRUNCH
+ingredients:
+  main:
+    GREEK_YOGURT:
+      unit: GRAM
+      quantity: 200
+    BANANA:
+      unit: NATURAL
+      quantity: 1
+    DARK_CHOCOLATE:
+      unit: GRAM
+      quantity: 20  

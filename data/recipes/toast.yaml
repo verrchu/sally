@@ -1,0 +1,16 @@
+meal: BRUNCH
+ingredients:
+  main:
+    CRISP:
+      unit: NATURAL
+      quantity: 2
+  additional:
+    - CREAM_CHEESE:
+        unit: GRAM
+        quantity: 30
+      SALMON:
+        unit: GRAM
+        quantity: 50
+      CUCUMBER:
+          unit: NATURAL
+          quantity: 1 

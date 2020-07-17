@@ -1,0 +1,16 @@
+meal: BRUNCH
+ingredients:
+  main:
+    COTTAGE_CHEESE:
+      unit: GRAM
+      quantity: 200
+  additional:
+    - PEACH:
+        unit: NATURAL
+        quantity: 1
+    - JAM:
+        unit: GRAM
+        quantity: 50
+    - BANANA:
+        unit: NATURAL
+        quantity: 1

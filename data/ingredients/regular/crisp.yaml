@@ -1,0 +1,8 @@
+units:
+    NATURAL:
+      quantity: 1
+      characteristics:
+          calories: 30
+          carbohydrates: 6.7
+          fats: 0.1
+          proteins: 0.6

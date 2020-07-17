@@ -1,0 +1,26 @@
+meal: BRUNCH
+ingredients:
+  main:
+    EGG:
+      unit: NATURAL
+      quantity: 1
+    BANANA:
+      unit: NATURAL
+      quantity: 1
+    FLOUR:
+      unit: GRAM
+      quantity: 15
+    COCOA:
+        unit: GRAM
+        quantity: 15
+    DARK_CHOCOLATE:
+        unit: GRAM
+        quantity: 10
+  technical:
+     BAKING_POWDER:
+       unit: TEASPOON
+       quantity: 0.5
+    SUGAR_SUBSTITUTE:
+      unit: NATURAL
+    VANILLA:
+      unit: NATURAL   

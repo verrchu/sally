@@ -1,0 +1,26 @@
+meal: BREAKFAST
+ingredients:
+  main:
+    COTTAGE_CHEESE:
+      unit: GRAM
+      quantity: 200
+    OAT:
+      unit: GRAM
+      quantity: 20
+    EGG:
+      unit: NATURAL
+      quantity: 1
+    DARK_CHOCOLATE:
+      unit: GRAM
+      quantity: 20
+    RAISIN:
+      unit: GRAM
+      quantity: 15      
+    technical:
+       BAKING_POWDER:
+         unit: TEASPOON
+         quantity: 0.5
+      SUGAR_SUBSTITUTE:
+        unit: NATURAL
+      VANILLA:
+        unit: NATURAL

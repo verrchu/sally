@@ -1,0 +1,13 @@
+meal: BRUNCH
+ingredients:
+  main:
+    GREEK_YOGURT:
+      unit: GRAM
+      quantity: 250
+  additional:
+    - RASPBERRY:
+        unit: GRAM
+        quantity: 100
+    - BANANA:
+       unit: NATURAL
+       quantity: 1
