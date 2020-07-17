@@ -44,14 +44,18 @@ menu_nutritions(BN, SN, MN) :-
 
 
 check_nutritions(MenuNutritions, TargetNutritions) :-
-    [BFCals, BFProts, BFFats, BFCarbs] = MenuNutritions,
-
+    [MCals, MProts, MFats, MCarbs] = MenuNutritions,
     [TCals, TProts, TFats, TCarbs] = TargetNutritions,
 
-    Cals is BFCals, Cals < TCals,
-    Prots is BFProts, Prots < TProts,
-    Fats is BFFats, Fats < TFats,
-    Carbs is BFCarbs, Carbs < TCarbs.
+    check_nutrition(MCals, TCals),
+    check_nutrition(MProts, TProts),
+    check_nutrition(MFats, TFats),
+    check_nutrition(MCarbs, TCarbs).
+
+
+% constants can be tuned if needed
+check_nutrition(Val, Target) :-
+    Val > Target * 0.90, Val < Target * 1.02.
 
 
 meal(breakfast, Meal, ExcludedRecipes) :-
