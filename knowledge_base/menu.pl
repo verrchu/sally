@@ -4,7 +4,7 @@
 
 :- use_module(recipe, [
     breakfast/1,
-    variant/3
+    variant/4
 ]).
 
 
@@ -20,9 +20,9 @@ main :-
 
 menu(Breakfast, Snack, TargetNutritions, ExcludedRecipes) :-
     meal(breakfast, Breakfast, ExcludedRecipes),
-    [BR, BN, _] = Breakfast,
+    [BR, BN, _, _] = Breakfast,
     meal(snack, Snack, ExcludedRecipes),
-    [SR, SN, _] = Snack, SR \= BR,
+    [SR, SN, _, _] = Snack, SR \= BR,
     menu_nutritions(BN, SN, MN),
     check_nutritions(MN, TargetNutritions).
 
@@ -65,16 +65,17 @@ check_carbohydrates(Val, Target) :-
     Val > Target * 0.90, Val < Target * 1.02.
 
 
+% TODO: reduce code duplication
 meal(breakfast, Meal, ExcludedRecipes) :-
     recipe:breakfast(Recipe), \+ member(Recipe, ExcludedRecipes),
-    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId),
+    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId, ComplementsId),
 
-    Meal = [Recipe, Nutritions, AdditionalIngredientsId].
+    Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
 meal(snack, Meal, ExcludedRecipes) :-
     recipe:snack(Recipe), \+ member(Recipe, ExcludedRecipes),
-    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId),
+    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId, ComplementsId),
 
-    Meal = [Recipe, Nutritions, AdditionalIngredientsId].
+    Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
 
 
 print_menu([]) :- true.
@@ -86,11 +87,19 @@ print_menu([Menu|Menus]) :-
     print_menu(Menus).
 
 
-format_recipe([Recipe, _Nutritions, none], Txt) :-
-    swritef(Txt, '{"recipe": "%w", "additional_ingredients": null}', [Recipe]).
-format_recipe([Recipe, _Nutritions, AdditionalIngredientsId], Txt) :-
-    swritef(Txt, '{"recipe": "%w", "additional_ingredients": "%w"}', [
+format_recipe([Recipe, _Nutritions, none, none], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "additional_ingredients": null, "complements": null}', [Recipe]).
+format_recipe([Recipe, _Nutritions, AdditionalIngredientsId, none], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "additional_ingredients": "%w", "complements": null}', [
         Recipe, AdditionalIngredientsId
+    ]).
+format_recipe([Recipe, _Nutritions, none, ComplementsId], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "additional_ingredients": null, "complements": "%w"}', [
+        Recipe, ComplementsId
+    ]).
+format_recipe([Recipe, _Nutritions, AdditionalIngredientsId, ComplementsId], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "additional_ingredients": "%w", "complements": "%w"}', [
+        Recipe, AdditionalIngredientsId, ComplementsId
     ]).
 
 
