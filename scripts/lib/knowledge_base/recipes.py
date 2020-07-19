@@ -4,13 +4,15 @@ PREDICATE_MEAL = 'meal'
 PREDICATE_SUFFICIENT = 'sufficient'
 PREDICATE_MAIN_INGREDIENTS = 'main_ingredients'
 PREDICATE_ADDITIONAL_INGREDIENTS = 'additional_ingredients'
+PREDICATE_COMPLEMENTS = 'complements'
 
 MODULE_HEADER = f"""
 :- module(recipes_kb, [
     {PREDICATE_MEAL}/2,
     {PREDICATE_SUFFICIENT}/1,
     {PREDICATE_MAIN_INGREDIENTS}/2,
-    {PREDICATE_ADDITIONAL_INGREDIENTS}/3
+    {PREDICATE_ADDITIONAL_INGREDIENTS}/3,
+    {PREDICATE_COMPLEMENTS}/3
 ]).
 """
 
@@ -32,6 +34,8 @@ def render(kb_dir, recipes):
         render_main_ingredients(kb, recipes)
         kb.write('\n')
         render_additional_ingredients(kb, recipes)
+        kb.write('\n')
+        render_complements(kb, recipes)
 
 
 def render_sufficient_parameter(kb, recipes):
@@ -80,7 +84,6 @@ def render_additional_ingredients(kb, recipes):
         recipe_name = f'"{recipe_name}"'
 
         if 'additional' in recipe['ingredients']:
-            outer_ingredients = []
             additional_ingredients = recipe['ingredients']['additional']
             for ingredients_group_id, ingredients_group in additional_ingredients.items():
                 ingredients = []
@@ -96,6 +99,35 @@ def render_additional_ingredients(kb, recipes):
                 ingredients_group_id = f'"{ingredients_group_id}"'
 
                 kb.write(f'{pred}({recipe_name},{ingredients_group_id},{ingredients}).\n')
+
+
+def render_complements(kb, recipes):
+    pred = PREDICATE_COMPLEMENTS
+
+    for recipe_name, recipe in recipes.items():
+        recipe_name = f'"{recipe_name}"'
+
+        if 'complements' in recipe:
+            for complements_id, complements in recipe['complements'].items():
+                complements_txt = []
+                for complement_name, complement in complements.items():
+                    name = f'"{complement_name}"'
+
+                    if complement['additional_ingredients']:
+                        additional_ingredients_id = complement['additional_ingredients']
+                        additional_ingredients_id = f'"{additional_ingredients_id}"'
+
+                        complements_txt.append(f'[{name},{additional_ingredients_id}]')
+                    else:
+                        complements_txt.append(f'[{name},none]')
+
+
+                complements_txt = f',\n{space(4)}'.join(complements_txt)
+                complements_txt = f'[\n{space(4)}{complements_txt}\n]'
+
+                complements_id = f'"{complements_id}"'
+
+                kb.write(f'{pred}({recipe_name},{complements_id},{complements_txt}).\n')
 
 
 def space(n):
