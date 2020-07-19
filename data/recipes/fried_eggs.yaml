@@ -20,3 +20,7 @@ ingredients:
       TOMATO:
         unit: NATURAL
         quantity: 1
+complements:
+    '01EDKH3FZ0R4Z3PSCMXME20788':
+        TOAST:
+            additional_ingredients: '01EDDW2RM80Y1EWFYVRKDBDYNR'

@@ -33,6 +33,7 @@
                 "additional": {"$ref": "def.json#/recipe/ingredients/additional"},
                 "technical": {"$ref": "def.json#/recipe/ingredients/technical"}
             }
-        }
+        },
+        "complements": {"$ref": "def.json#/recipe/complements"}
     }
 }

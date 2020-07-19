@@ -108,6 +108,35 @@
           }
         }
       }
+    },
+    "complements": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-HJKMNP-TV-Z0-9]{26}$": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "patternProperties": {
+            "^[A-Z_]+$": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "additional_ingredients"
+              ],
+              "properties": {
+                "additional_ingredients": {
+                  "oneOf": [
+                    {"type": "string", "pattern": "^[A-HJKMNP-TV-Z0-9]{26}$"},
+                    {"type": "null"}
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
