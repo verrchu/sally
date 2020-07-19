@@ -1,6 +1,7 @@
 meals:
   - BREAKFAST
 sufficient: true
+embeddable: false
 ingredients:
   main:
     COTTAGE_CHEESE:

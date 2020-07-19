@@ -1,6 +1,7 @@
 meals:
   - SNACK
 sufficient: false
+embeddable: true
 ingredients:
   main:
     CRISP:

@@ -1,6 +1,7 @@
 meals:
   - BREAKFAST
 sufficient: false
+embeddable: false
 ingredients:
   main:
     OAT:

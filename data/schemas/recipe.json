@@ -4,6 +4,7 @@
     "type": "object",
     "required": [
       "sufficient",
+      "embeddable",
       "ingredients"
     ],
     "additionalProperties": false,
@@ -18,6 +19,9 @@
           }
         },
         "sufficient": {
+          "type": "boolean"
+        },
+        "embeddable": {
           "type": "boolean"
         },
         "ingredients": {

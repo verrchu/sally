@@ -1,6 +1,7 @@
 meals:
   - SNACK
 sufficient: true
+embeddable: false
 ingredients:
   main:
     EGG:
