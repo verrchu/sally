@@ -43,14 +43,15 @@ menu_nutritions(BN, SN, MN) :-
     apply:foldl(menu:combine_nutritions, [BN, SN], [0,0,0,0], MN).
 
 
-check_nutritions(MenuNutritions, TargetNutritions) :-
-    [MCals, MProts, MFats, MCarbs] = MenuNutritions,
-    [TCals, TProts, TFats, TCarbs] = TargetNutritions,
+check_nutritions(_, _).
+% check_nutritions(MenuNutritions, TargetNutritions) :-
+%     [MCals, MProts, MFats, MCarbs] = MenuNutritions,
+%     [TCals, TProts, TFats, TCarbs] = TargetNutritions,
 
-    check_calories(MCals, TCals),
-    check_proteins(MProts, TProts),
-    check_fats(MFats, TFats),
-    check_carbohydrates(MCarbs, TCarbs).
+%     check_calories(MCals, TCals),
+%     check_proteins(MProts, TProts),
+%     check_fats(MFats, TFats),
+%     check_carbohydrates(MCarbs, TCarbs).
 
 
 % constants can be tuned if needed
@@ -120,6 +121,12 @@ args(Nutritions, ExcludedRecipes) :-
     atom_number(CarbsRaw, Carbs), positive(Carbs),
 
     Nutritions = [Cals, Prots, Fats, Carbs],
-    split_string(ExcludedRecipesRaw, ',', '', ExcludedRecipes).
+    parse_excluded_items(ExcludedRecipesRaw, ExcludedRecipes).
+
+
+parse_excluded_items("_", []).
+parse_excluded_items(Txt, Items) :-
+    split_string(Txt, ',', '', Items).
+
 
 positive(X) :- X > 0.

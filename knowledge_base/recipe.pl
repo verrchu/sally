@@ -8,7 +8,8 @@
     meal/2,
     sufficient/1,
     main_ingredients/2,
-    additional_ingredients/3
+    additional_ingredients/3,
+    complements/3
 ]).
 
 :- use_module(ingredient, [
