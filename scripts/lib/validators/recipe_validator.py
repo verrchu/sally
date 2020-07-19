@@ -8,6 +8,10 @@ def validate(recipes, ingredients, schemas):
         validate_recipe_ingredients(
             recipe_name, recipe['ingredients'],  ingredients
         )
+        if 'complements' in recipe:
+            validate_recipe_complements(
+                recipe_name, recipe['complements'], recipes, ingredients
+            )
 
 
 def validate_recipe_ingredients(recipe_name, recipe_ingredients, ingredients):
@@ -110,3 +114,58 @@ def validate_technical_recipe_ingredient(
             IBGREDIENT UNIT: {ingredient_unit}
             DEFINED INGREDIENT UNITS: {defined_ingredient_units}
             """)
+
+
+def validate_recipe_complements(
+    recipe_name, recipe_complements, recipes, ingredients
+):
+    for complements_id, complements in recipe_complements.items():
+        for complement_name, complement in complements.items():
+            if not complement_name in recipes.keys():
+                raise Exception(f"""
+                UNKNOWN COMPLEMENT NAME
+                RECIPE: {recipe_name}
+                COMPLEMENT: {complement_name}
+                COMPLEMENTS iD: {complements_id}
+                """)
+
+            complement_recipe = recipes[complement_name]
+
+            if not complement_recipe['embeddable']:
+                raise Exception(f"""
+                COMPLEMENT IS NOT EMBEDDABLE
+                RECIPE: {recipe_name}
+                COMPLEMENT: {complement_name}
+                COMPLEMENTS iD: {complements_id}
+                """)
+
+            if complement['additional_ingredients']:
+                if 'additional' in complement_recipe['ingredients']:
+                    additional_ingredients = complement['additional_ingredients']
+                    defined_additional_ingredients = list(
+                        complement_recipe['ingredients']['additional'].keys()
+                    )
+                    if not additional_ingredients in defined_additional_ingredients:
+                        raise Exception(f"""
+                        ADDITONAL INGREDIENTS ID NOT FOUND
+                        RECIPE: {recipe_name}
+                        COMPLEMENT: {complement_name}
+                        COMPLEMENTS iD: {complements_id}
+                        ADDITIONAL INGREDIENTS ID: {additional_ingredients}
+                        DEFINED ADDITIONAL INGREDIENT IDS: {defined_additional_ingredients}
+                        """)
+                else:
+                    raise Exception(f"""
+                    ADDITONAL INGREDIENTS NOT DEFINED
+                    RECIPE: {recipe_name}
+                    COMPLEMENT: {complement_name}
+                    COMPLEMENTS iD: {complements_id}
+                    """)
+            else:
+                if not complement_recipe['sufficient']:
+                    raise Exception(f"""
+                    COMPLEMENT IS NOT SUFFICIENT
+                    RECIPE: {recipe_name}
+                    COMPLEMENT: {complement_name}
+                    COMPLEMENTS iD: {complements_id}
+                    """)
