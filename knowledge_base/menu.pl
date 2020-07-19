@@ -47,14 +47,20 @@ check_nutritions(MenuNutritions, TargetNutritions) :-
     [MCals, MProts, MFats, MCarbs] = MenuNutritions,
     [TCals, TProts, TFats, TCarbs] = TargetNutritions,
 
-    check_nutrition(MCals, TCals),
-    check_nutrition(MProts, TProts),
-    check_nutrition(MFats, TFats),
-    check_nutrition(MCarbs, TCarbs).
+    check_calories(MCals, TCals),
+    check_proteins(MProts, TProts),
+    check_fats(MFats, TFats),
+    check_carbohydrates(MCarbs, TCarbs).
 
 
 % constants can be tuned if needed
-check_nutrition(Val, Target) :-
+check_calories(Val, Target) :-
+    Val > Target * 0.90, Val < Target * 1.02.
+check_proteins(Val, Target) :-
+    Val > Target * 0.90, Val < Target * 1.02.
+check_fats(Val, Target) :-
+    Val > Target * 0.90, Val < Target * 1.02.
+check_carbohydrates(Val, Target) :-
     Val > Target * 0.90, Val < Target * 1.02.
 
 
