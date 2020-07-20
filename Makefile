@@ -19,6 +19,9 @@ generate_menu:
 		$(CALORIES) $(PROTEINS) $(FATS) $(CARBOHYDRATES) \
 		$(EXCLUDED_RECIPES)
 
+test:
+	@ swipl -t "load_test_files([]), run_tests." $(KNOWLEDGE_BASE_DIR)/menu.pl
+
 server:
 	@ python server.py \
 		--port $(PORT) --program $(PWD)/$(KNOWLEDGE_BASE_DIR)/menu.pl
