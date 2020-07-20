@@ -1,7 +1,5 @@
 :- set_prolog_flag(verbose, silent).
 
-:- initialization main.
-
 :- use_module(recipe, [
     breakfast/1,
     variant/4

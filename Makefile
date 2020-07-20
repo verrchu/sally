@@ -15,7 +15,7 @@ render_knowledge_base: validate_data
 		--knowledge-base-dir $(PWD)/$(KNOWLEDGE_BASE_DIR)
 
 generate_menu:
-	@ swipl $(KNOWLEDGE_BASE_DIR)/menu.pl -- \
+	@ swipl -t "menu:main" $(KNOWLEDGE_BASE_DIR)/menu.pl -- \
 		$(CALORIES) $(PROTEINS) $(FATS) $(CARBOHYDRATES) \
 		$(EXCLUDED_RECIPES)
 

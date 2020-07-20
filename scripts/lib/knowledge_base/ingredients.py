@@ -7,7 +7,7 @@ MODULE_HEADER = f"""
     {PREDICATE_NUTRITION}/5
 ]).
 
-:- dynamic {PREDICATE_NUTRITION}/5
+:- dynamic {PREDICATE_NUTRITION}/5.
 """
 
 KNOWLEDGE_BASE_FILE = "ingredients_kb.pl"
