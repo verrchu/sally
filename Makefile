@@ -17,7 +17,7 @@ render_knowledge_base: validate_data
 generate_menu:
 	@ swipl -t "menu:main" $(KNOWLEDGE_BASE_DIR)/menu.pl -- \
 		$(CALORIES) $(PROTEINS) $(FATS) $(CARBOHYDRATES) \
-		$(EXCLUDED_RECIPES)
+		$(EXCLUDED_RECIPES) $(EXCLUDED_INGREDIENTS)
 
 test:
 	@ swipl -t "load_test_files([]), run_tests." $(KNOWLEDGE_BASE_DIR)/menu.pl

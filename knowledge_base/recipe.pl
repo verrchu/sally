@@ -1,7 +1,7 @@
 :- module(recipe, [
     breakfast/1,
     snack/1,
-    variant/4
+    variant/5
 ]).
 
 :- use_module(recipes_kb, [
@@ -18,36 +18,70 @@
 
 
 breakfast(Recipe) :-
-    recipes_kb:meal(Recipe, "BREAKFAST").
+    generic_meal(Recipe, "BREAKFAST").
 
 snack(Recipe) :-
-    recipes_kb:meal(Recipe, "SNACK").
+    generic_meal(Recipe, "SNACK").
+
+generic_meal(Recipe, Meal) :-
+    recipes_kb:meal(Recipe, Meal).
 
 
-variant(Recipe, Nutritions, AdditionalIngredientsId, ComplementsId) :-
+allowed_recipe(Recipe, [ExcludedRecipes, _]) :-
+    \+ member(Recipe, ExcludedRecipes).
+
+allowed_ingredients([], _).
+allowed_ingredients([Ingredient|Ingredients], Excluded) :-
+    Excluded = [_, ExcludedIngredients],
+    Ingredient = [Name, _, _],
+
+    \+ member(Name, ExcludedIngredients),
+
+    allowed_ingredients(Ingredients, Excluded).
+
+allowed_complements([], _).
+allowed_complements([[Recipe,none]|Complements], Excluded) :-
+    allowed_recipe(Recipe, Excluded),
+
+    recipes_kb:main_ingredients(
+        Recipe, MainIngredients
+    ), allowed_ingredients(MainIngredients, Excluded),
+
+    allowed_complements(Complements, Excluded).
+allowed_complements([[Recipe,AdditionalIngredientsId]|Complements], Excluded) :-
+    allowed_recipe(Recipe, Excluded),
+
+    recipes_kb:main_ingredients(
+        Recipe, MainIngredients
+    ), allowed_ingredients(MainIngredients, Excluded),
+
     recipes_kb:additional_ingredients(
         Recipe, AdditionalIngredientsId, AdditionalIngredients
-    ),
-    recipes_kb:complements(
-        Recipe, ComplementsId, Complements
-    ),
-    complements_nutritions(Complements, [CCals, CProts, CFats, CCarbs]),
-    ingredients_nutritions(AdditionalIngredients, [ACals, AProts, AFats, ACarbs]),
-    recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
+    ), allowed_ingredients(AdditionalIngredients, Excluded),
 
-    Cals is ACals + MCals + CCals,
-    Prots is AProts + MProts + CProts,
-    Fats is AFats + MFats + CFats,
-    Carbs is ACarbs + MCarbs + CCarbs,
+    allowed_complements(Complements, Excluded).
 
-    Nutritions = [Cals, Prots, Fats, Carbs].
-variant(Recipe, Nutritions, AdditionalIngredientsId, none) :-
+
+variant(
+    Recipe, Nutritions, none, none, Excluded
+) :-
+    recipes_kb:sufficient(Recipe),
+
+    recipes_kb:main_ingredients(
+        Recipe, MainIngredients
+    ), allowed_ingredients(MainIngredients, Excluded),
+    ingredients_nutritions(MainIngredients, Nutritions).
+variant(
+    Recipe, Nutritions, AdditionalIngredientsId, none, Excluded
+) :-
     recipes_kb:additional_ingredients(
         Recipe, AdditionalIngredientsId, AdditionalIngredients
-    ),
+    ), allowed_ingredients(AdditionalIngredients, Excluded),
     ingredients_nutritions(AdditionalIngredients, [ACals, AProts, AFats, ACarbs]),
-    recipes_kb:main_ingredients(Recipe, MainIngredients),
+
+    recipes_kb:main_ingredients(
+        Recipe, MainIngredients
+    ), allowed_ingredients(MainIngredients, Excluded),
     ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
 
     Cals is ACals + MCals,
@@ -56,13 +90,19 @@ variant(Recipe, Nutritions, AdditionalIngredientsId, none) :-
     Carbs is ACarbs + MCarbs,
 
     Nutritions = [Cals, Prots, Fats, Carbs].
-variant(Recipe, Nutritions, none, ComplementsId) :-
+variant(
+    Recipe, Nutritions, none, ComplementsId, Excluded
+) :-
     recipes_kb:sufficient(Recipe),
+
     recipes_kb:complements(
         Recipe, ComplementsId, Complements
-    ),
+    ), allowed_complements(Complements, Excluded),
     complements_nutritions(Complements, [CCals, CProts, CFats, CCarbs]),
-    recipes_kb:main_ingredients(Recipe, MainIngredients),
+
+    recipes_kb:main_ingredients(
+        Recipe, MainIngredients
+    ), allowed_ingredients(MainIngredients, Excluded),
     ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
 
     Cals is CCals + MCals,
@@ -71,10 +111,30 @@ variant(Recipe, Nutritions, none, ComplementsId) :-
     Carbs is CCarbs + MCarbs,
 
     Nutritions = [Cals, Prots, Fats, Carbs].
-variant(Recipe, Nutritions, none, none) :-
-    recipes_kb:sufficient(Recipe),
-    recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, Nutritions).
+variant(
+    Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
+) :-
+    recipes_kb:complements(
+        Recipe, ComplementsId, Complements
+    ), allowed_complements(Complements, Excluded),
+    complements_nutritions(Complements, [CCals, CProts, CFats, CCarbs]),
+
+    recipes_kb:additional_ingredients(
+        Recipe, AdditionalIngredientsId, AdditionalIngredients
+    ), allowed_ingredients(AdditionalIngredients, Excluded),
+    ingredients_nutritions(AdditionalIngredients, [ACals, AProts, AFats, ACarbs]),
+
+    recipes_kb:main_ingredients(
+        Recipe, MainIngredients
+    ), allowed_ingredients(MainIngredients, Excluded),
+    ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
+
+    Cals is ACals + MCals + CCals,
+    Prots is AProts + MProts + CProts,
+    Fats is AFats + MFats + CFats,
+    Carbs is ACarbs + MCarbs + CCarbs,
+
+    Nutritions = [Cals, Prots, Fats, Carbs].
 
 
 complements_nutritions([], [0,0,0,0]).

@@ -2,26 +2,30 @@
 
 :- use_module(recipe, [
     breakfast/1,
-    variant/4
+    snack/1,
+    variant/5
 ]).
 
 
 main :-
     % current_prolog_flag(argv, Args), print(Args),
-    args(Nutritions, ExcludedRecipes),
+    args(Nutritions, Excluded),
     findall([Breakfast, Snack], menu(
-        Breakfast, Snack, Nutritions, ExcludedRecipes
+        Breakfast, Snack, Nutritions, Excluded
     ), Menu),
     print_menu(Menu),
     halt(0).
 
 
-menu(Breakfast, Snack, TargetNutritions, ExcludedRecipes) :-
-    meal(breakfast, Breakfast, ExcludedRecipes),
+menu(Breakfast, Snack, TargetNutritions, Excluded) :-
+    meal(breakfast, Breakfast, Excluded),
     [BR, BN, _, _] = Breakfast,
-    meal(snack, Snack, ExcludedRecipes),
+
+    meal(snack, Snack, Excluded),
     [SR, SN, _, _] = Snack, SR \= BR,
+
     menu_nutritions(BN, SN, MN),
+
     check_nutritions(MN, TargetNutritions).
 
 
@@ -64,14 +68,18 @@ check_carbohydrates(Val, Target) :-
 
 
 % TODO: reduce code duplication
-meal(breakfast, Meal, ExcludedRecipes) :-
-    recipe:breakfast(Recipe), \+ member(Recipe, ExcludedRecipes),
-    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId, ComplementsId),
+meal(breakfast, Meal, Excluded) :-
+    recipe:breakfast(Recipe),
+    recipe:variant(
+        Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
+    ),
 
     Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
-meal(snack, Meal, ExcludedRecipes) :-
-    recipe:snack(Recipe), \+ member(Recipe, ExcludedRecipes),
-    recipe:variant(Recipe, Nutritions, AdditionalIngredientsId, ComplementsId),
+meal(snack, Meal, Excluded) :-
+    recipe:snack(Recipe),
+    recipe:variant(
+        Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
+    ),
 
     Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
 
@@ -117,9 +125,9 @@ format_ingredient([Name, Unit, Quantity], Txt) :-
     ).
 
 
-args(Nutritions, ExcludedRecipes) :-
+args(Nutritions, Excluded) :-
     current_prolog_flag(argv, [
-        CalsRaw, ProtsRaw, FatsRaw, CarbsRaw, ExcludedRecipesRaw
+        CalsRaw, ProtsRaw, FatsRaw, CarbsRaw, ExcludedRecipesTxt, ExcludedIngredientsTxt
     ]),
 
     atom_number(CalsRaw, Cals), positive(Cals),
@@ -128,7 +136,11 @@ args(Nutritions, ExcludedRecipes) :-
     atom_number(CarbsRaw, Carbs), positive(Carbs),
 
     Nutritions = [Cals, Prots, Fats, Carbs],
-    parse_excluded_items(ExcludedRecipesRaw, ExcludedRecipes).
+
+    parse_excluded_items(ExcludedRecipesTxt, ExcludedRecipes),
+    parse_excluded_items(ExcludedIngredientsTxt, ExcludedIngredients),
+
+    Excluded = [ExcludedRecipes, ExcludedIngredients].
 
 
 parse_excluded_items("_", []).
