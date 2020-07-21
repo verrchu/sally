@@ -143,7 +143,7 @@ args(Nutritions, Excluded) :-
     Excluded = [ExcludedRecipes, ExcludedIngredients].
 
 
-parse_excluded_items("_", []).
+parse_excluded_items('_', []).
 parse_excluded_items(Txt, Items) :-
     split_string(Txt, ',', '', Items).
 
