@@ -39,3 +39,7 @@ ingredients:
       CHAMPIGNON:
         unit: NATURAL
         quantity: 5
+complements:
+    '01EDKH3FZ0R4Z3PSCMXME20789':
+        TOAST:
+            additional_ingredients: '01EDDW2RM80Y1EWFYVRKDBDYNR'
