@@ -449,3 +449,57 @@ test(excluded_ingredients, [nondet]) :-
 % ---------------------------------------------------------------------------- %
 % ----------------------- TEST ALLOWED COMPLEMENTS --------------------------- %
 % ---------------------------------------------------------------------------- %
+
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+% +++++++++++++++++++++++++++ TEST NUTRITIONS ++++++++++++++++++++++++++++++++ %
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+
+:- begin_tests(nutritions).
+
+test(default) :-
+    nutritions:default(Nutritions),
+    nutritions:cals(Nutritions, Cals), assertion(Cals == 0),
+    nutritions:prots(Nutritions, Prots), assertion(Prots == 0),
+    nutritions:fats(Nutritions, Fats), assertion(Fats == 0),
+    nutritions:carbs(Nutritions, Carbs), assertion(Carbs == 0).
+
+test(new) :-
+    nutritions:new(cals(1), prots(2), fats(3), carbs(4), Nutritions),
+    nutritions:cals(Nutritions, Cals), assertion(Cals == 1),
+    nutritions:prots(Nutritions, Prots), assertion(Prots == 2),
+    nutritions:fats(Nutritions, Fats), assertion(Fats == 3),
+    nutritions:carbs(Nutritions, Carbs), assertion(Carbs == 4).
+
+test(cals) :-
+    nutritions:new(cals(1), prots(0), fats(0), carbs(0), Nutritions),
+    nutritions:cals(Nutritions, Cals), assertion(Cals == 1).
+    
+test(prots) :-
+    nutritions:new(cals(0), prots(1), fats(0), carbs(0), Nutritions),
+    nutritions:prots(Nutritions, Prots), assertion(Prots == 1).
+
+test(fats) :-
+    nutritions:new(cals(0), prots(0), fats(1), carbs(0), Nutritions),
+    nutritions:fats(Nutritions, Fats), assertion(Fats == 1).
+
+test(carbs) :-
+    nutritions:new(cals(0), prots(0), fats(0), carbs(1), Nutritions),
+    nutritions:carbs(Nutritions, Carbs), assertion(Carbs == 1).
+
+test(combine_base) :-
+    nutritions:new(cals(1), prots(1), fats(1), carbs(1), ANutritions),
+    nutritions:new(cals(2), prots(2), fats(2), carbs(2), BNutritions),
+    nutritions:new(cals(3), prots(3), fats(3), carbs(3), CNutritions),
+    nutritions:combine(ANutritions, BNutritions, CNutritions).
+
+test(combine_many) :-
+    nutritions:new(cals(1), prots(1), fats(1), carbs(1), ANutritions),
+    nutritions:new(cals(2), prots(2), fats(2), carbs(2), BNutritions),
+    nutritions:new(cals(3), prots(3), fats(3), carbs(3), CNutritions),
+    nutritions:combine([ANutritions, BNutritions], CNutritions).
+
+:- end_tests(nutritions).
+
+% ---------------------------------------------------------------------------- %
+% --------------------------- TEST NUTRITIONS -------------------------------- %
+% ---------------------------------------------------------------------------- %
