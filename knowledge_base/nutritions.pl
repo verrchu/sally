@@ -1,7 +1,11 @@
-:- use_module(library(record)).
-:- use_module(library(clpfd)).
+:- module(nutritions, [
+    default/1, new/5, combine/2,
+    cals/2, prots/2, fats/2, carbs/2
+]).
 
-:- record nutr(cals:integer=0, prots:integer=0, fats:integer=0, carbs:integer=0).
+:- use_module(library(record)).
+
+:- record nutr(cals=0, prots=0, fats=0, carbs=0).
 
 default(N) :-
     default_nutr(N).
@@ -21,9 +25,9 @@ combine(NA, NB, NC) :-
     cals(NA, ACals), prots(NA, AProts), fats(NA, AFats), carbs(NA, ACarbs), 
     cals(NB, BCals), prots(NB, BProts), fats(NB, BFats), carbs(NB, BCarbs),
 
-    Cals #= ACals + BCals,
-    Prots #= AProts + BProts,
-    Fats #= AFats + BFats,
-    Carbs #= ACarbs + BCarbs,
+    Cals is ACals + BCals,
+    Prots is AProts + BProts,
+    Fats is AFats + BFats,
+    Carbs is ACarbs + BCarbs,
 
     new(cals(Cals), prots(Prots), fats(Fats), carbs(Carbs), NC).

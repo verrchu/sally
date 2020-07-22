@@ -1,10 +1,7 @@
 :- set_prolog_flag(verbose, silent).
 
-:- use_module(recipe, [
-    breakfast/1,
-    snack/1,
-    variant/5
-]).
+:- use_module(recipe).
+:- use_module(nutritions).
 
 
 main :-
@@ -24,25 +21,9 @@ menu(Breakfast, Snack, MenuNutritions, TargetNutritions, Excluded) :-
     meal(snack, Snack, Excluded),
     [SR, SN, _, _] = Snack, SR \= BR,
 
-    menu_nutritions(BN, SN, MenuNutritions),
+    nutritions:combine([BN, SN], MenuNutritions),
 
     check_nutritions(MenuNutritions, TargetNutritions).
-
-
-combine_nutritions(NCur, NAcc, NRes) :-
-    [CCals, CProts, CFats, CCarbs] = NCur,
-    [ACals, AProts, AFats, ACarbs] = NAcc,
-
-    RCals is CCals + ACals,
-    RProts is CProts + AProts,
-    RFats is CFats + AFats,
-    RCarbs is CCarbs + ACarbs,
-
-    NRes = [RCals, RProts, RFats, RCarbs].
-
-
-menu_nutritions(BN, SN, MN) :-
-    apply:foldl(menu:combine_nutritions, [BN, SN], [0,0,0,0], MN).
 
 
 check_nutritions(_, _).
@@ -96,7 +77,12 @@ print_menu([Menu|Menus]) :-
     print_menu(Menus).
 
 
-format_nutritions([Cals, Prots, Fats, Carbs], Txt) :-
+format_nutritions(Nutritions, Txt) :-
+    nutritions:cals(Nutritions, Cals),
+    nutritions:prots(Nutritions, Prots),
+    nutritions:fats(Nutritions, Fats),
+    nutritions:carbs(Nutritions, Carbs),
+
     swritef(Txt, '{"calories": %w, "proteins": %w, "fats": %w, "carbohydrates": %w}', [
         Cals, Prots, Fats, Carbs
     ]).
@@ -144,12 +130,12 @@ args(Nutritions, Excluded) :-
         CalsRaw, ProtsRaw, FatsRaw, CarbsRaw, ExcludedRecipesTxt, ExcludedIngredientsTxt
     ]),
 
-    atom_number(CalsRaw, Cals), positive(Cals),
-    atom_number(ProtsRaw, Prots), positive(Prots),
-    atom_number(FatsRaw, Fats), positive(Fats),
-    atom_number(CarbsRaw, Carbs), positive(Carbs),
+    atom_number(CalsRaw, Cals), assertion(Cals > 0),
+    atom_number(ProtsRaw, Prots), assertion(Prots > 0),
+    atom_number(FatsRaw, Fats), assertion(Fats > 0),
+    atom_number(CarbsRaw, Carbs), assertion(Carbs > 0),
 
-    Nutritions = [Cals, Prots, Fats, Carbs],
+    nutritions:new(cals(Cals), prots(Prots), fats(Fats), carbs(Carbs), Nutritions),
 
     parse_excluded_items(ExcludedRecipesTxt, ExcludedRecipes),
     parse_excluded_items(ExcludedIngredientsTxt, ExcludedIngredients),
@@ -160,6 +146,3 @@ args(Nutritions, Excluded) :-
 parse_excluded_items('_', []).
 parse_excluded_items(Txt, Items) :-
     split_string(Txt, ',', '', Items).
-
-
-positive(X) :- X > 0.

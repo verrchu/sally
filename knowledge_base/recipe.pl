@@ -4,17 +4,9 @@
     variant/5
 ]).
 
-:- use_module(recipes_kb, [
-    meal/2,
-    sufficient/1,
-    main_ingredients/2,
-    additional_ingredients/3,
-    complements/3
-]).
-
-:- use_module(ingredient, [
-    nutrition_query/5
-]).
+:- use_module(recipes_kb).
+:- use_module(ingredient).
+:- use_module(nutritions).
 
 
 breakfast(Recipe) :-
@@ -77,19 +69,14 @@ variant(
     recipes_kb:additional_ingredients(
         Recipe, AdditionalIngredientsId, AdditionalIngredients
     ), allowed_ingredients(AdditionalIngredients, Excluded),
-    ingredients_nutritions(AdditionalIngredients, [ACals, AProts, AFats, ACarbs]),
+    ingredients_nutritions(AdditionalIngredients, AINutritions),
 
     recipes_kb:main_ingredients(
         Recipe, MainIngredients
     ), allowed_ingredients(MainIngredients, Excluded),
-    ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
+    ingredients_nutritions(MainIngredients, MINutritions),
 
-    Cals is ACals + MCals,
-    Prots is AProts + MProts,
-    Fats is AFats + MFats,
-    Carbs is ACarbs + MCarbs,
-
-    Nutritions = [Cals, Prots, Fats, Carbs].
+    nutritions:combine([AINutritions, MINutritions], Nutritions).
 variant(
     Recipe, Nutritions, none, ComplementsId, Excluded
 ) :-
@@ -98,102 +85,74 @@ variant(
     recipes_kb:complements(
         Recipe, ComplementsId, Complements
     ), allowed_complements(Complements, Excluded),
-    complements_nutritions(Complements, [CCals, CProts, CFats, CCarbs]),
+    complements_nutritions(Complements, CNutritions),
 
     recipes_kb:main_ingredients(
         Recipe, MainIngredients
     ), allowed_ingredients(MainIngredients, Excluded),
-    ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
+    ingredients_nutritions(MainIngredients, MINutritions),
 
-    Cals is CCals + MCals,
-    Prots is CProts + MProts,
-    Fats is CFats + MFats,
-    Carbs is CCarbs + MCarbs,
-
-    Nutritions = [Cals, Prots, Fats, Carbs].
+    nutritions:combine([MINutritions, CNutritions], Nutritions).
 variant(
     Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
 ) :-
     recipes_kb:complements(
         Recipe, ComplementsId, Complements
     ), allowed_complements(Complements, Excluded),
-    complements_nutritions(Complements, [CCals, CProts, CFats, CCarbs]),
+    complements_nutritions(Complements, CNutritions),
 
     recipes_kb:additional_ingredients(
         Recipe, AdditionalIngredientsId, AdditionalIngredients
     ), allowed_ingredients(AdditionalIngredients, Excluded),
-    ingredients_nutritions(AdditionalIngredients, [ACals, AProts, AFats, ACarbs]),
+    ingredients_nutritions(AdditionalIngredients, AINutritions),
 
     recipes_kb:main_ingredients(
         Recipe, MainIngredients
     ), allowed_ingredients(MainIngredients, Excluded),
-    ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
+    ingredients_nutritions(MainIngredients, MINutritions),
 
-    Cals is ACals + MCals + CCals,
-    Prots is AProts + MProts + CProts,
-    Fats is AFats + MFats + CFats,
-    Carbs is ACarbs + MCarbs + CCarbs,
-
-    Nutritions = [Cals, Prots, Fats, Carbs].
+    nutritions:combine([MINutritions, AINutritions, CNutritions], Nutritions).
 
 
-complements_nutritions([], [0,0,0,0]).
+complements_nutritions([], Nutritions) :- nutritions:default(Nutritions).
 complements_nutritions([Complement|Complements], Nutritions) :-
     [Recipe, none] = Complement,
 
     recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, [CurCals, CurProts, CurFats, CurCarbs]),
+    ingredients_nutritions(MainIngredients, MINutritions),
 
-    complements_nutritions(Complements, [AccCals, AccProts, AccFats, AccCarbs]),
+    complements_nutritions(Complements, CNutritions),
 
-    Cals is ceil(CurCals + AccCals),
-    Prots is ceil(CurProts + AccProts),
-    Fats is ceil(CurFats + AccFats),
-    Carbs is ceil(CurCarbs + AccCarbs),
-
-    Nutritions = [Cals, Prots, Fats, Carbs].
+    nutritions:combine([MINutritions, CNutritions], Nutritions).
 complements_nutritions([Complement|Complements], Nutritions) :-
     [Recipe, AdditionalIngredientsId] = Complement,
 
     recipes_kb:additional_ingredients(
         Recipe, AdditionalIngredientsId, AdditionalIngredients
     ),
-    ingredients_nutritions(AdditionalIngredients, [ACals, AProts, AFats, ACarbs]),
+    ingredients_nutritions(AdditionalIngredients, AINutritions),
 
     recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, [MCals, MProts, MFats, MCarbs]),
+    ingredients_nutritions(MainIngredients, MINutritions),
 
-    CurCals is ACals + MCals,
-    CurProts is AProts + MProts,
-    CurFats is AFats + MFats,
-    CurCarbs is ACarbs + MCarbs,
+    complements_nutritions(Complements, CNutritions),
 
-    complements_nutritions(Complements, [AccCals, AccProts, AccFats, AccCarbs]),
-
-    Cals is ceil(CurCals + AccCals),
-    Prots is ceil(CurProts + AccProts),
-    Fats is ceil(CurFats + AccFats),
-    Carbs is ceil(CurCarbs + AccCarbs),
-
-    Nutritions = [Cals, Prots, Fats, Carbs].
+    nutritions:combine([MINutritions, AINutritions, CNutritions], Nutritions).
 
 
-ingredients_nutritions([], [0, 0, 0, 0]).
+ingredients_nutritions([], Nutritions) :- nutritions:default(Nutritions).
 ingredients_nutritions(
     [Ingredient|Ingredients], Nutritions
 ) :-
     [Name, Unit, Quantity] = Ingredient,
 
-    ingredient:nutrition_query(Name, Unit, Quantity, calories, CurCals),
-    ingredient:nutrition_query(Name, Unit, Quantity, proteins, CurProts),
-    ingredient:nutrition_query(Name, Unit, Quantity, fats, CurFats),
-    ingredient:nutrition_query(Name, Unit, Quantity, carbohydrates, CurCarbs),
+    ingredient:nutrition_query(Name, Unit, Quantity, calories, Cals),
+    ingredient:nutrition_query(Name, Unit, Quantity, proteins, Prots),
+    ingredient:nutrition_query(Name, Unit, Quantity, fats, Fats),
+    ingredient:nutrition_query(Name, Unit, Quantity, carbohydrates, Carbs),
 
-    ingredients_nutritions(Ingredients, [AccCals, AccProts, AccFats, AccCarbs]),
+    nutritions:new(cals(Cals), prots(Prots), fats(Fats), carbs(Carbs), CurNutritions),
 
-    Cals is ceil(CurCals + AccCals),
-    Prots is ceil(CurProts + AccProts),
-    Fats is ceil(CurFats + AccFats),
-    Carbs is ceil(CurCarbs + AccCarbs),
+    ingredients_nutritions(Ingredients, AccNutritions),
 
-    Nutritions = [Cals, Prots, Fats, Carbs].
+    nutritions:combine([CurNutritions, AccNutritions], Nutritions).
