@@ -327,3 +327,119 @@ test(complements, [
 % ---------------------------------------------------------------------------- %
 % ----------------------- TEST RECIPE COMPLEMENTS ---------------------------- %
 % ---------------------------------------------------------------------------- %
+
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+% +++++++++++++++++++++++++ TEST ALLOWED RECIPE ++++++++++++++++++++++++++++++ %
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+
+:- begin_tests(allowed_recipe).
+
+test(empty_excluded) :-
+    recipe:allowed_recipe("TEST_RECIPE", [[], []]).
+
+test(not_excluded) :-
+    recipe:allowed_recipe("TEST_RECIPE_A", [["TEST_RECIPE_B"], []]).
+
+test(excluded) :-
+    \+ recipe:allowed_recipe("TEST_RECIPE_A", [
+        ["TEST_RECIPE_A", "TEST_RECIPE_B"], []
+    ]).
+
+:- end_tests(allowed_recipe).
+
+% ---------------------------------------------------------------------------- %
+% ------------------------- TEST ALLOWED RECIPE ------------------------------ %
+% ---------------------------------------------------------------------------- %
+
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+% +++++++++++++++++++++++ TEST ALLOWED INGREDIENTS +++++++++++++++++++++++++++ %
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+
+:- begin_tests(allowed_ingredients).
+
+test(empty_excluded) :-
+    recipe:allowed_ingredients([
+        ["TEST_INGREDIENT_A","TEST_UNIT_A",2],
+        ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
+    ], [[], []]).
+
+test(not_excluded) :-
+    recipe:allowed_ingredients([
+        ["TEST_INGREDIENT_A","TEST_UNIT_A",2],
+        ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
+    ], [[], ["TEST_INGREDIENT_C"]]).
+
+test(excluded) :-
+    \+ recipe:allowed_ingredients([
+        ["TEST_INGREDIENT_A","TEST_UNIT_A",2],
+        ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
+    ], [[], ["TEST_INGREDIENT_B"]]).
+
+:- end_tests(allowed_ingredients).
+
+% ---------------------------------------------------------------------------- %
+% ----------------------- TEST ALLOWED INGREDIENTS --------------------------- %
+% ---------------------------------------------------------------------------- %
+
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+% +++++++++++++++++++++++ TEST ALLOWED COMPLEMENTS +++++++++++++++++++++++++++ %
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+
+setup_suite(allowed_complements) :-
+    alter_suite(allowed_complements, assert).
+
+cleanup_suite(allowed_complements) :-
+    alter_suite(allowed_complements, retract).
+
+alter_suite(allowed_complements, Pred) :-
+    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_A", [
+        ["TEST_INGREDIENT_A","NATURAL",2],
+        ["TEST_INGREDIENT_B","GRAM",200]
+    ])),
+    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_B", [
+        ["TEST_INGREDIENT_A","NATURAL",2]
+    ])),
+    call(Pred, recipes_kb:additional_ingredients("TEST_COMPLEMENT_B", "INGREDIENTS_ID", [
+        ["TEST_INGREDIENT_B","GRAM",200]
+    ])).
+
+:- begin_tests(allowed_complements, [
+    setup(setup_suite(allowed_complements)),
+    cleanup(cleanup_suite(allowed_complements))
+]).
+
+test(empty_excluded, [nondet]) :-
+    recipe:allowed_complements([
+        ["TEST_COMPLEMENT_A", none],
+        ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
+    ], [[], []]).
+
+test(not_excluded, [nondet]) :-
+    Complements = [
+        ["TEST_COMPLEMENT_A", none],
+        ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
+    ],
+
+    recipe:allowed_complements(Complements, [["TEST_COMPLEMENT_C"], []]),
+    recipe:allowed_complements(Complements, [[], ["TEST_INGREDIENT_C"]]),
+    recipe:allowed_complements(Complements, [
+        ["TEST_COMPLEMENT_C"], ["TEST_INGREDIENT_C"]
+    ]).
+
+test(excluded_recipes, [nondet]) :-
+    \+ recipe:allowed_complements([
+        ["TEST_COMPLEMENT_A", none],
+        ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
+    ], [["TEST_COMPLEMENT_B", "TEST_COMPLEMENT_C"], []]).
+
+test(excluded_ingredients, [nondet]) :-
+    \+ recipe:allowed_complements([
+        ["TEST_COMPLEMENT_A", none],
+        ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
+    ], [[], ["TEST_INGREDIENT_B", "TEST_INGREDIENT_C"]]).
+
+:- end_tests(allowed_complements).
+
+% ---------------------------------------------------------------------------- %
+% ----------------------- TEST ALLOWED COMPLEMENTS --------------------------- %
+% ---------------------------------------------------------------------------- %
