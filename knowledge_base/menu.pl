@@ -9,24 +9,24 @@
 
 main :-
     % current_prolog_flag(argv, Args), print(Args),
-    args(Nutritions, Excluded),
-    findall([Breakfast, Snack], menu(
-        Breakfast, Snack, Nutritions, Excluded
+    args(TargetNutritions, Excluded),
+    findall([[Breakfast, Snack], MenuNutritions], menu(
+        Breakfast, Snack, MenuNutritions, TargetNutritions, Excluded
     ), Menu),
     print_menu(Menu),
     halt(0).
 
 
-menu(Breakfast, Snack, TargetNutritions, Excluded) :-
+menu(Breakfast, Snack, MenuNutritions, TargetNutritions, Excluded) :-
     meal(breakfast, Breakfast, Excluded),
     [BR, BN, _, _] = Breakfast,
 
     meal(snack, Snack, Excluded),
     [SR, SN, _, _] = Snack, SR \= BR,
 
-    menu_nutritions(BN, SN, MN),
+    menu_nutritions(BN, SN, MenuNutritions),
 
-    check_nutritions(MN, TargetNutritions).
+    check_nutritions(MenuNutritions, TargetNutritions).
 
 
 combine_nutritions(NCur, NAcc, NRes) :-
@@ -86,26 +86,40 @@ meal(snack, Meal, Excluded) :-
 
 print_menu([]) :- true.
 print_menu([Menu|Menus]) :-
-    [Breakfast, Snack] = Menu,
+    [[Breakfast, Snack], Nutritions] = Menu,
     format_recipe(Breakfast, BreakfastTxt),
     format_recipe(Snack, SnackTxt),
-    format('{"breakfast": ~s, "snack": ~s}', [BreakfastTxt, SnackTxt]),
+    format_nutritions(Nutritions, NutritionsTxt),
+    format('{"meals": {"breakfast": ~s, "snack": ~s}, "nutritions": ~s}', [
+        BreakfastTxt, SnackTxt, NutritionsTxt
+    ]),
     print_menu(Menus).
 
 
-format_recipe([Recipe, _Nutritions, none, none], Txt) :-
-    swritef(Txt, '{"recipe": "%w", "additional_ingredients": null, "complements": null}', [Recipe]).
-format_recipe([Recipe, _Nutritions, AdditionalIngredientsId, none], Txt) :-
-    swritef(Txt, '{"recipe": "%w", "additional_ingredients": "%w", "complements": null}', [
-        Recipe, AdditionalIngredientsId
+format_nutritions([Cals, Prots, Fats, Carbs], Txt) :-
+    swritef(Txt, '{"calories": %w, "proteins": %w, "fats": %w, "carbohydrates": %w}', [
+        Cals, Prots, Fats, Carbs
     ]).
-format_recipe([Recipe, _Nutritions, none, ComplementsId], Txt) :-
-    swritef(Txt, '{"recipe": "%w", "additional_ingredients": null, "complements": "%w"}', [
-        Recipe, ComplementsId
+
+format_recipe([Recipe, Nutritions, none, none], Txt) :-
+    format_nutritions(Nutritions, NutritionsTxt),
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": null, "complements": null}', [
+        Recipe, NutritionsTxt
     ]).
-format_recipe([Recipe, _Nutritions, AdditionalIngredientsId, ComplementsId], Txt) :-
-    swritef(Txt, '{"recipe": "%w", "additional_ingredients": "%w", "complements": "%w"}', [
-        Recipe, AdditionalIngredientsId, ComplementsId
+format_recipe([Recipe, Nutritions, AdditionalIngredientsId, none], Txt) :-
+    format_nutritions(Nutritions, NutritionsTxt),
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": "%w", "complements": null}', [
+        Recipe, NutritionsTxt, AdditionalIngredientsId
+    ]).
+format_recipe([Recipe, Nutritions, none, ComplementsId], Txt) :-
+    format_nutritions(Nutritions, NutritionsTxt),
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": null, "complements": "%w"}', [
+        Recipe, NutritionsTxt, ComplementsId
+    ]).
+format_recipe([Recipe, Nutritions, AdditionalIngredientsId, ComplementsId], Txt) :-
+    format_nutritions(Nutritions, NutritionsTxt),
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": "%w", "complements": "%w"}', [
+        Recipe, NutritionsTxt, AdditionalIngredientsId, ComplementsId
     ]).
 
 
