@@ -183,17 +183,18 @@ test(main_ingredients, [
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, fats, AFats),
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, carbohydrates, ACarbs),
 
+    nutritions:new(cals(ACals), prots(AProts), fats(AFats), carbs(ACarbs), IANutritions),
+
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, calories, BCals),
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, proteins, BProts),
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, fats, BFats),
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, carbohydrates, BCarbs),
 
-    Cals is ACals + BCals,
-    Prots is AProts + BProts,
-    Fats is AFats + BFats,
-    Carbs is ACarbs + BCarbs,
+    nutritions:new(cals(BCals), prots(BProts), fats(BFats), carbs(BCarbs), IBNutritions),
 
-    assertion([Cals, Prots, Fats, Carbs] == Nutritions).
+    nutritions:combine([IANutritions, IBNutritions], ExpectedNutritions),
+
+    assertion(ExpectedNutritions == Nutritions).
 
 % ============================================================================ %
 
@@ -221,17 +222,18 @@ test(additional_ingredients, [
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, fats, AFats),
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, carbohydrates, ACarbs),
 
+    nutritions:new(cals(ACals), prots(AProts), fats(AFats), carbs(ACarbs), IANutritions),
+
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, calories, BCals),
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, proteins, BProts),
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, fats, BFats),
     ingredient:nutrition_query("TEST_INGREDIENT_B", "GRAM", 200, carbohydrates, BCarbs),
 
-    Cals is ACals + BCals,
-    Prots is AProts + BProts,
-    Fats is AFats + BFats,
-    Carbs is ACarbs + BCarbs,
+    nutritions:new(cals(BCals), prots(BProts), fats(BFats), carbs(BCarbs), IBNutritions),
 
-    assertion([Cals, Prots, Fats, Carbs] == Nutritions).
+    nutritions:combine([IANutritions, IBNutritions], ExpectedNutritions),
+
+    assertion(ExpectedNutritions == Nutritions).
 
 :- end_tests(recipe_ingredients).
 
@@ -298,29 +300,33 @@ test(complements, [
     recipe:complements_nutritions(Complements, Nutritions),
 
     recipes_kb:main_ingredients("TEST_COMPLEMENT_A", AMainIngredients),
-    recipe:ingredients_nutritions(AMainIngredients, [AMCals, AMProts, AMFats, AMCarbs]),
+    recipe:ingredients_nutritions(AMainIngredients, AMNutritions),
 
-    AMNutritions = [AMCals, AMProts, AMFats, AMCarbs],
-    assertion([400, 20, 20, 100] == AMNutritions),
+    nutritions:new(
+        cals(400), prots(20), fats(20), carbs(100),
+        ExpectedAMNutritions
+    ), assertion(ExpectedAMNutritions == AMNutritions),
 
     recipes_kb:main_ingredients("TEST_COMPLEMENT_B", BMainIngredients),
-    recipe:ingredients_nutritions(BMainIngredients, [BMCals, BMProts, BMFats, BMCarbs]),
+    recipe:ingredients_nutritions(BMainIngredients, BMNutritions),
 
-    BMNutritions = [BMCals, BMProts, BMFats, BMCarbs],
-    assertion([200, 10, 10, 50] == BMNutritions),
+    nutritions:new(
+        cals(200), prots(10), fats(10), carbs(50),
+        ExpectedBMNutritions
+    ), assertion(ExpectedBMNutritions == BMNutritions),
 
     recipes_kb:additional_ingredients("TEST_COMPLEMENT_B", "INGREDIENTS_ID", BAdditionalIngredients),
-    recipe:ingredients_nutritions(BAdditionalIngredients, [BACals, BAProts, BAFats, BACarbs]),
+    recipe:ingredients_nutritions(BAdditionalIngredients, BANutritions),
 
-    BANutritions = [BACals, BAProts, BAFats, BACarbs],
-    assertion([200, 10, 10, 50] == BANutritions),
+    nutritions:new(
+        cals(200), prots(10), fats(10), carbs(50),
+        ExpectedBANutritions
+    ), assertion(ExpectedBANutritions == BANutritions),
 
-    Cals is AMCals + BMCals+ BACals,
-    Prots is AMProts + BMProts+ BAProts,
-    Fats is AMFats + BMFats+ BAFats,
-    Carbs is AMCarbs + BMCarbs+ BACarbs,
-
-    assertion([Cals, Prots, Fats, Carbs] == Nutritions).
+    nutritions:combine(
+        [AMNutritions, BMNutritions, BANutritions],
+        ExpectedNutritions
+    ), assertion(ExpectedNutritions == Nutritions).
 
 :- end_tests(recipe_complements).
 
