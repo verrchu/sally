@@ -639,6 +639,187 @@ test(format_recipe_complete, [nondet]) :-
 % --------------------------- TEST FORMATTERS -------------------------------- %
 % ---------------------------------------------------------------------------- %
 
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+% +++++++++++++++++++++++++ TEST RCIPE VARIANTS ++++++++++++++++++++++++++++++ %
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+
+setup_suite(recipe_variant) :-
+    alter_suite(recipe_variant, assert).
+
+cleanup_suite(recipe_variant) :-
+    alter_suite(recipe_variant, retract).
+
+alter_suite(recipe_variant, Pred) :-
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,calories,100)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,carbohydrates,25)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,fats,5)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,proteins,5)),
+
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","NATURAL",1,calories,100)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","NATURAL",1,carbohydrates,25)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","NATURAL",1,fats,5)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","NATURAL",1,proteins,5)),
+
+    call(Pred, recipes_kb:main_ingredients("TEST_RECIPE",[
+        ["TEST_INGREDIENT_A","NATURAL",1]
+    ])),
+    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_A",[
+        ["TEST_INGREDIENT_A","NATURAL",1]
+    ])),
+    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_B",[
+        ["TEST_INGREDIENT_A","NATURAL",1]
+    ])),
+
+    call(Pred, recipes_kb:additional_ingredients(
+        "TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_INGREDIENTS_ID",[
+            ["TEST_INGREDIENT_B","NATURAL",1]
+        ]
+    )).
+
+
+:- begin_tests(recipe_variant, [
+    setup(setup_suite(recipe_variant)),
+    cleanup(cleanup_suite(recipe_variant))
+]).
+
+:- discontiguous plunit_recipe_variant:setup_test/1.
+:- discontiguous plunit_recipe_variant:cleanup_test/1.
+:- discontiguous plunit_recipe_variant:alter_test/2.
+
+% ============================================================================ %
+
+test(recipe_variant_base) :-
+    \+ recipe:variant("TEST_RECIPE", _Nutritions, none, none, [[], []]).
+
+% ============================================================================ %
+
+setup_test(recipe_variant_base) :-
+    alter_test(recipe_variant_base, assert).
+
+cleanup_test(recipe_variant_base) :-
+    alter_test(recipe_variant_base, retract).
+
+alter_test(recipe_variant_base, Pred) :-
+    call(Pred, recipes_kb:sufficient("TEST_RECIPE")).
+
+test(recipe_variant_base_sufficient, [
+    setup(setup_test(recipe_variant_base)),
+    cleanup(cleanup_test(recipe_variant_base)),
+    nondet
+]) :-
+    recipe:variant("TEST_RECIPE", Nutritions, none, none, [[], []]),
+    nutritions:new(
+        cals(100), prots(5), fats(5), carbs(25),
+        ExpectedNutritions
+    ), assertion(ExpectedNutritions == Nutritions).
+
+% ============================================================================ %
+
+setup_test(recipe_variant_additional_ingredients) :-
+    alter_test(recipe_variant_additional_ingredients, assert).
+
+cleanup_test(recipe_variant_additional_ingredients) :-
+    alter_test(recipe_variant_additional_ingredients, retract).
+
+alter_test(recipe_variant_additional_ingredients, Pred) :-
+    call(Pred, recipes_kb:additional_ingredients("TEST_RECIPE","INGREDIENTS_ID",[
+        ["TEST_INGREDIENT_B","NATURAL",1]
+    ])).
+
+test(recipe_variant_additional_ingredients, [
+    setup(setup_test(recipe_variant_additional_ingredients)),
+    cleanup(cleanup_test(recipe_variant_additional_ingredients)),
+    nondet
+]) :-
+    recipe:variant("TEST_RECIPE", Nutritions, "INGREDIENTS_ID", none, [[], []]),
+    nutritions:new(
+        cals(200), prots(10), fats(10), carbs(50),
+        ExpectedNutritions
+    ), assertion(ExpectedNutritions == Nutritions).
+
+% ============================================================================ %
+
+setup_test(recipe_variant_complements) :-
+    alter_test(recipe_variant_complements, assert).
+
+cleanup_test(recipe_variant_complements) :-
+    alter_test(recipe_variant_complements, retract).
+
+alter_test(recipe_variant_complements, Pred) :-
+    call(Pred, recipes_kb:complements("TEST_RECIPE","COMPLEMENTS_ID",[
+        ["TEST_COMPLEMENT_A",none],
+        ["TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_INGREDIENTS_ID"]
+    ])).
+
+test(recipe_variant_complements, [
+    setup(setup_test(recipe_variant_complements)),
+    cleanup(cleanup_test(recipe_variant_complements)),
+    nondet
+]) :-
+    \+ recipe:variant("TEST_RECIPE", _Nutritions, none, "COMPLEMENTS_ID", [[], []]).
+
+% ============================================================================ %
+
+setup_test(recipe_variant_complements_sufficient) :-
+    alter_test(recipe_variant_complements_sufficient, assert).
+
+cleanup_test(recipe_variant_complements_sufficient) :-
+    alter_test(recipe_variant_complements_sufficient, retract).
+
+alter_test(recipe_variant_complements_sufficient, Pred) :-
+    call(Pred, recipes_kb:sufficient("TEST_RECIPE")),
+    call(Pred, recipes_kb:complements("TEST_RECIPE","COMPLEMENTS_ID",[
+        ["TEST_COMPLEMENT_A",none],
+        ["TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_INGREDIENTS_ID"]
+    ])).
+
+test(recipe_variant_complements_sufficient, [
+    setup(setup_test(recipe_variant_complements_sufficient)),
+    cleanup(cleanup_test(recipe_variant_complements_sufficient)),
+    nondet
+]) :-
+    recipe:variant("TEST_RECIPE", Nutritions, none, "COMPLEMENTS_ID", [[], []]),
+    nutritions:new(
+        cals(400), prots(20), fats(20), carbs(100),
+        ExpectedNutritions
+    ), assertion(ExpectedNutritions == Nutritions).
+
+% ============================================================================ %
+
+setup_test(recipe_variant_complete) :-
+    alter_test(recipe_variant_complete, assert).
+
+cleanup_test(recipe_variant_complete) :-
+    alter_test(recipe_variant_complete, retract).
+
+alter_test(recipe_variant_complete, Pred) :-
+    call(Pred, recipes_kb:additional_ingredients("TEST_RECIPE","INGREDIENTS_ID",[
+        ["TEST_INGREDIENT_B","NATURAL",1]
+    ])),
+    call(Pred, recipes_kb:complements("TEST_RECIPE","COMPLEMENTS_ID",[
+        ["TEST_COMPLEMENT_A",none],
+        ["TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_INGREDIENTS_ID"]
+    ])).
+
+test(recipe_variant_complete, [
+    setup(setup_test(recipe_variant_complete)),
+    cleanup(cleanup_test(recipe_variant_complete)),
+    nondet
+]) :-
+    recipe:variant(
+        "TEST_RECIPE", Nutritions, "INGREDIENTS_ID", "COMPLEMENTS_ID", [[], []]
+    ),
+    nutritions:new(
+        cals(500), prots(25), fats(25), carbs(125),
+        ExpectedNutritions
+    ), assertion(ExpectedNutritions == Nutritions).
+
+:- end_tests(recipe_variant).
+
+% ---------------------------------------------------------------------------- %
+% ------------------------- TEST RCIPE VARIANTS ------------------------------ %
+% ---------------------------------------------------------------------------- %
+
 
 % ============================================================================ %
 % ================================ UTILS ===================================== %
