@@ -533,3 +533,111 @@ test(combine_many) :-
 % ---------------------------------------------------------------------------- %
 % --------------------------- TEST NUTRITIONS -------------------------------- %
 % ---------------------------------------------------------------------------- %
+
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+% +++++++++++++++++++++++++++ TEST FORMATTERS ++++++++++++++++++++++++++++++++ %
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+
+:- begin_tests(forematters).
+
+test(format_nutritions) :-
+    nutritions:default(Nutritions),
+    menu:format_nutritions(Nutritions, Txt),
+
+    merge_strings([
+        "{",
+            "\"calories\": 0, ",
+            "\"proteins\": 0, ",
+            "\"fats\": 0, ",
+            "\"carbohydrates\": 0",
+        "}"
+    ], ExpectedTxt), assertion(ExpectedTxt == Txt).
+
+% ============================================================================ %
+
+test(format_recipe_base, [nondet]) :-
+    nutritions:default(Nutritions),
+    menu:format_recipe(["TEST_RECIPE", Nutritions, none, none], Txt),
+
+    merge_strings([
+        "{",
+            "\"recipe\": \"TEST_RECIPE\", ",
+            "\"nutritions\": {",
+                "\"calories\": 0, ",
+                "\"proteins\": 0, ",
+                "\"fats\": 0, ",
+                "\"carbohydrates\": 0",
+            "}, ",
+            "\"additional_ingredients\": null, ",
+            "\"complements\": null",
+        "}"
+    ], ExpectedTxt), assertion(ExpectedTxt == Txt).
+    
+% ============================================================================ %
+
+test(format_recipe_with_additional_ingredients, [nondet]) :-
+    nutritions:default(Nutritions),
+    menu:format_recipe(["TEST_RECIPE", Nutritions, "INGREDIENTS_ID", none], Txt),
+
+    merge_strings([
+        "{",
+            "\"recipe\": \"TEST_RECIPE\", ",
+            "\"nutritions\": {",
+                "\"calories\": 0, ",
+                "\"proteins\": 0, ",
+                "\"fats\": 0, ",
+                "\"carbohydrates\": 0",
+            "}, ",
+            "\"additional_ingredients\": \"INGREDIENTS_ID\", ",
+            "\"complements\": null",
+        "}"
+    ], ExpectedTxt), assertion(ExpectedTxt == Txt).
+
+% ============================================================================ %
+
+test(format_recipe_with_complements, [nondet]) :-
+    nutritions:default(Nutritions),
+    menu:format_recipe(["TEST_RECIPE", Nutritions, none, "COMPLEMENTS_ID"], Txt),
+
+    merge_strings([
+        "{",
+            "\"recipe\": \"TEST_RECIPE\", ",
+            "\"nutritions\": {",
+                "\"calories\": 0, ",
+                "\"proteins\": 0, ",
+                "\"fats\": 0, ",
+                "\"carbohydrates\": 0",
+            "}, ",
+            "\"additional_ingredients\": null, ",
+            "\"complements\": \"COMPLEMENTS_ID\"",
+        "}"
+    ], ExpectedTxt), assertion(ExpectedTxt == Txt).
+
+% ============================================================================ %
+
+test(format_recipe_complete, [nondet]) :-
+    nutritions:default(Nutritions),
+    menu:format_recipe(["TEST_RECIPE", Nutritions, "INGREDIENTS_ID", "COMPLEMENTS_ID"], Txt),
+
+    merge_strings([
+        "{",
+            "\"recipe\": \"TEST_RECIPE\", ",
+            "\"nutritions\": {",
+                "\"calories\": 0, ",
+                "\"proteins\": 0, ",
+                "\"fats\": 0, ",
+                "\"carbohydrates\": 0",
+            "}, ",
+            "\"additional_ingredients\": \"INGREDIENTS_ID\", ",
+            "\"complements\": \"COMPLEMENTS_ID\"",
+        "}"
+    ], ExpectedTxt), assertion(ExpectedTxt == Txt).
+
+:- end_tests(forematters).
+
+% ---------------------------------------------------------------------------- %
+% --------------------------- TEST FORMATTERS -------------------------------- %
+% ---------------------------------------------------------------------------- %
+
+merge_strings(Strings, Txt) :-
+    lists:reverse(Strings, Rev), foldl(string_concat, Rev, "", Txt).
