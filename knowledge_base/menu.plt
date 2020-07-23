@@ -343,8 +343,12 @@ test(complements, [
 test(empty_excluded) :-
     recipe:allowed_recipe("TEST_RECIPE", [[], []]).
 
+% ============================================================================ %
+
 test(not_excluded) :-
     recipe:allowed_recipe("TEST_RECIPE_A", [["TEST_RECIPE_B"], []]).
+
+% ============================================================================ %
 
 test(excluded) :-
     \+ recipe:allowed_recipe("TEST_RECIPE_A", [
@@ -369,11 +373,15 @@ test(empty_excluded) :-
         ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
     ], [[], []]).
 
+% ============================================================================ %
+
 test(not_excluded) :-
     recipe:allowed_ingredients([
         ["TEST_INGREDIENT_A","TEST_UNIT_A",2],
         ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
     ], [[], ["TEST_INGREDIENT_C"]]).
+
+% ============================================================================ %
 
 test(excluded) :-
     \+ recipe:allowed_ingredients([
@@ -414,11 +422,15 @@ alter_suite(allowed_complements, Pred) :-
     cleanup(cleanup_suite(allowed_complements))
 ]).
 
+% ============================================================================ %
+
 test(empty_excluded, [nondet]) :-
     recipe:allowed_complements([
         ["TEST_COMPLEMENT_A", none],
         ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
     ], [[], []]).
+
+% ============================================================================ %
 
 test(not_excluded, [nondet]) :-
     Complements = [
@@ -432,11 +444,15 @@ test(not_excluded, [nondet]) :-
         ["TEST_COMPLEMENT_C"], ["TEST_INGREDIENT_C"]
     ]).
 
+% ============================================================================ %
+
 test(excluded_recipes, [nondet]) :-
     \+ recipe:allowed_complements([
         ["TEST_COMPLEMENT_A", none],
         ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
     ], [["TEST_COMPLEMENT_B", "TEST_COMPLEMENT_C"], []]).
+
+% ============================================================================ %
 
 test(excluded_ingredients, [nondet]) :-
     \+ recipe:allowed_complements([
@@ -463,6 +479,8 @@ test(default) :-
     nutritions:fats(Nutritions, Fats), assertion(Fats == 0),
     nutritions:carbs(Nutritions, Carbs), assertion(Carbs == 0).
 
+% ============================================================================ %
+
 test(new) :-
     nutritions:new(cals(1), prots(2), fats(3), carbs(4), Nutritions),
     nutritions:cals(Nutritions, Cals), assertion(Cals == 1),
@@ -470,27 +488,39 @@ test(new) :-
     nutritions:fats(Nutritions, Fats), assertion(Fats == 3),
     nutritions:carbs(Nutritions, Carbs), assertion(Carbs == 4).
 
+% ============================================================================ %
+
 test(cals) :-
     nutritions:new(cals(1), prots(0), fats(0), carbs(0), Nutritions),
     nutritions:cals(Nutritions, Cals), assertion(Cals == 1).
     
+% ============================================================================ %
+
 test(prots) :-
     nutritions:new(cals(0), prots(1), fats(0), carbs(0), Nutritions),
     nutritions:prots(Nutritions, Prots), assertion(Prots == 1).
+
+% ============================================================================ %
 
 test(fats) :-
     nutritions:new(cals(0), prots(0), fats(1), carbs(0), Nutritions),
     nutritions:fats(Nutritions, Fats), assertion(Fats == 1).
 
+% ============================================================================ %
+
 test(carbs) :-
     nutritions:new(cals(0), prots(0), fats(0), carbs(1), Nutritions),
     nutritions:carbs(Nutritions, Carbs), assertion(Carbs == 1).
+
+% ============================================================================ %
 
 test(combine_base) :-
     nutritions:new(cals(1), prots(1), fats(1), carbs(1), ANutritions),
     nutritions:new(cals(2), prots(2), fats(2), carbs(2), BNutritions),
     nutritions:new(cals(3), prots(3), fats(3), carbs(3), CNutritions),
     nutritions:combine(ANutritions, BNutritions, CNutritions).
+
+% ============================================================================ %
 
 test(combine_many) :-
     nutritions:new(cals(1), prots(1), fats(1), carbs(1), ANutritions),
