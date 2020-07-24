@@ -1,7 +1,7 @@
 :- module(recipe, [
     breakfast/1,
     snack/1,
-    variant/5
+    instance/5
 ]).
 
 :- use_module(recipes_kb).
@@ -57,7 +57,7 @@ allowed_complements([[Recipe,AdditionalIngredientsId]|Complements], Excluded) :-
     allowed_complements(Complements, Excluded).
 
 
-variant(
+instance(
     Recipe, Nutritions, none, none, Excluded
 ) :-
     recipes_kb:sufficient(Recipe),
@@ -66,7 +66,7 @@ variant(
         Recipe, MainIngredients
     ), allowed_ingredients(MainIngredients, Excluded),
     ingredients_nutritions(MainIngredients, Nutritions).
-variant(
+instance(
     Recipe, Nutritions, AdditionalIngredientsId, none, Excluded
 ) :-
     recipes_kb:additional_ingredients(
@@ -80,7 +80,7 @@ variant(
     ingredients_nutritions(MainIngredients, MINutritions),
 
     nutritions:combine([AINutritions, MINutritions], Nutritions).
-variant(
+instance(
     Recipe, Nutritions, none, ComplementsId, Excluded
 ) :-
     recipes_kb:sufficient(Recipe),
@@ -96,7 +96,7 @@ variant(
     ingredients_nutritions(MainIngredients, MINutritions),
 
     nutritions:combine([MINutritions, CNutritions], Nutritions).
-variant(
+instance(
     Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
 ) :-
     recipes_kb:complements(

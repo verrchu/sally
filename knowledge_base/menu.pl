@@ -55,21 +55,21 @@ check_carbohydrates(Val, Target) :-
 % TODO: reduce code duplication
 meal(breakfast, Meal, Excluded) :-
     recipe:breakfast(Recipe),
-    recipe:variant(
+    recipe:instance(
         Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
     ),
 
     Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
 meal(snack, Meal, Excluded) :-
     recipe:snack(Recipe),
-    recipe:variant(
+    recipe:instance(
         Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
     ),
 
     Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
 meal(lunch, Meal, Excluded) :-
     recipe:lunch(Recipe),
-    recipe:variant(
+    recipe:instance(
         Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
     ),
 
