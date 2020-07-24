@@ -1,0 +1,27 @@
+meals:
+  - LUNCH
+sufficient: true
+embeddable: false
+ingredients:
+  main:
+    EGG:
+      unit: NATURAL
+      quantity: 1
+    FLOUR:
+      unit: TABLESPOON
+      quantity: 1
+    CHICKEN_FILLET:
+      unit: GRAM
+      quantity: 250
+  technical:
+    SPICE:
+      quantity: ANY
+    SALT:
+      quantity: ANY
+complements:
+    '01EDZXGA4F93SH6HCMB22B794S':
+      PASTA:
+        additional_ingredients: '01EDZXD268GE7MRXNEAV6JMX90'
+    '01EDZY69T9CZJCX0J8FWS3G34P':
+      BUCKWHEAT:
+        additional_ingredients: null

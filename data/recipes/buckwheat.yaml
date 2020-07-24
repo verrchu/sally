@@ -1,0 +1,7 @@
+sufficient: true
+embeddable: true
+ingredients:
+  main:
+    BUCKWHEAT:
+      unit: GRAM
+      quantity: 50
