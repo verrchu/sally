@@ -1,6 +1,5 @@
 :- module(recipe, [
-    breakfast/1,
-    snack/1,
+    breakfast/1, snack/1, lunch/1,
     instance/5
 ]).
 

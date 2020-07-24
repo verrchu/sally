@@ -1,6 +1,8 @@
 :- set_prolog_flag(verbose, silent).
 
-:- use_module(recipe).
+:- use_module(recipe, [
+    breakfast/1, snack/1, lunch/1
+]).
 :- use_module(nutritions).
 
 
@@ -52,23 +54,8 @@ check_carbohydrates(Val, Target) :-
     Val > Target * 0.90, Val < Target * 1.02.
 
 
-% TODO: reduce code duplication
-meal(breakfast, Meal, Excluded) :-
-    recipe:breakfast(Recipe),
-    recipe:instance(
-        Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
-    ),
-
-    Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
-meal(snack, Meal, Excluded) :-
-    recipe:snack(Recipe),
-    recipe:instance(
-        Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
-    ),
-
-    Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
-meal(lunch, Meal, Excluded) :-
-    recipe:lunch(Recipe),
+meal(MealType, Meal, Excluded) :-
+    call(MealType, Recipe),
     recipe:instance(
         Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
     ),
