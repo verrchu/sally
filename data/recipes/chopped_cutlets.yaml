@@ -9,17 +9,16 @@ ingredients:
       quantity: 1
     FLOUR:
       unit: TABLESPOON
+      quantity: 1
     CHICKEN_FILLET:
       unit: GRAM
       quantity: 250
-    technical:
-      SPICE:
-        unit: NATURAL
-        quantity: ANY
-      SALT:
-        unit: NATURAL
-        quantity: ANY
+  technical:
+    SPICE:
+      quantity: ANY
+    SALT:
+      quantity: ANY
 complements:
-    '11':
+    '01EDZXGA4F93SH6HCMB22B794S':
       PASTA:
-      additional_ingredients: '11'
+        additional_ingredients: '01EDZXD268GE7MRXNEAV6JMX90'

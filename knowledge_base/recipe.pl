@@ -15,6 +15,9 @@ breakfast(Recipe) :-
 snack(Recipe) :-
     generic_meal(Recipe, "SNACK").
 
+lunch(Recipe) :-
+    generic_meal(Recipe, "LUNCH").
+
 generic_meal(Recipe, Meal) :-
     recipes_kb:meal(Recipe, Meal).
 

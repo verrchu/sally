@@ -15,7 +15,7 @@
           "minItems": 1,
           "items": {
             "type": "string",
-            "enum": ["BREAKFAST", "SNACK"]
+            "enum": ["BREAKFAST", "SNACK", "LUNCH"]
           }
         },
         "sufficient": {

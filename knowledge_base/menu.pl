@@ -7,21 +7,25 @@
 main :-
     % current_prolog_flag(argv, Args), print(Args),
     args(TargetNutritions, Excluded),
-    findall([[Breakfast, Snack], MenuNutritions], menu(
-        Breakfast, Snack, MenuNutritions, TargetNutritions, Excluded
+    findall([[Breakfast, Snack, Lunch], MenuNutritions], menu(
+        [Breakfast, Snack, Lunch],
+        MenuNutritions, TargetNutritions, Excluded
     ), Menu),
     print_menu(Menu),
     halt(0).
 
 
-menu(Breakfast, Snack, MenuNutritions, TargetNutritions, Excluded) :-
+menu([Breakfast, Snack, Lunch], MenuNutritions, TargetNutritions, Excluded) :-
     meal(breakfast, Breakfast, Excluded),
     [BR, BN, _, _] = Breakfast,
 
     meal(snack, Snack, Excluded),
     [SR, SN, _, _] = Snack, SR \= BR,
 
-    nutritions:combine([BN, SN], MenuNutritions),
+    meal(lunch, Lunch, Excluded),
+    [LR, LN, _, _] = Lunch, LR \= BR, LR \= SR,
+
+    nutritions:combine([BN, SN, LN], MenuNutritions),
 
     check_nutritions(MenuNutritions, TargetNutritions).
 
@@ -63,16 +67,24 @@ meal(snack, Meal, Excluded) :-
     ),
 
     Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
+meal(lunch, Meal, Excluded) :-
+    recipe:lunch(Recipe),
+    recipe:variant(
+        Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
+    ),
+
+    Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
 
 
 print_menu([]) :- true.
 print_menu([Menu|Menus]) :-
-    [[Breakfast, Snack], Nutritions] = Menu,
+    [[Breakfast, Snack, Lunch], Nutritions] = Menu,
     format_recipe(Breakfast, BreakfastTxt),
     format_recipe(Snack, SnackTxt),
+    format_recipe(Lunch, LunchTxt),
     format_nutritions(Nutritions, NutritionsTxt),
-    format('{"meals": {"breakfast": ~s, "snack": ~s}, "nutritions": ~s}', [
-        BreakfastTxt, SnackTxt, NutritionsTxt
+    format('{"meals": {"breakfast": ~s, "snack": ~s, "lunch": ~s}, "nutritions": ~s}', [
+        BreakfastTxt, SnackTxt, LunchTxt, NutritionsTxt
     ]),
     print_menu(Menus).
 
