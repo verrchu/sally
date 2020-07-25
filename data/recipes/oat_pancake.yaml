@@ -1,9 +1,10 @@
 meals:
   - BREAKFAST
+plural: false
 sufficient: false
 embeddable: false
 ingredients:
-  main:
+  regular:
     EGG:
       unit: NATURAL
       quantity: 1
@@ -13,19 +14,28 @@ ingredients:
     OAT:
       unit: GRAM
       quantity: 40
-  additional:
-    '01ECVN5K5SE900A9PH88Z9QY9A':
+variants:
+  '01ECVN5K5SE900A9PH88Z9QY9A':
+    standalone: true
+    embeddable: false
+    ingredients:
       HONEY:
         unit: TEASPOON
         quantity: 1
-    '01ECVN65T2N4JTVYKV89PF42PX':
+  '01ECVN65T2N4JTVYKV89PF42PX':
+    standalone: true
+    embeddable: false
+    ingredients:
       SALMON:
         unit: GRAM
         quantity: 50
       CREAM_CHEESE:
         unit: GRAM
         quantity: 30
-    '01ECVN6Q3STBJ4K9SD6Z85Z7RQ':
+  '01ECVN6Q3STBJ4K9SD6Z85Z7RQ':
+    standalone: true
+    embeddable: false
+    ingredients:
       CREAM_CHEESE:
         unit: GRAM
         quantity: 30
@@ -35,7 +45,10 @@ ingredients:
       LETTUCE:
         unit: GRAM
         quantity: 20
-    '01ECVN7B12E2C6N0PD17HEZDV9':
+  '01ECVN7B12E2C6N0PD17HEZDV9':
+    standalone: true
+    embeddable: false
+    ingredients:
       DARK_CHOCOLATE:
         unit: GRAM
         quantity: 30

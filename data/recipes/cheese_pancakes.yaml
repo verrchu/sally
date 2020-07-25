@@ -1,15 +1,16 @@
 meals:
   - BREAKFAST
+plural: true
 sufficient: false
 embeddable: false
 ingredients:
-  main:
+  regular:
     EGG:
       unit: NATURAL
       quantity: 1
     FLOUR:
       unit: TABLESPOON
-      quantity: 1
+      quantity: 2
     COTTAGE_CHEESE:
       unit: GRAM
       quantity: 220
@@ -19,24 +20,39 @@ ingredients:
       quantity: 0.5
     SUGAR_SUBSTITUTE:
       quantity: ANY
-  additional:
-    '01ECVMYMMCFC8ETMQDPZ4SQT5J':
+variants:
+  '01ECVMYMMCFC8ETMQDPZ4SQT5J':
+    standalone: true
+    embeddable: false
+    ingredients:
       SOUR_CREAM:
         unit: GRAM
         quantity: 15
-    '01ECVMZB5NF7K3XSWWT94QNTAP':
+  '01ECVMZB5NF7K3XSWWT94QNTAP':
+    standalone: true
+    embeddable: false
+    ingredients:
       DARK_CHOCOLATE:
         unit: GRAM
         quantity: 30
-    '01ECVN08FK873T2WXB3WCP84XF':
+  '01ECVN08FK873T2WXB3WCP84XF':
+    standalone: true
+    embeddable: false
+    ingredients:
       COCONUT_FLAKES:
         unit: GRAM
         quantity: 30
-    '01ECVN0TCB20H8NAYMWF49AGPY':
+  '01ECVN0TCB20H8NAYMWF49AGPY':
+    standalone: true
+    embeddable: false
+    ingredients:
       JAM:
         unit: GRAM
         quantity: 50
-    '01ECVN1AHBW207267JHKW549Z0':
+  '01ECVN1AHBW207267JHKW549Z0':
+    standalone: true
+    embeddable: false
+    ingredients:
       DARK_CHOCOLATE:
         unit: GRAM
         quantity: 30

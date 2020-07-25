@@ -1,22 +1,32 @@
 meals:
   - SNACK
+plural: false
 sufficient: false
 embeddable: false
 ingredients:
-  main:
+  regular:
     COTTAGE_CHEESE:
       unit: GRAM
       quantity: 200
-  additional:
-    "01EDDVRKT7KDN0C44C8Z77H7C0":
-       PEACH:
-         unit: NATURAL
-         quantity: 1
-    "01EDDVTM6FA4FKMPEZ3XQ36CVV":
+variants:
+  '01EDDVRKT7KDN0C44C8Z77H7C0':
+    standalone: true
+    embeddable: false
+    ingredients:
+      PEACH:
+        unit: NATURAL
+        quantity: 1
+  '01EDDVTM6FA4FKMPEZ3XQ36CVV':
+    standalone: true
+    embeddable: false
+    ingredients:
       JAM:
         unit: GRAM
         quantity: 50
-    "01EDDVVDF7W6CG72H9Q89CCW3C":
+  '01EDDVVDF7W6CG72H9Q89CCW3C':
+    standalone: true
+    embeddable: false
+    ingredients:
       BANANA:
         unit: NATURAL
         quantity: 1

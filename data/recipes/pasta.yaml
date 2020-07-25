@@ -1,12 +1,16 @@
+plural: false
 sufficient: false
 embeddable: true
 ingredients:
-  main:
+  regular:
     PASTA:
       unit: GRAM
       quantity: 50
-  additional:
-    '01EDZXD268GE7MRXNEAV6JMX90':
+variants:
+  '01EDZXD268GE7MRXNEAV6JMX90':
+    standalone: false
+    embeddable: true
+    ingredients:
       CHEESE:
         unit: GRAM
         quantity: 20

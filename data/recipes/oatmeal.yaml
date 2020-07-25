@@ -1,30 +1,46 @@
 meals:
   - BREAKFAST
+plural: false
 sufficient: false
 embeddable: false
 ingredients:
-  main:
+  regular:
     OAT:
       unit: GRAM
       quantity: 45
-  additional:
-    "01EDDVX2WYRVNA67ZQJRAV3MBF":
+variants:
+  '01EDDVX2WYRVNA67ZQJRAV3MBF':
+    standalone: true
+    embeddable: false
+    ingredients:
       HONEY:
         unit: TEASPOON
         quantity: 1
-    "01EDDVXYVY15VHGVHG04W45CA4":
+  '01EDDVXYVY15VHGVHG04W45CA4':
+    standalone: true
+    embeddable: false
+    ingredients:
       PEACH:
         unit: NATURAL
         quantity: 1
-    "01EDDVYZWYVXDEAE65NMG78Q0X":
+  '01EDDVYZWYVXDEAE65NMG78Q0X':
+    standalone: true
+    embeddable: false
+    ingredients:
       JAM:
         unit: GRAM
         quantity: 50
-    "01EDDVZH7GNMH064ASQCT3MMKG":
+  '01EDDVZH7GNMH064ASQCT3MMKG':
+    standalone: true
+    embeddable: false
+    ingredients:
       BANANA:
         unit: NATURAL
         quantity: 1
-    "01EDDW004H870EKWY1D37MJDAD":
+  '01EDDW004H870EKWY1D37MJDAD':
+    standalone: true
+    embeddable: false
+    ingredients:
       PEANUT_BUTTER:
         unit: GRAM
         quantity: 15

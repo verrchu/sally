@@ -1,20 +1,24 @@
 meals:
   - SNACK
+plural: false
 sufficient: false
 embeddable: true
 ingredients:
-  main:
+  regular:
     CRISP:
       unit: NATURAL
-      quantity: 2
-  additional:
-    "01EDDW2RM80Y1EWFYVRKDBDYNR":
+      quantity: 1
+variants:
+  '01EDDW2RM80Y1EWFYVRKDBDYNR':
+    standalone: true
+    embeddable: true
+    ingredients:
       CREAM_CHEESE:
         unit: GRAM
-        quantity: 30
+        quantity: 15
       SALMON:
         unit: GRAM
-        quantity: 50
+        quantity: 25
       CUCUMBER:
-          unit: NATURAL
-          quantity: 1
+        unit: NATURAL
+        quantity: 0.5

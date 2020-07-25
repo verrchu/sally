@@ -2,23 +2,23 @@ import os
 
 PREDICATE_MEAL = 'meal'
 PREDICATE_SUFFICIENT = 'sufficient'
-PREDICATE_MAIN_INGREDIENTS = 'main_ingredients'
-PREDICATE_ADDITIONAL_INGREDIENTS = 'additional_ingredients'
+PREDICATE_INGREDIENTS = 'ingredients'
+PREDICATE_VARIANT = 'variant'
 PREDICATE_COMPLEMENTS = 'complements'
 
 MODULE_HEADER = f"""
 :- module(recipes_kb, [
     {PREDICATE_MEAL}/2,
     {PREDICATE_SUFFICIENT}/1,
-    {PREDICATE_MAIN_INGREDIENTS}/2,
-    {PREDICATE_ADDITIONAL_INGREDIENTS}/3,
+    {PREDICATE_INGREDIENTS}/2,
+    {PREDICATE_VARIANT}/3,
     {PREDICATE_COMPLEMENTS}/3
 ]).
 
 :- dynamic {PREDICATE_MEAL}/2.
 :- dynamic {PREDICATE_SUFFICIENT}/1.
-:- dynamic {PREDICATE_MAIN_INGREDIENTS}/2.
-:- dynamic {PREDICATE_ADDITIONAL_INGREDIENTS}/3.
+:- dynamic {PREDICATE_INGREDIENTS}/2.
+:- dynamic {PREDICATE_VARIANT}/3.
 :- dynamic {PREDICATE_COMPLEMENTS}/3.
 """
 
@@ -37,9 +37,9 @@ def render(kb_dir, recipes):
         kb.write('\n')
         render_meals(kb, recipes)
         kb.write('\n')
-        render_main_ingredients(kb, recipes)
+        render_ingredients(kb, recipes)
         kb.write('\n')
-        render_additional_ingredients(kb, recipes)
+        render_variants(kb, recipes)
         kb.write('\n')
         render_complements(kb, recipes)
 
@@ -64,14 +64,14 @@ def render_meals(kb, recipes):
                 kb.write(f'{pred}({name},{meal}).\n')
 
 
-def render_main_ingredients(kb, recipes):
-    pred = PREDICATE_MAIN_INGREDIENTS
+def render_ingredients(kb, recipes):
+    pred = PREDICATE_INGREDIENTS
 
     for recipe_name, recipe in recipes.items():
         recipe_name = f'"{recipe_name}"'
 
         ingredients = []
-        for ingredient_name, ingredient in recipe['ingredients']['main'].items():
+        for ingredient_name, ingredient in recipe['ingredients']['regular'].items():
             name = f'"{ingredient_name}"'
             unit = f'"{ingredient["unit"]}"'
             quantity = ingredient['quantity']
@@ -83,17 +83,16 @@ def render_main_ingredients(kb, recipes):
         kb.write(f'{pred}({recipe_name},[\n{ingredients}\n]).\n')
 
 
-def render_additional_ingredients(kb, recipes):
-    pred = PREDICATE_ADDITIONAL_INGREDIENTS
+def render_variants(kb, recipes):
+    pred = PREDICATE_VARIANT
 
     for recipe_name, recipe in recipes.items():
         recipe_name = f'"{recipe_name}"'
 
-        if 'additional' in recipe['ingredients']:
-            additional_ingredients = recipe['ingredients']['additional']
-            for ingredients_group_id, ingredients_group in additional_ingredients.items():
+        if 'variants' in recipe:
+            for variant_id, variant in recipe['variants'].items():
                 ingredients = []
-                for ingredient_name, ingredient in ingredients_group.items():
+                for ingredient_name, ingredient in variant['ingredients'].items():
                     name = f'"{ingredient_name}"'
                     unit = f'"{ingredient["unit"]}"'
                     quantity = ingredient['quantity']
@@ -102,9 +101,12 @@ def render_additional_ingredients(kb, recipes):
                 ingredients = f',\n{space(4)}'.join(ingredients)
                 ingredients = f'[\n{space(4)}{ingredients}\n]'
 
-                ingredients_group_id = f'"{ingredients_group_id}"'
+                variant_id = f'"{variant_id}"'
 
-                kb.write(f'{pred}({recipe_name},{ingredients_group_id},{ingredients}).\n')
+                if variant['standalone']:
+                    kb.write(f'{pred}({recipe_name},[standalone,{variant_id}],{ingredients}).\n')
+                if variant['embeddable']:
+                    kb.write(f'{pred}({recipe_name},[embeddable,{variant_id}],{ingredients}).\n')
 
 
 def render_complements(kb, recipes):
@@ -119,11 +121,11 @@ def render_complements(kb, recipes):
                 for complement_name, complement in complements.items():
                     name = f'"{complement_name}"'
 
-                    if complement['additional_ingredients']:
-                        additional_ingredients_id = complement['additional_ingredients']
-                        additional_ingredients_id = f'"{additional_ingredients_id}"'
+                    if complement['variant']:
+                        variant_id = complement['variant']
+                        variant_id = f'"{variant_id}"'
 
-                        complements_txt.append(f'[{name},{additional_ingredients_id}]')
+                        complements_txt.append(f'[{name},{variant_id}]')
                     else:
                         complements_txt.append(f'[{name},none]')
 

@@ -1,8 +1,8 @@
 units:
-    NATURAL:
-      quantity: 1
-      nutritions:
-          calories: 95
-          carbohydrates: 21.8
-          fats: 0.2
-          proteins: 1.5
+  NATURAL:
+    quantity: 1
+    nutritions:
+      calories: 95
+      proteins: 1.5
+      fats: 0.2
+      carbohydrates: 21.8

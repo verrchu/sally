@@ -1,9 +1,10 @@
 meals:
   - SNACK
+plural: false
 sufficient: true
 embeddable: false
 ingredients:
-  main:
+  regular:
     EGG:
       unit: NATURAL
       quantity: 1

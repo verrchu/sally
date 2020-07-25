@@ -44,6 +44,27 @@
     }
   },
   "recipe": {
+    "variant":  {
+      "type": "object",
+      "required": ["standalone", "embeddable", "ingredients"],
+      "additionalProperties": false,
+      "properties": {
+        "standalone": {
+          "type": "boolean"
+        },
+        "embeddable": {
+          "type": "boolean"
+        },
+        "ingredients": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "patternProperties": {
+            "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
+          }
+        }
+      }
+    },
     "ingredient": {
       "regular": {
         "type": "object",
@@ -72,27 +93,12 @@
       }
     },
     "ingredients": {
-      "main": {
+      "regular": {
         "type": "object",
         "additionalProperties": false,
         "minProperties": 1,
         "patternProperties": {
             "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
-        }
-      },
-      "additional": {
-        "type": "object",
-        "additionalProperties": false,
-        "minProperties": 1,
-        "patternProperties": {
-          "^[A-HJKMNP-TV-Z0-9]{26}$": {
-            "type": "object",
-            "additionalProperties": false,
-            "minProperties": 1,
-            "patternProperties": {
-              "^[A-Z_]+$": {"$ref": "#/recipe/ingredient/regular"}
-            }
-          }
         }
       },
       "technical": {
@@ -109,6 +115,14 @@
         }
       }
     },
+    "variants": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-HJKMNP-TV-Z0-9]{26}$": {"$ref": "#/recipe/variant"}
+      }
+    },
     "complements": {
       "type": "object",
       "additionalProperties": false,
@@ -123,10 +137,10 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "additional_ingredients"
+                "variant"
               ],
               "properties": {
-                "additional_ingredients": {
+                "variant": {
                   "oneOf": [
                     {"type": "string", "pattern": "^[A-HJKMNP-TV-Z0-9]{26}$"},
                     {"type": "null"}

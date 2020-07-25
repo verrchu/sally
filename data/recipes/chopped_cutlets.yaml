@@ -1,9 +1,10 @@
 meals:
   - LUNCH
+plural: true
 sufficient: true
 embeddable: false
 ingredients:
-  main:
+  regular:
     EGG:
       unit: NATURAL
       quantity: 1
@@ -19,9 +20,9 @@ ingredients:
     SALT:
       quantity: ANY
 complements:
-    '01EDZXGA4F93SH6HCMB22B794S':
-      PASTA:
-        additional_ingredients: '01EDZXD268GE7MRXNEAV6JMX90'
-    '01EDZY69T9CZJCX0J8FWS3G34P':
-      BUCKWHEAT:
-        additional_ingredients: null
+  '01EDZXGA4F93SH6HCMB22B794S':
+    PASTA:
+      variant: '01EDZXD268GE7MRXNEAV6JMX90'
+  '01EDZY69T9CZJCX0J8FWS3G34P':
+    BUCKWHEAT:
+      variant: null

@@ -205,17 +205,19 @@ cleanup_test(additional_ingredients) :-
     alter_test(additional_ingredients, retract).
 
 alter_test(additional_ingredients, Pred) :-
-    call(Pred, recipes_kb:additional_ingredients("TEST_RECIPE", "ID", [
-        ["TEST_INGREDIENT_A","NATURAL",3],
-        ["TEST_INGREDIENT_B","GRAM",200]
-    ])).
+    call(Pred, recipes_kb:variant(
+        "TEST_RECIPE", [standalone, "VARIANT_ID"], [
+            ["TEST_INGREDIENT_A","NATURAL",3],
+            ["TEST_INGREDIENT_B","GRAM",200]
+        ]
+    )).
 
 test(additional_ingredients, [
     setup(setup_test(additional_ingredients)),
     cleanup(cleanup_test(additional_ingredients))
 ]) :-
-    recipes_kb:additional_ingredients("TEST_RECIPE", "ID", AdditionalIngredients),
-    recipe:ingredients_nutritions(AdditionalIngredients, Nutritions),
+    recipe:standalone_variant("TEST_RECIPE", "VARIANT_ID", VariantIngredients),
+    recipe:ingredients_nutritions(VariantIngredients, Nutritions),
 
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, calories, ACals),
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, proteins, AProts),
@@ -278,18 +280,20 @@ cleanup_test(complements) :-
 alter_test(complements, Pred) :-
     call(Pred, recipes_kb:complements("TEST_RECIPE", "COMPLEMENTS_ID", [
         ["TEST_COMPLEMENT_A", none],
-        ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
+        ["TEST_COMPLEMENT_B", "VARIANT_ID"]
     ])),
-    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_A", [
+    call(Pred, recipes_kb:ingredients("TEST_COMPLEMENT_A", [
         ["TEST_INGREDIENT_A","NATURAL",2],
         ["TEST_INGREDIENT_B","GRAM",200]
     ])),
-    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_B", [
+    call(Pred, recipes_kb:ingredients("TEST_COMPLEMENT_B", [
         ["TEST_INGREDIENT_A","NATURAL",2]
     ])),
-    call(Pred, recipes_kb:additional_ingredients("TEST_COMPLEMENT_B", "INGREDIENTS_ID", [
-        ["TEST_INGREDIENT_B","GRAM",200]
-    ])).
+    call(Pred, recipes_kb:variant(
+        "TEST_COMPLEMENT_B",
+        [embeddable, "VARIANT_ID"],
+        [["TEST_INGREDIENT_B","GRAM",200]]
+    )).
 
 test(complements, [
     setup(setup_test(complements)),
@@ -299,32 +303,32 @@ test(complements, [
     recipes_kb:complements("TEST_RECIPE", "COMPLEMENTS_ID", Complements),
     recipe:complements_nutritions(Complements, Nutritions),
 
-    recipes_kb:main_ingredients("TEST_COMPLEMENT_A", AMainIngredients),
-    recipe:ingredients_nutritions(AMainIngredients, AMNutritions),
+    recipes_kb:ingredients("TEST_COMPLEMENT_A", CAIngredients),
+    recipe:ingredients_nutritions(CAIngredients, CAINutritions),
 
     nutritions:new(
         cals(400), prots(20), fats(20), carbs(100),
-        ExpectedAMNutritions
-    ), assertion(ExpectedAMNutritions == AMNutritions),
+        ExpectedCAINutritions
+    ), assertion(ExpectedCAINutritions == CAINutritions),
 
-    recipes_kb:main_ingredients("TEST_COMPLEMENT_B", BMainIngredients),
-    recipe:ingredients_nutritions(BMainIngredients, BMNutritions),
-
-    nutritions:new(
-        cals(200), prots(10), fats(10), carbs(50),
-        ExpectedBMNutritions
-    ), assertion(ExpectedBMNutritions == BMNutritions),
-
-    recipes_kb:additional_ingredients("TEST_COMPLEMENT_B", "INGREDIENTS_ID", BAdditionalIngredients),
-    recipe:ingredients_nutritions(BAdditionalIngredients, BANutritions),
+    recipes_kb:ingredients("TEST_COMPLEMENT_B", BIngredients),
+    recipe:ingredients_nutritions(BIngredients, CBINutritions),
 
     nutritions:new(
         cals(200), prots(10), fats(10), carbs(50),
-        ExpectedBANutritions
-    ), assertion(ExpectedBANutritions == BANutritions),
+        ExpectedCBINutritions
+    ), assertion(ExpectedCBINutritions == CBINutritions),
+
+    recipe:embeddable_variant("TEST_COMPLEMENT_B", "VARIANT_ID", CBVIngredients),
+    recipe:ingredients_nutritions(CBVIngredients, CBVINutritions),
+
+    nutritions:new(
+        cals(200), prots(10), fats(10), carbs(50),
+        ExpectedCBVINutritions
+    ), assertion(ExpectedCBVINutritions == CBVINutritions),
 
     nutritions:combine(
-        [AMNutritions, BMNutritions, BANutritions],
+        [CAINutritions, CBINutritions, CBVINutritions],
         ExpectedNutritions
     ), assertion(ExpectedNutritions == Nutritions).
 
@@ -406,16 +410,18 @@ cleanup_suite(allowed_complements) :-
     alter_suite(allowed_complements, retract).
 
 alter_suite(allowed_complements, Pred) :-
-    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_A", [
+    call(Pred, recipes_kb:ingredients("TEST_COMPLEMENT_A", [
         ["TEST_INGREDIENT_A","NATURAL",2],
         ["TEST_INGREDIENT_B","GRAM",200]
     ])),
-    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_B", [
+    call(Pred, recipes_kb:ingredients("TEST_COMPLEMENT_B", [
         ["TEST_INGREDIENT_A","NATURAL",2]
     ])),
-    call(Pred, recipes_kb:additional_ingredients("TEST_COMPLEMENT_B", "INGREDIENTS_ID", [
-        ["TEST_INGREDIENT_B","GRAM",200]
-    ])).
+    call(Pred, recipes_kb:variant(
+        "TEST_COMPLEMENT_B", [embeddable, "VARIANT_ID"], [
+            ["TEST_INGREDIENT_B","GRAM",200]
+        ]
+    )).
 
 :- begin_tests(allowed_complements, [
     setup(setup_suite(allowed_complements)),
@@ -427,7 +433,7 @@ alter_suite(allowed_complements, Pred) :-
 test(empty_excluded, [nondet]) :-
     recipe:allowed_complements([
         ["TEST_COMPLEMENT_A", none],
-        ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
+        ["TEST_COMPLEMENT_B", "VARIANT_ID"]
     ], [[], []]).
 
 % ============================================================================ %
@@ -435,7 +441,7 @@ test(empty_excluded, [nondet]) :-
 test(not_excluded, [nondet]) :-
     Complements = [
         ["TEST_COMPLEMENT_A", none],
-        ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
+        ["TEST_COMPLEMENT_B", "VARIANT_ID"]
     ],
 
     recipe:allowed_complements(Complements, [["TEST_COMPLEMENT_C"], []]),
@@ -660,18 +666,18 @@ alter_suite(recipe_instance, Pred) :-
     call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","NATURAL",1,fats,5)),
     call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","NATURAL",1,proteins,5)),
 
-    call(Pred, recipes_kb:main_ingredients("TEST_RECIPE",[
+    call(Pred, recipes_kb:ingredients("TEST_RECIPE",[
         ["TEST_INGREDIENT_A","NATURAL",1]
     ])),
-    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_A",[
+    call(Pred, recipes_kb:ingredients("TEST_COMPLEMENT_A",[
         ["TEST_INGREDIENT_A","NATURAL",1]
     ])),
-    call(Pred, recipes_kb:main_ingredients("TEST_COMPLEMENT_B",[
+    call(Pred, recipes_kb:ingredients("TEST_COMPLEMENT_B",[
         ["TEST_INGREDIENT_A","NATURAL",1]
     ])),
 
-    call(Pred, recipes_kb:additional_ingredients(
-        "TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_INGREDIENTS_ID",[
+    call(Pred, recipes_kb:variant(
+        "TEST_COMPLEMENT_B", [embeddable, "TEST_COMPLEMENT_B_VARIANT_ID"], [
             ["TEST_INGREDIENT_B","NATURAL",1]
         ]
     )).
@@ -715,23 +721,25 @@ test(recipe_instance_base_sufficient, [
 
 % ============================================================================ %
 
-setup_test(recipe_instance_additional_ingredients) :-
-    alter_test(recipe_instance_additional_ingredients, assert).
+setup_test(recipe_instance_variant) :-
+    alter_test(recipe_instance_variant, assert).
 
-cleanup_test(recipe_instance_additional_ingredients) :-
-    alter_test(recipe_instance_additional_ingredients, retract).
+cleanup_test(recipe_instance_variant) :-
+    alter_test(recipe_instance_variant, retract).
 
-alter_test(recipe_instance_additional_ingredients, Pred) :-
-    call(Pred, recipes_kb:additional_ingredients("TEST_RECIPE","INGREDIENTS_ID",[
-        ["TEST_INGREDIENT_B","NATURAL",1]
-    ])).
+alter_test(recipe_instance_variant, Pred) :-
+    call(Pred, recipes_kb:variant(
+        "TEST_RECIPE", [standalone, "VARIANT_ID"], [
+            ["TEST_INGREDIENT_B","NATURAL",1]
+        ]
+    )).
 
-test(recipe_instance_additional_ingredients, [
-    setup(setup_test(recipe_instance_additional_ingredients)),
-    cleanup(cleanup_test(recipe_instance_additional_ingredients)),
+test(recipe_instance_variant, [
+    setup(setup_test(recipe_instance_variant)),
+    cleanup(cleanup_test(recipe_instance_variant)),
     nondet
 ]) :-
-    recipe:instance("TEST_RECIPE", Nutritions, "INGREDIENTS_ID", none, [[], []]),
+    recipe:instance("TEST_RECIPE", Nutritions, "VARIANT_ID", none, [[], []]),
     nutritions:new(
         cals(200), prots(10), fats(10), carbs(50),
         ExpectedNutritions
@@ -770,7 +778,7 @@ alter_test(recipe_instance_complements_sufficient, Pred) :-
     call(Pred, recipes_kb:sufficient("TEST_RECIPE")),
     call(Pred, recipes_kb:complements("TEST_RECIPE","COMPLEMENTS_ID",[
         ["TEST_COMPLEMENT_A",none],
-        ["TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_INGREDIENTS_ID"]
+        ["TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_VARIANT_ID"]
     ])).
 
 test(recipe_instance_complements_sufficient, [
@@ -793,12 +801,14 @@ cleanup_test(recipe_instance_complete) :-
     alter_test(recipe_instance_complete, retract).
 
 alter_test(recipe_instance_complete, Pred) :-
-    call(Pred, recipes_kb:additional_ingredients("TEST_RECIPE","INGREDIENTS_ID",[
-        ["TEST_INGREDIENT_B","NATURAL",1]
-    ])),
+    call(Pred, recipes_kb:variant(
+        "TEST_RECIPE", [standalone, "VARIANT_ID"], [
+            ["TEST_INGREDIENT_B","NATURAL",1]
+        ]
+    )),
     call(Pred, recipes_kb:complements("TEST_RECIPE","COMPLEMENTS_ID",[
         ["TEST_COMPLEMENT_A",none],
-        ["TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_INGREDIENTS_ID"]
+        ["TEST_COMPLEMENT_B","TEST_COMPLEMENT_B_VARIANT_ID"]
     ])).
 
 test(recipe_instance_complete, [
@@ -807,7 +817,7 @@ test(recipe_instance_complete, [
     nondet
 ]) :-
     recipe:instance(
-        "TEST_RECIPE", Nutritions, "INGREDIENTS_ID", "COMPLEMENTS_ID", [[], []]
+        "TEST_RECIPE", Nutritions, "VARIANT_ID", "COMPLEMENTS_ID", [[], []]
     ),
     nutritions:new(
         cals(500), prots(25), fats(25), carbs(125),

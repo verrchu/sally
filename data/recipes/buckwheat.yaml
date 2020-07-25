@@ -1,7 +1,11 @@
+plural: false
 sufficient: true
 embeddable: true
 ingredients:
-  main:
+  regular:
     BUCKWHEAT:
       unit: GRAM
       quantity: 50
+  technical:
+    SALT:
+      quantity: ANY
