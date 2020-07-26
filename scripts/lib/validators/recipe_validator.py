@@ -27,6 +27,9 @@ def validate_flags(recipe_name, recipe):
         """)
 
     if 'variants' in recipe:
+        any_standalone_variants = False
+        any_embeddable_variants = False
+
         for variant_id, variant in recipe['variants'].items():
             if not variant['embeddable'] and not variant['standalone']:
                 raise Exception(f"""
@@ -36,6 +39,9 @@ def validate_flags(recipe_name, recipe):
                 """)
 
             if variant['embeddable']:
+                if not any_embeddable_variants:
+                    any_embeddable_variants = True
+
                 if not recipe['embeddable']:
                     raise Exception(f"""
                     NOT EMBEDDABLE RECIPE HAS EMBEDDABLE VARIANT
@@ -44,12 +50,28 @@ def validate_flags(recipe_name, recipe):
                     """)
 
             if variant['standalone']:
+                if not any_standalone_variants:
+                    any_standalone_variants = True
+
                 if not 'meals' in recipe:
                     raise Exception(f"""
                     NOT STANDALONE RECIPE HAS STANDLAONE VARIANT
                     RECIPE: {recipe_name}
                     VARIANT: {variant_id}
                     """)
+
+        if not recipe['sufficient']:
+            if 'meals' in recipe and not any_standalone_variants:
+                raise Exception(f"""
+                INSUFFICIENT STANDALONE RECIPE HAS NO STANDALONE VARIANTS
+                RECIPE: {recipe_name}
+                """)
+
+            if recipe['embeddable'] and not any_embeddable_variants:
+                raise Exception(f"""
+                INSUFFICIENT EMBEDDABLE RECIPE HAS NO EMBEDDABLE VARIANTS
+                RECIPE: {recipe_name}
+                """)
     else:
         if not recipe['sufficient']:
             raise Exception(f"""
