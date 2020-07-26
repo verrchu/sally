@@ -615,14 +615,14 @@ test(format_recipe_base, [nondet]) :-
                 "\"fats\": 0, ",
                 "\"carbohydrates\": 0",
             "}, ",
-            "\"additional_ingredients\": null, ",
+            "\"variant\": null, ",
             "\"complements\": null",
         "}"
     ], ExpectedTxt), assertion(ExpectedTxt == Txt).
     
 % ============================================================================ %
 
-test(format_recipe_with_additional_ingredients, [nondet]) :-
+test(format_recipe_with_variant, [nondet]) :-
     nutritions:default(Nutritions),
     menu:format_recipe(["TEST_RECIPE", Nutritions, "INGREDIENTS_ID", none], Txt),
 
@@ -635,7 +635,7 @@ test(format_recipe_with_additional_ingredients, [nondet]) :-
                 "\"fats\": 0, ",
                 "\"carbohydrates\": 0",
             "}, ",
-            "\"additional_ingredients\": \"INGREDIENTS_ID\", ",
+            "\"variant\": \"INGREDIENTS_ID\", ",
             "\"complements\": null",
         "}"
     ], ExpectedTxt), assertion(ExpectedTxt == Txt).
@@ -655,7 +655,7 @@ test(format_recipe_with_complements, [nondet]) :-
                 "\"fats\": 0, ",
                 "\"carbohydrates\": 0",
             "}, ",
-            "\"additional_ingredients\": null, ",
+            "\"variant\": null, ",
             "\"complements\": \"COMPLEMENTS_ID\"",
         "}"
     ], ExpectedTxt), assertion(ExpectedTxt == Txt).
@@ -675,7 +675,7 @@ test(format_recipe_complete, [nondet]) :-
                 "\"fats\": 0, ",
                 "\"carbohydrates\": 0",
             "}, ",
-            "\"additional_ingredients\": \"INGREDIENTS_ID\", ",
+            "\"variant\": \"INGREDIENTS_ID\", ",
             "\"complements\": \"COMPLEMENTS_ID\"",
         "}"
     ], ExpectedTxt), assertion(ExpectedTxt == Txt).

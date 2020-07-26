@@ -57,10 +57,10 @@ check_carbohydrates(Val, Target) :-
 meal(MealType, Meal, Excluded) :-
     call(MealType, Recipe),
     recipe:instance(
-        Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
+        Recipe, Nutritions, VariantId, ComplementsId, Excluded
     ),
 
-    Meal = [Recipe, Nutritions, AdditionalIngredientsId, ComplementsId].
+    Meal = [Recipe, Nutritions, VariantId, ComplementsId].
 
 
 print_menu([]) :- true.
@@ -88,23 +88,23 @@ format_nutritions(Nutritions, Txt) :-
 
 format_recipe([Recipe, Nutritions, none, none], Txt) :-
     format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": null, "complements": null}', [
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": null, "complements": null}', [
         Recipe, NutritionsTxt
     ]).
-format_recipe([Recipe, Nutritions, AdditionalIngredientsId, none], Txt) :-
+format_recipe([Recipe, Nutritions, VariantId, none], Txt) :-
     format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": "%w", "complements": null}', [
-        Recipe, NutritionsTxt, AdditionalIngredientsId
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": "%w", "complements": null}', [
+        Recipe, NutritionsTxt, VariantId
     ]).
 format_recipe([Recipe, Nutritions, none, ComplementsId], Txt) :-
     format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": null, "complements": "%w"}', [
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": null, "complements": "%w"}', [
         Recipe, NutritionsTxt, ComplementsId
     ]).
-format_recipe([Recipe, Nutritions, AdditionalIngredientsId, ComplementsId], Txt) :-
+format_recipe([Recipe, Nutritions, VariantId, ComplementsId], Txt) :-
     format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "additional_ingredients": "%w", "complements": "%w"}', [
-        Recipe, NutritionsTxt, AdditionalIngredientsId, ComplementsId
+    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": "%w", "complements": "%w"}', [
+        Recipe, NutritionsTxt, VariantId, ComplementsId
     ]).
 
 
