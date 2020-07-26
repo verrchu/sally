@@ -47,12 +47,28 @@ test(snack, [
 ]) :-
     recipe:snack("TEST_RECIPE").
 
+% ============================================================================ %
+
+setup_test(lunch) :-
+    alter_test(lunch, assert).
+
+cleanup_test(lunch) :-
+    alter_test(lunch, retract).
+
+alter_test(lunch, Pred) :-
+    call(Pred, recipes_kb:meal("TEST_RECIPE", "LUNCH")).
+
+test(lunch, [
+    setup(setup_test(lunch)),
+    cleanup(cleanup_test(lunch))
+]) :-
+    recipe:lunch("TEST_RECIPE").
+
 :- end_tests(recipe_meal).
 
 % ---------------------------------------------------------------------------- %
 % --------------------------- TEST RECIPE MEAL ------------------------------- %
 % ---------------------------------------------------------------------------- %
-
 
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
 % ++++++++++++++++++++ TEST INGREDIENT NUTRITION QUERY +++++++++++++++++++++++ %
@@ -153,30 +169,25 @@ alter_suite(recipe_ingredients, Pred) :-
     cleanup(cleanup_suite(recipe_ingredients))
 ]).
 
-:- discontiguous plunit_recipe_ingredients:setup_test/1.
-:- discontiguous plunit_recipe_ingredients:cleanup_test/1.
-:- discontiguous plunit_recipe_ingredients:alter_test/2.
+setup_test(recipe_ingredients) :-
+    alter_test(recipe_ingredients, assert).
 
-% ============================================================================ %
+cleanup_test(recipe_ingredients) :-
+    alter_test(recipe_ingredients, retract).
 
-setup_test(main_ingredients) :-
-    alter_test(main_ingredients, assert).
-
-cleanup_test(main_ingredients) :-
-    alter_test(main_ingredients, retract).
-
-alter_test(main_ingredients, Pred) :-
-    call(Pred, recipes_kb:main_ingredients("TEST_RECIPE",[
+alter_test(recipe_ingredients, Pred) :-
+    call(Pred, recipes_kb:sufficient("TEST_RECIPE")),
+    call(Pred, recipes_kb:ingredients("TEST_RECIPE",[
         ["TEST_INGREDIENT_A","NATURAL",3],
         ["TEST_INGREDIENT_B","GRAM",200]
     ])).
 
-test(main_ingredients, [
-    setup(setup_test(main_ingredients)),
-    cleanup(cleanup_test(main_ingredients))
+test(recipe_ingredients, [
+    setup(setup_test(recipe_ingredients)),
+    cleanup(cleanup_test(recipe_ingredients)),
+    nondet
 ]) :-
-    recipes_kb:main_ingredients("TEST_RECIPE", MainIngredients),
-    recipe:ingredients_nutritions(MainIngredients, Nutritions),
+    recipe:instance("TEST_RECIPE", Nutritions, none, none, [[], []]),
 
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, calories, ACals),
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, proteins, AProts),
@@ -196,15 +207,45 @@ test(main_ingredients, [
 
     assertion(ExpectedNutritions == Nutritions).
 
-% ============================================================================ %
+:- end_tests(recipe_ingredients).
 
-setup_test(additional_ingredients) :-
-    alter_test(additional_ingredients, assert).
+% ---------------------------------------------------------------------------- %
+% ----------------------- TEST RECIPE INGREDIENTS ---------------------------- %
+% ---------------------------------------------------------------------------- %
 
-cleanup_test(additional_ingredients) :-
-    alter_test(additional_ingredients, retract).
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
+% +++++++++++++++++++++++ TEST RECIPE INGREDIENTS ++++++++++++++++++++++++++++ %
+% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ %
 
-alter_test(additional_ingredients, Pred) :-
+setup_suite(recipe_variants) :-
+    alter_suite(recipe_variants, assert).
+
+cleanup_suite(recipe_variants) :-
+    alter_suite(recipe_variants, retract).
+
+alter_suite(recipe_variants, Pred) :-
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,calories,100)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,carbohydrates,25)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,fats,5)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_A","NATURAL",1,proteins,5)),
+
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","GRAM",100,calories,100)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","GRAM",100,carbohydrates,25)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","GRAM",100,fats,5)),
+    call(Pred, ingredients_kb:nutrition("TEST_INGREDIENT_B","GRAM",100,proteins,5)).
+
+:- begin_tests(recipe_variants, [
+    setup(setup_suite(recipe_variants)),
+    cleanup(cleanup_suite(recipe_variants))
+]).
+
+setup_test(recipe_variant) :-
+    alter_test(recipe_variant, assert).
+
+cleanup_test(recipe_variant) :-
+    alter_test(recipe_variant, retract).
+
+alter_test(recipe_variant, Pred) :-
     call(Pred, recipes_kb:variant(
         "TEST_RECIPE", [standalone, "VARIANT_ID"], [
             ["TEST_INGREDIENT_A","NATURAL",3],
@@ -212,9 +253,9 @@ alter_test(additional_ingredients, Pred) :-
         ]
     )).
 
-test(additional_ingredients, [
-    setup(setup_test(additional_ingredients)),
-    cleanup(cleanup_test(additional_ingredients))
+test(recipe_variant, [
+    setup(setup_test(recipe_variant)),
+    cleanup(cleanup_test(recipe_variant))
 ]) :-
     recipe:standalone_variant("TEST_RECIPE", "VARIANT_ID", VariantIngredients),
     recipe:ingredients_nutritions(VariantIngredients, Nutritions),
@@ -237,7 +278,7 @@ test(additional_ingredients, [
 
     assertion(ExpectedNutritions == Nutritions).
 
-:- end_tests(recipe_ingredients).
+:- end_tests(recipe_variants).
 
 % ---------------------------------------------------------------------------- %
 % ----------------------- TEST RECIPE INGREDIENTS ---------------------------- %
