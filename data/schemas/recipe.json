@@ -3,6 +3,7 @@
     "title": "Ingredient definition",
     "type": "object",
     "required": [
+      "plural",
       "sufficient",
       "embeddable",
       "ingredients"
@@ -18,6 +19,9 @@
             "enum": ["BREAKFAST", "SNACK", "LUNCH"]
           }
         },
+        "plural": {
+          "type": "boolean"
+        },
         "sufficient": {
           "type": "boolean"
         },
@@ -26,14 +30,14 @@
         },
         "ingredients": {
             "type": "object",
-            "required": ["main"],
+            "required": ["regular"],
             "additionalProperties": false,
             "properties": {
-                "main": {"$ref": "def.json#/recipe/ingredients/main"},
-                "additional": {"$ref": "def.json#/recipe/ingredients/additional"},
+                "regular": {"$ref": "def.json#/recipe/ingredients/regular"},
                 "technical": {"$ref": "def.json#/recipe/ingredients/technical"}
             }
         },
+        "variants": {"$ref": "def.json#/recipe/variants"},
         "complements": {"$ref": "def.json#/recipe/complements"}
     }
 }

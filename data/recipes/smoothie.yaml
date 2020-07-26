@@ -1,18 +1,25 @@
 meals:
   - SNACK
+plural: false
 sufficient: false
 embeddable: false
 ingredients:
-  main:
+  regular:
     GREEK_YOGURT:
       unit: GRAM
       quantity: 250
-  additional:
-    "01EDDW11900W69QZMMPPKE3QZ1":
+variants:
+  '01EDDW11900W69QZMMPPKE3QZ1':
+    standalone: true
+    embeddable: false
+    ingredients:
       RASPBERRY:
         unit: GRAM
         quantity: 100
-    "01EDDW1JS0MMFVX9P5BDZM9095":
+  '01EDDW1JS0MMFVX9P5BDZM9095':
+    standalone: true
+    embeddable: false
+    ingredients:
       BANANA:
        unit: NATURAL
        quantity: 1

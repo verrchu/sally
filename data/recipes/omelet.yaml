@@ -1,9 +1,10 @@
 meals:
   - BREAKFAST
+plural: false
 sufficient: true
 embeddable: false
 ingredients:
-  main:
+  regular:
     EGG:
       unit: NATURAL
       quantity: 2
@@ -16,30 +17,42 @@ ingredients:
     FLOUR:
       unit: TABLESPOON
       quantity: 1
-  additional:
-    '01ECVN8CRBJJ7M38TDZMJWX3FS':
+variants:
+  '01ECVN8CRBJJ7M38TDZMJWX3FS':
+    standalone: true
+    embeddable: false
+    ingredients:
       CHEESE:
         unit: GRAM
         quantity: 20
-    '01ECVN8ZHW8Y5XB0T2YTD775ZJ':
+  '01ECVN8ZHW8Y5XB0T2YTD775ZJ':
+    standalone: true
+    embeddable: false
+    ingredients:
       CHEESE:
         unit: GRAM
         quantity: 20
       TOMATO:
         unit: NATURAL
         quantity: 1
-    '01ECVN9H4BAPPRPDWK5ZXXKK2A':
+  '01ECVN9H4BAPPRPDWK5ZXXKK2A':
+    standalone: true
+    embeddable: false
+    ingredients:
       BASTURMA:
         unit: GRAM
         quantity: 70
       ARUGULA:
         unit: GRAM
         quantity: 15
-    '01ECVNA9PZAJQX2Y4K78FPNHWT':
+  '01ECVNA9PZAJQX2Y4K78FPNHWT':
+    standalone: true
+    embeddable: false
+    ingredients:
       CHAMPIGNON:
-        unit: NATURAL
-        quantity: 5
+        unit: GRAM
+        quantity: 150
 complements:
-    '01EDKH3FZ0R4Z3PSCMXME20789':
-        TOAST:
-            additional_ingredients: '01EDDW2RM80Y1EWFYVRKDBDYNR'
+  '01EDKH3FZ0R4Z3PSCMXME20789':
+    TOAST:
+      variant: '01EDDW2RM80Y1EWFYVRKDBDYNR'

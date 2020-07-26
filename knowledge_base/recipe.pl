@@ -37,48 +37,52 @@ allowed_complements([], _).
 allowed_complements([[Recipe,none]|Complements], Excluded) :-
     allowed_recipe(Recipe, Excluded),
 
-    recipes_kb:main_ingredients(
-        Recipe, MainIngredients
-    ), allowed_ingredients(MainIngredients, Excluded),
+    recipes_kb:ingredients(
+        Recipe, Ingredients
+    ), allowed_ingredients(Ingredients, Excluded),
 
     allowed_complements(Complements, Excluded).
-allowed_complements([[Recipe,AdditionalIngredientsId]|Complements], Excluded) :-
+allowed_complements([[Recipe,VariantId]|Complements], Excluded) :-
     allowed_recipe(Recipe, Excluded),
 
-    recipes_kb:main_ingredients(
-        Recipe, MainIngredients
-    ), allowed_ingredients(MainIngredients, Excluded),
+    embeddable_variant(Recipe, VariantId, VariantIngredients),
+    allowed_ingredients(VariantIngredients, Excluded),
 
-    recipes_kb:additional_ingredients(
-        Recipe, AdditionalIngredientsId, AdditionalIngredients
-    ), allowed_ingredients(AdditionalIngredients, Excluded),
+    recipes_kb:ingredients(
+        Recipe, Ingredients
+    ), allowed_ingredients(Ingredients, Excluded),
 
     allowed_complements(Complements, Excluded).
 
+
+standalone_variant(Recipe, VariantId, VariantIngredients) :-
+    recipes_kb:variant(Recipe, [standalone, VariantId], VariantIngredients).
+
+embeddable_variant(Recipe, VariantId, VariantIngredients) :-
+    recipes_kb:variant(Recipe, [embeddable, VariantId], VariantIngredients).
 
 instance(
     Recipe, Nutritions, none, none, Excluded
 ) :-
     recipes_kb:sufficient(Recipe),
 
-    recipes_kb:main_ingredients(
+    recipes_kb:ingredients(
         Recipe, MainIngredients
     ), allowed_ingredients(MainIngredients, Excluded),
     ingredients_nutritions(MainIngredients, Nutritions).
 instance(
-    Recipe, Nutritions, AdditionalIngredientsId, none, Excluded
+    Recipe, Nutritions, VariantId, none, Excluded
 ) :-
-    recipes_kb:additional_ingredients(
-        Recipe, AdditionalIngredientsId, AdditionalIngredients
-    ), allowed_ingredients(AdditionalIngredients, Excluded),
-    ingredients_nutritions(AdditionalIngredients, AINutritions),
+    standalone_variant(Recipe, VariantId, VariantIngredients),
+    allowed_ingredients(VariantIngredients, Excluded),
+    ingredients_nutritions(VariantIngredients, VNutritions),
 
-    recipes_kb:main_ingredients(
-        Recipe, MainIngredients
-    ), allowed_ingredients(MainIngredients, Excluded),
-    ingredients_nutritions(MainIngredients, MINutritions),
+    recipes_kb:ingredients(
+        Recipe, Ingredients
+    ), allowed_ingredients(Ingredients, Excluded),
+    ingredients_nutritions(Ingredients, INutritions),
 
-    nutritions:combine([AINutritions, MINutritions], Nutritions).
+    nutritions:combine([VNutritions, INutritions], Nutritions).
 instance(
     Recipe, Nutritions, none, ComplementsId, Excluded
 ) :-
@@ -89,57 +93,54 @@ instance(
     ), allowed_complements(Complements, Excluded),
     complements_nutritions(Complements, CNutritions),
 
-    recipes_kb:main_ingredients(
-        Recipe, MainIngredients
-    ), allowed_ingredients(MainIngredients, Excluded),
-    ingredients_nutritions(MainIngredients, MINutritions),
+    recipes_kb:ingredients(
+        Recipe, Ingredients
+    ), allowed_ingredients(Ingredients, Excluded),
+    ingredients_nutritions(Ingredients, INutritions),
 
-    nutritions:combine([MINutritions, CNutritions], Nutritions).
+    nutritions:combine([INutritions, CNutritions], Nutritions).
 instance(
-    Recipe, Nutritions, AdditionalIngredientsId, ComplementsId, Excluded
+    Recipe, Nutritions, VariantId, ComplementsId, Excluded
 ) :-
     recipes_kb:complements(
         Recipe, ComplementsId, Complements
     ), allowed_complements(Complements, Excluded),
     complements_nutritions(Complements, CNutritions),
 
-    recipes_kb:additional_ingredients(
-        Recipe, AdditionalIngredientsId, AdditionalIngredients
-    ), allowed_ingredients(AdditionalIngredients, Excluded),
-    ingredients_nutritions(AdditionalIngredients, AINutritions),
+    standalone_variant(Recipe, VariantId, VariantIngredients),
+    allowed_ingredients(VariantIngredients, Excluded),
+    ingredients_nutritions(VariantIngredients, VNutritions),
 
-    recipes_kb:main_ingredients(
-        Recipe, MainIngredients
-    ), allowed_ingredients(MainIngredients, Excluded),
-    ingredients_nutritions(MainIngredients, MINutritions),
+    recipes_kb:ingredients(
+        Recipe, Ingredients
+    ), allowed_ingredients(Ingredients, Excluded),
+    ingredients_nutritions(Ingredients, INutritions),
 
-    nutritions:combine([MINutritions, AINutritions, CNutritions], Nutritions).
+    nutritions:combine([INutritions, VNutritions, CNutritions], Nutritions).
 
 
 complements_nutritions([], Nutritions) :- nutritions:default(Nutritions).
 complements_nutritions([Complement|Complements], Nutritions) :-
     [Recipe, none] = Complement,
 
-    recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, MINutritions),
+    recipes_kb:ingredients(Recipe, Ingredients),
+    ingredients_nutritions(Ingredients, INutritions),
 
     complements_nutritions(Complements, CNutritions),
 
-    nutritions:combine([MINutritions, CNutritions], Nutritions).
+    nutritions:combine([INutritions, CNutritions], Nutritions).
 complements_nutritions([Complement|Complements], Nutritions) :-
-    [Recipe, AdditionalIngredientsId] = Complement,
+    [Recipe, VariantId] = Complement,
 
-    recipes_kb:additional_ingredients(
-        Recipe, AdditionalIngredientsId, AdditionalIngredients
-    ),
-    ingredients_nutritions(AdditionalIngredients, AINutritions),
+    embeddable_variant(Recipe, VariantId, VariantIngredients),
+    ingredients_nutritions(VariantIngredients, VNutritions),
 
-    recipes_kb:main_ingredients(Recipe, MainIngredients),
-    ingredients_nutritions(MainIngredients, MINutritions),
+    recipes_kb:ingredients(Recipe, Ingredients),
+    ingredients_nutritions(Ingredients, INutritions),
 
     complements_nutritions(Complements, CNutritions),
 
-    nutritions:combine([MINutritions, AINutritions, CNutritions], Nutritions).
+    nutritions:combine([INutritions, VNutritions, CNutritions], Nutritions).
 
 
 ingredients_nutritions([], Nutritions) :- nutritions:default(Nutritions).

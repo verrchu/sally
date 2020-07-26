@@ -1,9 +1,10 @@
 meals:
   - SNACK
-sufficient: false
+plural: false
+sufficient: true
 embeddable: false
 ingredients:
-  main:
+  regular:
     GREEK_YOGURT:
       unit: GRAM
       quantity: 200

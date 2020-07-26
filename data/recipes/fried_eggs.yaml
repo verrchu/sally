@@ -1,26 +1,36 @@
 meals:
   - BREAKFAST
+plural: true
 sufficient: true
 embeddable: false
 ingredients:
-  main:
+  regular:
     EGG:
       unit: NATURAL
       quantity: 2
-  additional:
-    '01ECVN36S5PSB47NGVEDRFF84Q':
+variants:
+  '01ECVN36S5PSB47NGVEDRFF84Q':
+    standalone: true
+    embeddable: false
+    ingredients:
       BACON:
         unit: GRAM
         quantity: 50
-    '01ECVN441YGDTQNG86NAK3MMQH':
+  '01ECVN441YGDTQNG86NAK3MMQH':
+    standalone: true
+    embeddable: false
+    ingredients:
       BEANS:
         unit: GRAM
         quantity: 80
-    '01ECVN4YG8J83QBAN6PX2FQYC0':
+  '01ECVN4YG8J83QBAN6PX2FQYC0':
+    standalone: true
+    embeddable: false
+    ingredients:
       TOMATO:
         unit: NATURAL
         quantity: 1
 complements:
-    '01EDKH3FZ0R4Z3PSCMXME20788':
-        TOAST:
-            additional_ingredients: '01EDDW2RM80Y1EWFYVRKDBDYNR'
+  '01EDKH3FZ0R4Z3PSCMXME20788':
+    TOAST:
+      variant: '01EDDW2RM80Y1EWFYVRKDBDYNR'

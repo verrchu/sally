@@ -1,9 +1,10 @@
 meals:
   - BREAKFAST
+plural: false
 sufficient: false
 embeddable: false
 ingredients:
-  main:
+  regular:
     EGG:
       unit: NATURAL
       quantity: 1
@@ -17,15 +18,21 @@ ingredients:
      BAKING_POWDER:
        unit: TEASPOON
        quantity: 0.5
-  additional:
-    '01ECVMVC9X90NKRJY4CMJR6X0M':
+variants:
+  '01ECVMVC9X90NKRJY4CMJR6X0M':
+    standalone: true
+    embeddable: false
+    ingredients:
       DARK_CHOCOLATE:
         unit: GRAM
         quantity: 10
       PEACH:
         unit: NATURAL
         quantity: 0.5
-    '01ECVMWV5ZRY01YBPSN84TNW3W':
+  '01ECVMWV5ZRY01YBPSN84TNW3W':
+    standalone: true
+    embeddable: false
+    ingredients:
       DARK_CHOCOLATE:
         unit: GRAM
         quantity: 15
