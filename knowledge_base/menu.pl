@@ -3,7 +3,8 @@
 :- use_module(recipe, [
     breakfast/1, snack/1, lunch/1
 ]).
-:- use_module(nutritions).
+:- use_module(nutritions, except([default/1])).
+:- use_module(excluded, except([default/1])).
 
 
 main :-
@@ -139,7 +140,12 @@ args(Nutritions, Excluded) :-
     parse_excluded_items(ExcludedRecipesTxt, ExcludedRecipes),
     parse_excluded_items(ExcludedIngredientsTxt, ExcludedIngredients),
 
-    Excluded = [ExcludedRecipes, ExcludedIngredients].
+    excluded:new(
+        recipes(ExcludedRecipes),
+        ingredients(ExcludedIngredients),
+
+        Excluded
+    ).
 
 
 parse_excluded_items('_', []).

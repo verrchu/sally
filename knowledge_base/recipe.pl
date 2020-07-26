@@ -6,6 +6,10 @@
 :- use_module(recipes_kb).
 :- use_module(ingredient).
 :- use_module(nutritions).
+:- use_module(excluded, [
+    recipes/2 as excluded_recipes,
+    ingredients/2 as excluded_ingredients
+]).
 
 
 breakfast(Recipe) :-
@@ -21,12 +25,13 @@ generic_meal(Recipe, Meal) :-
     recipes_kb:meal(Recipe, Meal).
 
 
-allowed_recipe(Recipe, [ExcludedRecipes, _]) :-
+allowed_recipe(Recipe, Excluded) :-
+    excluded_recipes(Excluded, ExcludedRecipes),
     \+ member(Recipe, ExcludedRecipes).
 
 allowed_ingredients([], _).
 allowed_ingredients([Ingredient|Ingredients], Excluded) :-
-    Excluded = [_, ExcludedIngredients],
+    excluded_ingredients(Excluded, ExcludedIngredients),
     Ingredient = [Name, _, _],
 
     \+ member(Name, ExcludedIngredients),

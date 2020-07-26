@@ -5,18 +5,18 @@
 
 :- use_module(library(record)).
 
-:- record nutr(cals=0, prots=0, fats=0, carbs=0).
+:- record nutritions(cals=0, prots=0, fats=0, carbs=0).
 
 default(N) :-
-    default_nutr(N).
+    default_nutritions(N).
 
 new(cals(Cals), prots(Prots), fats(Fats), carbs(Carbs), N) :-
-    make_nutr([cals(Cals), prots(Prots), fats(Fats), carbs(Carbs)], N).
+    make_nutritions([cals(Cals), prots(Prots), fats(Fats), carbs(Carbs)], N).
 
-cals(N, Val) :- nutr_cals(N, Val).
-prots(N, Val) :- nutr_prots(N, Val).
-fats(N, Val) :- nutr_fats(N, Val).
-carbs(N, Val) :- nutr_carbs(N, Val).
+cals(N, Val) :- nutritions_cals(N, Val).
+prots(N, Val) :- nutritions_prots(N, Val).
+fats(N, Val) :- nutritions_fats(N, Val).
+carbs(N, Val) :- nutritions_carbs(N, Val).
 
 combine(NS, N) :-
     nutritions:default(Acc), apply:foldl(nutritions:combine, NS, Acc, N).

@@ -187,7 +187,8 @@ test(recipe_ingredients, [
     cleanup(cleanup_test(recipe_ingredients)),
     nondet
 ]) :-
-    recipe:instance("TEST_RECIPE", Nutritions, none, none, [[], []]),
+    excluded:default(Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, none, none, Excluded),
 
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, calories, ACals),
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, proteins, AProts),
@@ -386,19 +387,20 @@ test(complements, [
 :- begin_tests(allowed_recipe).
 
 test(empty_excluded) :-
-    recipe:allowed_recipe("TEST_RECIPE", [[], []]).
+    excluded:default(Excluded),
+    recipe:allowed_recipe("TEST_RECIPE", Excluded).
 
 % ============================================================================ %
 
 test(not_excluded) :-
-    recipe:allowed_recipe("TEST_RECIPE_A", [["TEST_RECIPE_B"], []]).
+    excluded:new(recipes(["TEST_RECIPE_B"]), ingredients([]), Excluded),
+    recipe:allowed_recipe("TEST_RECIPE_A", Excluded).
 
 % ============================================================================ %
 
 test(excluded) :-
-    \+ recipe:allowed_recipe("TEST_RECIPE_A", [
-        ["TEST_RECIPE_A", "TEST_RECIPE_B"], []
-    ]).
+    excluded:new(recipes(["TEST_RECIPE_A"]), ingredients([]), Excluded),
+    \+ recipe:allowed_recipe("TEST_RECIPE_A", Excluded).
 
 :- end_tests(allowed_recipe).
 
@@ -413,26 +415,29 @@ test(excluded) :-
 :- begin_tests(allowed_ingredients).
 
 test(empty_excluded) :-
+    excluded:default(Excluded),
     recipe:allowed_ingredients([
         ["TEST_INGREDIENT_A","TEST_UNIT_A",2],
         ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
-    ], [[], []]).
+    ], Excluded).
 
 % ============================================================================ %
 
 test(not_excluded) :-
+    excluded:new(recipes([]), ingredients(["TEST_INGREDIENT_C"]), Excluded),
     recipe:allowed_ingredients([
         ["TEST_INGREDIENT_A","TEST_UNIT_A",2],
         ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
-    ], [[], ["TEST_INGREDIENT_C"]]).
+    ], Excluded).
 
 % ============================================================================ %
 
 test(excluded) :-
+    excluded:new(recipes([]), ingredients(["TEST_INGREDIENT_B"]), Excluded),
     \+ recipe:allowed_ingredients([
         ["TEST_INGREDIENT_A","TEST_UNIT_A",2],
         ["TEST_INGREDIENT_B","TEST_UNIT_B",1]
-    ], [[], ["TEST_INGREDIENT_B"]]).
+    ], Excluded).
 
 :- end_tests(allowed_ingredients).
 
@@ -472,10 +477,11 @@ alter_suite(allowed_complements, Pred) :-
 % ============================================================================ %
 
 test(empty_excluded, [nondet]) :-
+    excluded:default(Excluded),
     recipe:allowed_complements([
         ["TEST_COMPLEMENT_A", none],
         ["TEST_COMPLEMENT_B", "VARIANT_ID"]
-    ], [[], []]).
+    ], Excluded).
 
 % ============================================================================ %
 
@@ -485,27 +491,40 @@ test(not_excluded, [nondet]) :-
         ["TEST_COMPLEMENT_B", "VARIANT_ID"]
     ],
 
-    recipe:allowed_complements(Complements, [["TEST_COMPLEMENT_C"], []]),
-    recipe:allowed_complements(Complements, [[], ["TEST_INGREDIENT_C"]]),
-    recipe:allowed_complements(Complements, [
-        ["TEST_COMPLEMENT_C"], ["TEST_INGREDIENT_C"]
-    ]).
+    excluded:new(
+        recipes(["TEST_COMPLEMENT_C"]), ingredients([]), ExcludedRecipes
+    ), recipe:allowed_complements(Complements, ExcludedRecipes),
+    excluded:new(
+        recipes([]), ingredients(["TEST_INGREDIENT_C"]), ExcludedIngredients
+    ), recipe:allowed_complements(Complements, ExcludedIngredients),
+    excluded:new(
+        recipes(["TEST_COMPLEMENT_C"]), ingredients(["TEST_INGREDIENT_C"]),
+        ExcludedComplete
+    ), recipe:allowed_complements(Complements, ExcludedComplete).
 
 % ============================================================================ %
 
 test(excluded_recipes, [nondet]) :-
+    excluded:new(
+        recipes(["TEST_COMPLEMENT_B", "TEST_COMPLEMENT_C"]), ingredients([]),
+        Excluded
+    ),
     \+ recipe:allowed_complements([
         ["TEST_COMPLEMENT_A", none],
         ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
-    ], [["TEST_COMPLEMENT_B", "TEST_COMPLEMENT_C"], []]).
+    ], Excluded).
 
 % ============================================================================ %
 
 test(excluded_ingredients, [nondet]) :-
+    excluded:new(
+        recipes([]), ingredients(["TEST_INGREDIENT_B", "TEST_INGREDIENT_C"]),
+        Excluded
+    ),
     \+ recipe:allowed_complements([
         ["TEST_COMPLEMENT_A", none],
         ["TEST_COMPLEMENT_B", "INGREDIENTS_ID"]
-    ], [[], ["TEST_INGREDIENT_B", "TEST_INGREDIENT_C"]]).
+    ], Excluded).
 
 :- end_tests(allowed_complements).
 
@@ -754,7 +773,8 @@ test(recipe_instance_base_sufficient, [
     cleanup(cleanup_test(recipe_instance_base)),
     nondet
 ]) :-
-    recipe:instance("TEST_RECIPE", Nutritions, none, none, [[], []]),
+    excluded:default(Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, none, none, Excluded),
     nutritions:new(
         cals(100), prots(5), fats(5), carbs(25),
         ExpectedNutritions
@@ -780,7 +800,8 @@ test(recipe_instance_variant, [
     cleanup(cleanup_test(recipe_instance_variant)),
     nondet
 ]) :-
-    recipe:instance("TEST_RECIPE", Nutritions, "VARIANT_ID", none, [[], []]),
+    excluded:default(Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, "VARIANT_ID", none, Excluded),
     nutritions:new(
         cals(200), prots(10), fats(10), carbs(50),
         ExpectedNutritions
@@ -827,7 +848,8 @@ test(recipe_instance_complements_sufficient, [
     cleanup(cleanup_test(recipe_instance_complements_sufficient)),
     nondet
 ]) :-
-    recipe:instance("TEST_RECIPE", Nutritions, none, "COMPLEMENTS_ID", [[], []]),
+    excluded:default(Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, none, "COMPLEMENTS_ID", Excluded),
     nutritions:new(
         cals(400), prots(20), fats(20), carbs(100),
         ExpectedNutritions
@@ -857,8 +879,9 @@ test(recipe_instance_complete, [
     cleanup(cleanup_test(recipe_instance_complete)),
     nondet
 ]) :-
+    excluded:default(Excluded),
     recipe:instance(
-        "TEST_RECIPE", Nutritions, "VARIANT_ID", "COMPLEMENTS_ID", [[], []]
+        "TEST_RECIPE", Nutritions, "VARIANT_ID", "COMPLEMENTS_ID", Excluded
     ),
     nutritions:new(
         cals(500), prots(25), fats(25), carbs(125),
