@@ -64,6 +64,23 @@ test(lunch, [
 ]) :-
     recipe:lunch("TEST_RECIPE").
 
+% ============================================================================ %
+
+setup_test(dinner) :-
+    alter_test(dinner, assert).
+
+cleanup_test(dinner) :-
+    alter_test(dinner, retract).
+
+alter_test(dinner, Pred) :-
+    call(Pred, recipes_kb:meal("TEST_RECIPE", "DINNER")).
+
+test(dinner, [
+    setup(setup_test(dinner)),
+    cleanup(cleanup_test(dinner))
+]) :-
+    recipe:dinner("TEST_RECIPE").
+
 :- end_tests(recipe_meal).
 
 % ---------------------------------------------------------------------------- %
@@ -628,12 +645,6 @@ test(format_recipe_base, [nondet]) :-
     merge_strings([
         "{",
             "\"recipe\": \"TEST_RECIPE\", ",
-            "\"nutritions\": {",
-                "\"calories\": 0, ",
-                "\"proteins\": 0, ",
-                "\"fats\": 0, ",
-                "\"carbohydrates\": 0",
-            "}, ",
             "\"variant\": null, ",
             "\"complements\": null",
         "}"
@@ -648,12 +659,6 @@ test(format_recipe_with_variant, [nondet]) :-
     merge_strings([
         "{",
             "\"recipe\": \"TEST_RECIPE\", ",
-            "\"nutritions\": {",
-                "\"calories\": 0, ",
-                "\"proteins\": 0, ",
-                "\"fats\": 0, ",
-                "\"carbohydrates\": 0",
-            "}, ",
             "\"variant\": \"INGREDIENTS_ID\", ",
             "\"complements\": null",
         "}"
@@ -668,12 +673,6 @@ test(format_recipe_with_complements, [nondet]) :-
     merge_strings([
         "{",
             "\"recipe\": \"TEST_RECIPE\", ",
-            "\"nutritions\": {",
-                "\"calories\": 0, ",
-                "\"proteins\": 0, ",
-                "\"fats\": 0, ",
-                "\"carbohydrates\": 0",
-            "}, ",
             "\"variant\": null, ",
             "\"complements\": \"COMPLEMENTS_ID\"",
         "}"
@@ -688,12 +687,6 @@ test(format_recipe_complete, [nondet]) :-
     merge_strings([
         "{",
             "\"recipe\": \"TEST_RECIPE\", ",
-            "\"nutritions\": {",
-                "\"calories\": 0, ",
-                "\"proteins\": 0, ",
-                "\"fats\": 0, ",
-                "\"carbohydrates\": 0",
-            "}, ",
             "\"variant\": \"INGREDIENTS_ID\", ",
             "\"complements\": \"COMPLEMENTS_ID\"",
         "}"

@@ -91,25 +91,21 @@ format_nutritions(Nutritions, Txt) :-
         Cals, Prots, Fats, Carbs
     ]).
 
-format_recipe([Recipe, Nutritions, none, none], Txt) :-
-    format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": null, "complements": null}', [
-        Recipe, NutritionsTxt
+format_recipe([Recipe, _Nutritions, none, none], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "variant": null, "complements": null}', [
+        Recipe
     ]).
-format_recipe([Recipe, Nutritions, VariantId, none], Txt) :-
-    format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": "%w", "complements": null}', [
-        Recipe, NutritionsTxt, VariantId
+format_recipe([Recipe, _Nutritions, VariantId, none], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "variant": "%w", "complements": null}', [
+        Recipe, VariantId
     ]).
-format_recipe([Recipe, Nutritions, none, ComplementsId], Txt) :-
-    format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": null, "complements": "%w"}', [
-        Recipe, NutritionsTxt, ComplementsId
+format_recipe([Recipe, _Nutritions, none, ComplementsId], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "variant": null, "complements": "%w"}', [
+        Recipe, ComplementsId
     ]).
-format_recipe([Recipe, Nutritions, VariantId, ComplementsId], Txt) :-
-    format_nutritions(Nutritions, NutritionsTxt),
-    swritef(Txt, '{"recipe": "%w", "nutritions": %w, "variant": "%w", "complements": "%w"}', [
-        Recipe, NutritionsTxt, VariantId, ComplementsId
+format_recipe([Recipe, _Nutritions, VariantId, ComplementsId], Txt) :-
+    swritef(Txt, '{"recipe": "%w", "variant": "%w", "complements": "%w"}', [
+        Recipe, VariantId, ComplementsId
     ]).
 
 
