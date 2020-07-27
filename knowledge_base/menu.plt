@@ -629,10 +629,10 @@ test(format_nutritions) :-
 
     merge_strings([
         "{",
-            "\"calories\": 0, ",
-            "\"proteins\": 0, ",
-            "\"fats\": 0, ",
-            "\"carbohydrates\": 0",
+            "\"calories\": 0.00, ",
+            "\"proteins\": 0.00, ",
+            "\"fats\": 0.00, ",
+            "\"carbohydrates\": 0.00",
         "}"
     ], ExpectedTxt), assertion(ExpectedTxt == Txt).
 

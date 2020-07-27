@@ -87,8 +87,13 @@ format_nutritions(Nutritions, Txt) :-
     nutritions:fats(Nutritions, Fats),
     nutritions:carbs(Nutritions, Carbs),
 
+    format(string(CalsTxt), "~2f", [Cals]),
+    format(string(ProtsTxt), "~2f", [Prots]),
+    format(string(FatsTxt), "~2f", [Fats]),
+    format(string(CarbsTxt), "~2f", [Carbs]),
+
     swritef(Txt, '{"calories": %w, "proteins": %w, "fats": %w, "carbohydrates": %w}', [
-        Cals, Prots, Fats, Carbs
+        CalsTxt, ProtsTxt, FatsTxt, CarbsTxt
     ]).
 
 format_recipe([Recipe, _Nutritions, none, none], Txt) :-
