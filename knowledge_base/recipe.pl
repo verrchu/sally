@@ -1,6 +1,6 @@
 :- module(recipe, [
     breakfast/1, snack/1, lunch/1, dinner/1,
-    instance/5
+    instance/4
 ]).
 
 :- use_module(recipes_kb).
@@ -69,59 +69,37 @@ standalone_variant(Recipe, VariantId, VariantIngredients) :-
 embeddable_variant(Recipe, VariantId, VariantIngredients) :-
     recipes_kb:variant(Recipe, [embeddable, VariantId], VariantIngredients).
 
-instance(
-    Recipe, Nutritions, none, none, Excluded
-) :-
+instance(Recipe, Nutritions, none, none) :-
     recipes_kb:sufficient(Recipe),
 
-    recipes_kb:ingredients(
-        Recipe, MainIngredients
-    ), allowed_ingredients(MainIngredients, Excluded),
+    recipes_kb:ingredients(Recipe, MainIngredients),
     ingredients_nutritions(MainIngredients, Nutritions).
-instance(
-    Recipe, Nutritions, VariantId, none, Excluded
-) :-
+instance(Recipe, Nutritions, VariantId, none) :-
     standalone_variant(Recipe, VariantId, VariantIngredients),
-    allowed_ingredients(VariantIngredients, Excluded),
     ingredients_nutritions(VariantIngredients, VNutritions),
 
-    recipes_kb:ingredients(
-        Recipe, Ingredients
-    ), allowed_ingredients(Ingredients, Excluded),
+    recipes_kb:ingredients(Recipe, Ingredients),
     ingredients_nutritions(Ingredients, INutritions),
 
     nutritions:combine([VNutritions, INutritions], Nutritions).
-instance(
-    Recipe, Nutritions, none, ComplementsId, Excluded
-) :-
+instance(Recipe, Nutritions, none, ComplementsId) :-
     recipes_kb:sufficient(Recipe),
 
-    recipes_kb:complements(
-        Recipe, ComplementsId, Complements
-    ), allowed_complements(Complements, Excluded),
+    recipes_kb:complements(Recipe, ComplementsId, Complements),
     complements_nutritions(Complements, CNutritions),
 
-    recipes_kb:ingredients(
-        Recipe, Ingredients
-    ), allowed_ingredients(Ingredients, Excluded),
+    recipes_kb:ingredients(Recipe, Ingredients),
     ingredients_nutritions(Ingredients, INutritions),
 
     nutritions:combine([INutritions, CNutritions], Nutritions).
-instance(
-    Recipe, Nutritions, VariantId, ComplementsId, Excluded
-) :-
-    recipes_kb:complements(
-        Recipe, ComplementsId, Complements
-    ), allowed_complements(Complements, Excluded),
+instance(Recipe, Nutritions, VariantId, ComplementsId) :-
+    recipes_kb:complements(Recipe, ComplementsId, Complements),
     complements_nutritions(Complements, CNutritions),
 
     standalone_variant(Recipe, VariantId, VariantIngredients),
-    allowed_ingredients(VariantIngredients, Excluded),
     ingredients_nutritions(VariantIngredients, VNutritions),
 
-    recipes_kb:ingredients(
-        Recipe, Ingredients
-    ), allowed_ingredients(Ingredients, Excluded),
+    recipes_kb:ingredients(Recipe, Ingredients),
     ingredients_nutritions(Ingredients, INutritions),
 
     nutritions:combine([INutritions, VNutritions, CNutritions], Nutritions).

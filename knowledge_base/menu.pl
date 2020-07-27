@@ -8,46 +8,37 @@
 
 
 main :-
-    % current_prolog_flag(argv, Args), print(Args),
-    args(TargetNutritions, Excluded),
     findall([[Breakfast, Snack, Lunch, Dinner], MenuNutritions], menu(
-        [Breakfast, Snack, Lunch, Dinner],
-        MenuNutritions, TargetNutritions, Excluded
-    ), Menu),
-    print_menu(Menu),
-    halt(0).
+        [Breakfast, Snack, Lunch, Dinner], MenuNutritions
+    ), Menu), print_menu(Menu), halt(0).
 
 
-menu([Breakfast, Snack, Lunch, Dinner], MenuNutritions, TargetNutritions, Excluded) :-
-    meal(breakfast, Breakfast, Excluded),
+menu([Breakfast, Snack, Lunch, Dinner], MenuNutritions) :-
+    meal(breakfast, Breakfast),
     [BR, BN, _, _] = Breakfast,
 
-    meal(snack, Snack, Excluded),
+    meal(snack, Snack),
     [SR, SN, _, _] = Snack, SR \= BR,
 
-    meal(lunch, Lunch, Excluded),
+    meal(lunch, Lunch),
     [LR, LN, _, _] = Lunch, LR \= BR, LR \= SR,
 
-    meal(dinner, Dinner, Excluded),
+    meal(dinner, Dinner),
     [DR, DN, _, _] = Dinner, DR \= LR, DR \= BR, DR \= SR,
 
-    nutritions:combine([BN, SN, LN, DN], MenuNutritions),
-
-    check_nutritions(MenuNutritions, TargetNutritions).
+    nutritions:combine([BN, SN, LN, DN], MenuNutritions).
 
 
-check_nutritions(_, _).
-% check_nutritions(MenuNutritions, TargetNutritions) :-
-%     [MCals, MProts, MFats, MCarbs] = MenuNutritions,
-%     [TCals, TProts, TFats, TCarbs] = TargetNutritions,
+check_nutritions(MenuNutritions, TargetNutritions) :-
+    [MCals, MProts, MFats, MCarbs] = MenuNutritions,
+    [TCals, TProts, TFats, TCarbs] = TargetNutritions,
 
-%     check_calories(MCals, TCals),
-%     check_proteins(MProts, TProts),
-%     check_fats(MFats, TFats),
-%     check_carbohydrates(MCarbs, TCarbs).
+    check_calories(MCals, TCals),
+    check_proteins(MProts, TProts),
+    check_fats(MFats, TFats),
+    check_carbohydrates(MCarbs, TCarbs).
 
 
-% constants can be tuned if needed
 check_calories(Val, Target) :-
     Val > Target * 0.90, Val < Target * 1.02.
 check_proteins(Val, Target) :-
@@ -58,11 +49,9 @@ check_carbohydrates(Val, Target) :-
     Val > Target * 0.90, Val < Target * 1.02.
 
 
-meal(MealType, Meal, Excluded) :-
+meal(MealType, Meal) :-
     call(MealType, Recipe),
-    recipe:instance(
-        Recipe, Nutritions, VariantId, ComplementsId, Excluded
-    ),
+    recipe:instance(Recipe, Nutritions, VariantId, ComplementsId),
 
     Meal = [Recipe, Nutritions, VariantId, ComplementsId].
 
