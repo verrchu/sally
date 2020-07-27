@@ -1,3 +1,7 @@
+/.git
+.gitignore
+.dockerignore
 .env
+Dockerfile
 /**/__pycache__
 /knowledge_base/*_kb.pl

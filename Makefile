@@ -28,4 +28,4 @@ server:
 		
 
 build:
-	docker build --no-cache -t ulidity/sally:latest --build-arg SSH_KEY="$(SSH_KEY)" .
+	docker build --no-cache -t ulidity/sally:latest .
