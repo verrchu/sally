@@ -1,3 +1,5 @@
+meals:
+    - LUNCH
 plural: false
 sufficient: false
 embeddable: true
@@ -14,3 +16,25 @@ variants:
       CHEESE:
         unit: GRAM
         quantity: 20
+  '01EE7DHRGZXN71PZ49E6F78SGW':
+    standalone: true
+    embeddable: false
+    ingredients:
+      TOMATO:
+        unit: NATURAL
+        quantity: 2
+      ONION:
+        unit: NATURAL
+        quantity: 1
+      CARROT:
+        unit: NATURAL
+        quantity: 1
+      CARROT:
+        unit: NATURAL
+        quantity: 1
+      CELERY:
+        unit: GRAM
+        quantity: 100
+      GROUND_BEEF:
+        unit: GRAM
+        quantity: 300
