@@ -1,5 +1,6 @@
 meals:
     - LUNCH
+    - DINNER
 plural: false
 sufficient: false
 embeddable: true

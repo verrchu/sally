@@ -1,7 +1,7 @@
 :- set_prolog_flag(verbose, silent).
 
 :- use_module(recipe, [
-    breakfast/1, snack/1, lunch/1
+    breakfast/1, snack/1, lunch/1, dinner/1
 ]).
 :- use_module(nutritions, except([default/1])).
 :- use_module(excluded, except([default/1])).
@@ -10,15 +10,15 @@
 main :-
     % current_prolog_flag(argv, Args), print(Args),
     args(TargetNutritions, Excluded),
-    findall([[Breakfast, Snack, Lunch], MenuNutritions], menu(
-        [Breakfast, Snack, Lunch],
+    findall([[Breakfast, Snack, Lunch, Dinner], MenuNutritions], menu(
+        [Breakfast, Snack, Lunch, Dinner],
         MenuNutritions, TargetNutritions, Excluded
     ), Menu),
     print_menu(Menu),
     halt(0).
 
 
-menu([Breakfast, Snack, Lunch], MenuNutritions, TargetNutritions, Excluded) :-
+menu([Breakfast, Snack, Lunch, Dinner], MenuNutritions, TargetNutritions, Excluded) :-
     meal(breakfast, Breakfast, Excluded),
     [BR, BN, _, _] = Breakfast,
 
@@ -28,7 +28,10 @@ menu([Breakfast, Snack, Lunch], MenuNutritions, TargetNutritions, Excluded) :-
     meal(lunch, Lunch, Excluded),
     [LR, LN, _, _] = Lunch, LR \= BR, LR \= SR,
 
-    nutritions:combine([BN, SN, LN], MenuNutritions),
+    meal(dinner, Dinner, Excluded),
+    [DR, DN, _, _] = Dinner, DR \= LR, DR \= BR, DR \= SR,
+
+    nutritions:combine([BN, SN, LN, DN], MenuNutritions),
 
     check_nutritions(MenuNutritions, TargetNutritions).
 
@@ -66,13 +69,14 @@ meal(MealType, Meal, Excluded) :-
 
 print_menu([]) :- true.
 print_menu([Menu|Menus]) :-
-    [[Breakfast, Snack, Lunch], Nutritions] = Menu,
+    [[Breakfast, Snack, Lunch, Dinner], Nutritions] = Menu,
     format_recipe(Breakfast, BreakfastTxt),
     format_recipe(Snack, SnackTxt),
     format_recipe(Lunch, LunchTxt),
+    format_recipe(Dinner, DinnerTxt),
     format_nutritions(Nutritions, NutritionsTxt),
-    format('{"meals": {"breakfast": ~s, "snack": ~s, "lunch": ~s}, "nutritions": ~s}', [
-        BreakfastTxt, SnackTxt, LunchTxt, NutritionsTxt
+    format('{"meals": {"breakfast": ~s, "snack": ~s, "lunch": ~s, "dinner": ~s}, "nutritions": ~s}', [
+        BreakfastTxt, SnackTxt, LunchTxt, DinnerTxt, NutritionsTxt
     ]),
     print_menu(Menus).
 

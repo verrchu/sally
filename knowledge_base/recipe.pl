@@ -1,5 +1,5 @@
 :- module(recipe, [
-    breakfast/1, snack/1, lunch/1,
+    breakfast/1, snack/1, lunch/1, dinner/1,
     instance/5
 ]).
 
@@ -20,6 +20,9 @@ snack(Recipe) :-
 
 lunch(Recipe) :-
     generic_meal(Recipe, "LUNCH").
+
+dinner(Recipe) :-
+    generic_meal(Recipe, "DINNER").
 
 generic_meal(Recipe, Meal) :-
     recipes_kb:meal(Recipe, Meal).
