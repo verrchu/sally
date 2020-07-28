@@ -204,8 +204,7 @@ test(recipe_ingredients, [
     cleanup(cleanup_test(recipe_ingredients)),
     nondet
 ]) :-
-    excluded:default(Excluded),
-    recipe:instance("TEST_RECIPE", Nutritions, none, none, Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, none, none),
 
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, calories, ACals),
     ingredient:nutrition_query("TEST_INGREDIENT_A", "NATURAL", 3, proteins, AProts),
@@ -748,7 +747,7 @@ alter_suite(recipe_instance, Pred) :-
 % ============================================================================ %
 
 test(recipe_instance_base) :-
-    \+ recipe:instance("TEST_RECIPE", _Nutritions, none, none, [[], []]).
+    \+ recipe:instance("TEST_RECIPE", _Nutritions, none, none).
 
 % ============================================================================ %
 
@@ -766,8 +765,7 @@ test(recipe_instance_base_sufficient, [
     cleanup(cleanup_test(recipe_instance_base)),
     nondet
 ]) :-
-    excluded:default(Excluded),
-    recipe:instance("TEST_RECIPE", Nutritions, none, none, Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, none, none),
     nutritions:new(
         cals(100), prots(5), fats(5), carbs(25),
         ExpectedNutritions
@@ -793,8 +791,7 @@ test(recipe_instance_variant, [
     cleanup(cleanup_test(recipe_instance_variant)),
     nondet
 ]) :-
-    excluded:default(Excluded),
-    recipe:instance("TEST_RECIPE", Nutritions, "VARIANT_ID", none, Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, "VARIANT_ID", none),
     nutritions:new(
         cals(200), prots(10), fats(10), carbs(50),
         ExpectedNutritions
@@ -819,7 +816,7 @@ test(recipe_instance_complements, [
     cleanup(cleanup_test(recipe_instance_complements)),
     nondet
 ]) :-
-    \+ recipe:instance("TEST_RECIPE", _Nutritions, none, "COMPLEMENTS_ID", [[], []]).
+    \+ recipe:instance("TEST_RECIPE", _Nutritions, none, "COMPLEMENTS_ID").
 
 % ============================================================================ %
 
@@ -841,8 +838,7 @@ test(recipe_instance_complements_sufficient, [
     cleanup(cleanup_test(recipe_instance_complements_sufficient)),
     nondet
 ]) :-
-    excluded:default(Excluded),
-    recipe:instance("TEST_RECIPE", Nutritions, none, "COMPLEMENTS_ID", Excluded),
+    recipe:instance("TEST_RECIPE", Nutritions, none, "COMPLEMENTS_ID"),
     nutritions:new(
         cals(400), prots(20), fats(20), carbs(100),
         ExpectedNutritions
@@ -872,10 +868,7 @@ test(recipe_instance_complete, [
     cleanup(cleanup_test(recipe_instance_complete)),
     nondet
 ]) :-
-    excluded:default(Excluded),
-    recipe:instance(
-        "TEST_RECIPE", Nutritions, "VARIANT_ID", "COMPLEMENTS_ID", Excluded
-    ),
+    recipe:instance("TEST_RECIPE", Nutritions, "VARIANT_ID", "COMPLEMENTS_ID"),
     nutritions:new(
         cals(500), prots(25), fats(25), carbs(125),
         ExpectedNutritions
