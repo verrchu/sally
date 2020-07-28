@@ -3,6 +3,7 @@ import hashlib
 import json
 
 from tinydb import TinyDB
+from progress.bar import Bar as ProgressBar
 
 
 def main():
@@ -15,6 +16,7 @@ def main():
 
     with open(args.data_file, 'r') as data:
         data = json.load(data)
+        progress_bar = ProgressBar('RECORDS', max=len(data))
         for record in data:
             checksum = hashlib.md5(json.dumps(record).encode()).hexdigest()
             db.insert({
@@ -25,6 +27,8 @@ def main():
                 'carbs': record['nutritions']['carbohydrates'],
                 'meals': record['meals']
             })
+            progress_bar.next()
+        progress_bar.finish()
 
 
 if __name__ == '__main__':

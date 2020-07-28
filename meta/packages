@@ -2,7 +2,9 @@ attrs==19.3.0
 bottle==0.12.18
 jsonref==0.2
 jsonschema==3.2.0
+progress==1.5
 pyrsistent==0.16.0
 PyYAML==5.3.1
 six==1.15.0
+tinydb==4.1.1
 ulid==1.1
