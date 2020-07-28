@@ -2,6 +2,7 @@
 .gitignore
 .dockerignore
 .env
+/tmp
 Dockerfile
 /**/__pycache__
 /knowledge_base/*_kb.pl
