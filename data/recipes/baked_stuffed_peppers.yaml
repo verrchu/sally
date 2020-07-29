@@ -1,0 +1,24 @@
+meals:
+  - DINNER
+plural: true
+sufficient: true
+embeddable: false
+ingredients:
+  regular:
+    SWEET_PEPPER:
+      unit: NATURAL
+      quantity: 2
+    CHICKEN_FILLET:
+      unit: GRAM
+      quantity: 200
+    CHEESE:
+      unit: GRAM
+      quantity: 20
+    FRENCH_MUSTARD:
+      unit: TEASPOON
+      quantity: 1
+  technical:
+    SALT:
+      quantity: ANY
+    SPICE:
+      quantity: ANY
