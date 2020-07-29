@@ -1,0 +1,15 @@
+units:
+    GRAM:
+        quantity: 100
+        nutritions:
+            calories: 145.5
+            proteins: 6.6
+            fats: 7.5
+            carbohydrates: 9.8
+    TEASPOON:
+        quantity: 1
+        nutritions:
+            calories: 10.1
+            proteins: 0.5
+            fats: 0.5
+            carbohydrates: 0.8

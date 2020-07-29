@@ -1,0 +1,29 @@
+meals:
+    - LUNCH
+    - DINNER
+plural: false
+sufficient: true
+embeddable: false
+ingredients:
+  regular:
+    CHICKEN_FILLET:
+      unit: GRAM
+      quantity: 100
+    THIN_LAVASH:
+      unit: NATURAL
+      quantity: 1
+    CREAM_CHEESE:
+      unit: GRAM
+      quantity: 20
+    LETTUCE:
+      unit: GRAM
+      quantity: 15
+    TOMATO:
+      unit: NATURAL
+      quantity: 1
+    GREEK_YOGURT:
+      unit: GRAM
+      quantity: 30
+    FRENCH_MUSTARD:
+      unit: TEASPOON
+      quantity: 1
